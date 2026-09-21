@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>مەلزەمەی کوردستان | مەلزەمە، کتێبی مامۆستا و ئەسیلە</title>
+
+    <!-- ڕێکخستنی مۆبایل و ئەپ -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#4f46e5">
+
+    <!-- فۆنتەکان -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&family=Chakra+Petch:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- ئایکۆنەکان -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+            --primary-hover: #4338ca;
+            --primary-light: rgba(79, 70, 229, 0.12);
+            --accent-cyan: #06b6d4;
+            --accent-amber: #f59e0b;
+            --accent-emerald: #10b981;
+            --accent-red: #ef4444;
+            --bg-main: #f8fafc;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --input-bg: #f1f5f9;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.07);
+            --num-font: 'Chakra Petch', sans-serif;
+            --main-font: 'Noto Kufi Arabic', sans-serif;
+        }
+
+        body.dark-mode {
+            --bg-main: #0b0f19;
+            --card-bg: #111827;
+            --card-border: #1f2937;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --input-bg: #1e293b;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            font-family: var(--main-font);
+            transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+        }
+
+        body {
+            background: var(--bg-main);
+            color: var(--text-main);
+            direction: rtl;
+            padding-bottom: 100px;
+            overflow-x: hidden;
+        }
+
+        .num-font {
+            font-family: var(--num-font) !important;
+            direction: ltr !important;
+            display: inline-block;
+        }
+
+        /* سەرپەڕە */
+        header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
+            color: #ffffff;
+            padding: max(16px, env(safe-area-inset-top, 16px)) 16px 22px 16px;
+            border-bottom-left-radius: 32px;
+            border-bottom-right-radius: 32px;
+            box-shadow: 0 12px 28px rgba(49, 46, 129, 0.25);
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto 12px auto;
+        }
+
+        .app-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #06b6d4, #4f46e5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            box-shadow: 0 4px 14px rgba(6, 182, 212, 0.4);
+        }
+
+        .brand-text h1 {
+            font-size: 1.18rem;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+        .brand-harki-secret {
+            font-size: 0.72rem;
+            color: #c7d2fe;
+            font-weight: 800;
+            cursor: pointer;
+            user-select: none;
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.08);
+            margin-top: 2px;
+        }
+        .brand-harki-secret:active {
+            color: #fde047;
+            transform: scale(0.95);
+        }
+
+        .theme-toggle-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        /* گەڕان */
+        .search-box-wrap {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 45px 12px 14px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            outline: none;
+        }
+        .search-input::placeholder { color: #c7d2fe; }
+
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #c7d2fe;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px 12px;
+        }
+
+        .section-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-size: 0.96rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* دوگمەی گەڕانەوە */
+        .btn-nav-back {
+            background: var(--input-bg);
+            border: 1.5px solid var(--card-border);
+            color: var(--text-main);
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-nav-back:active { transform: scale(0.95); }
+
+        /* =========================================================
+           ١. تۆڕی بەشە سەرەکییەکان (Main Hub Grid)
+        ========================================================= */
+        .main-hub-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .hub-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--card-border);
+            border-radius: 24px;
+            padding: 18px 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+        .hub-card:active {
+            transform: scale(0.96);
+            border-color: var(--primary);
+        }
+
+        .hub-card-icon-wrap {
+            width: 70px;
+            height: 70px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .hub-card-title {
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .hub-card-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            min-height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hub-card-badge {
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: var(--input-bg);
+            color: var(--primary);
+            border: 1px solid var(--card-border);
+        }
+
+        /* کارتەکانی پۆل (Grades Grid) */
+        .grades-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .grade-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--card-border);
+            border-radius: 20px;
+            padding: 14px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+        .grade-card:active {
+            transform: scale(0.96);
+            border-color: var(--primary);
+        }
+
+        .grade-card-img-wrap {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+        }
+        .grade-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .grade-card-title {
+            font-size: 0.9rem;
+            font-weight: 900;
+            color: var(--text-main);
+            margin-bottom: 2px;
+        }
+
+        .grade-card-desc {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            line-height: 1.3;
+            margin-bottom: 8px;
+        }
+
+        /* فلتەری وانەکان */
+        .subject-filter-grid {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 2px 0 10px 0;
+            scrollbar-width: none;
+        }
+        .subject-filter-grid::-webkit-scrollbar { display: none; }
+
+        .sub-chip {
+            flex: 0 0 auto;
+            padding: 7px 14px;
+            background: var(--input-bg);
+            border-radius: 12px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            cursor: pointer;
+            border: 1px solid var(--card-border);
+        }
+        .sub-chip.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        /* کارتەکانی مەلزەمە و ئەسیلە */
+        .booklets-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .booklet-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--card-border);
+            border-radius: 18px;
+            padding: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 12px;
+        }
+
+        .booklet-thumb {
+            width: 76px;
+            height: 98px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #1e1b4b, #4338ca);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+            padding: 4px;
+            text-align: center;
+        }
+        .booklet-thumb.exam-thumb {
+            background: linear-gradient(135deg, #7f1d1d, #dc2626);
+        }
+        .booklet-thumb.teacher-thumb {
+            background: linear-gradient(135deg, #065f46, #059669);
+        }
+
+        .booklet-thumb i { font-size: 26px; margin-bottom: 4px; }
+        .booklet-thumb span {
+            font-size: 0.65rem;
+            font-weight: 800;
+            background: rgba(255,255,255,0.2);
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        .booklet-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .booklet-title {
+            font-size: 0.88rem;
+            font-weight: 900;
+            color: var(--text-main);
+            line-height: 1.35;
+        }
+
+        .booklet-teacher {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin: 3px 0;
+            font-weight: 700;
+        }
+
+        .booklet-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .tag-pill {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 7px;
+            border-radius: 6px;
+        }
+        .tag-pill.exam-tag { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+        .tag-pill.teacher-tag { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
+
+        .booklet-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .btn-read {
+            flex: 1;
+            padding: 7px 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* =========================================================
+           حاسیبەی زیرەکی بیرکاری (دیزاینی مۆدێرن و شاز)
+        ========================================================= */
+        .ai-math-card {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 26px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-glow-bar {
+            height: 4px;
+            background: linear-gradient(90deg, #06b6d4, #4f46e5, #ec4899);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .ai-screen-display {
+            background: var(--input-bg);
+            border: 1.5px solid var(--card-border);
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+
+        .ai-math-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 1.25rem;
+            font-weight: 900;
+            font-family: var(--num-font);
+            direction: ltr;
+            color: var(--text-main);
+            text-align: left;
+        }
+
+        .ai-math-quick-pad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .quick-btn {
+            background: var(--card-bg);
+            border: 1.5px solid var(--card-border);
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+        .quick-btn:active { transform: scale(0.92); background: var(--input-bg); }
+        .quick-btn.op-btn { color: var(--accent-cyan); font-weight: 900; }
+        .quick-btn.action-clear { color: var(--accent-red); }
+
+        .btn-ai-solve {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #06b6d4 0%, #4f46e5 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 0.88rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 6px 18px rgba(6, 182, 212, 0.35);
+        }
+        .btn-ai-solve:active { transform: scale(0.98); }
+
+        .ai-solution-result {
+            margin-top: 14px;
+            background: var(--input-bg);
+            border: 1.5px solid var(--card-border);
+            border-radius: 18px;
+            padding: 14px;
+            display: none;
+        }
+
+        .ai-step-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+
+        /* حاسیبەی کۆنمرە */
+        .calculator-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--card-border);
+            border-radius: 24px;
+            padding: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .calc-input-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .calc-input-row label { font-size: 0.78rem; font-weight: 800; }
+        .calc-input {
+            padding: 9px;
+            border-radius: 12px;
+            border: 1.5px solid var(--card-border);
+            background: var(--input-bg);
+            font-size: 0.85rem;
+            font-weight: 900;
+            text-align: center;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .calc-result-box {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-radius: 16px;
+            padding: 14px;
+            text-align: center;
+            margin-top: 12px;
+        }
+        .calc-score-val {
+            font-size: 2.2rem;
+            font-weight: 900;
+            font-family: var(--num-font);
+        }
+
+        /* خوێنەرەوەی PDF */
+        .pdf-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(8px);
+            z-index: 99999;
+            display: none;
+            flex-direction: column;
+        }
+        .pdf-modal-header {
+            background: #111827;
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1f2937;
+        }
+        .zoom-controls-bar { display: flex; align-items: center; gap: 6px; }
+        .btn-zoom-action {
+            background: #1f2937;
+            color: #ffffff;
+            border: 1px solid #374151;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .pdf-frame-wrapper {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+        .pdf-frame-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* پەنجەرەی ئەدمین */
+        .admin-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(6px);
+            z-index: 99998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+        }
+        .admin-modal-card {
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 26px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 18px 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .admin-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+        }
+        .admin-tabs-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+        .admin-tab-btn {
+            background: var(--input-bg);
+            border: 1.5px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 8px 4px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            cursor: pointer;
+            text-align: center;
+        }
+        .admin-tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .admin-form-group { margin-bottom: 10px; text-align: right; }
+        .admin-form-group label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 4px;
+            color: var(--text-main);
+        }
+        .admin-input {
+            width: 100%;
+            padding: 9px 12px;
+            background: var(--input-bg);
+            border: 1.5px solid var(--card-border);
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-main);
+            outline: none;
+        }
+        .btn-admin-submit {
+            width: 100%;
+            padding: 11px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* شریتی خوارەوە */
+        .bottom-nav {
+            position: fixed;
+            bottom: max(12px, env(safe-area-inset-bottom, 12px));
+            left: 14px;
+            right: 14px;
+            max-width: 480px;
+            margin: 0 auto;
+            height: 62px;
+            background: var(--card-bg);
+            border: 1.5px solid var(--card-border);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 4px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            z-index: 9000;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.68rem;
+            font-weight: 800;
+            gap: 2px;
+            flex: 1;
+        }
+        .nav-item i { font-size: 18px; }
+        .nav-item.active { color: var(--primary); }
+    </style>
+</head>
+<body>
+
+<!-- سەرپەڕە -->
+<header>
+    <div class="header-top">
+        <div class="app-brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div class="brand-text">
+                <h1>مەلزەمەی کوردستان</h1>
+                <p class="brand-harki-secret" onclick="handleHarkiSecretClicks()" title="کۆنتڕۆڵی ئەدمین">
+                    Harki Tech • هەموو بەشەکان 🔐
+                </p>
+            </div>
+        </div>
+        <button class="theme-toggle-btn" onclick="toggleDarkMode()" title="تاریکی / ڕۆشنایی">
+            <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+    </div>
+
+    <!-- گەڕان -->
+    <div class="search-box-wrap">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="گەڕان بۆ مەلزەمە، کتێب، مامۆستا یان وانە..." oninput="handleSearch()">
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- پەڕەی سەرەکی بە شێوازی قۆناغ بە قۆناغ (Navigation Levels) -->
+    <div id="tabHome" class="tab-content-view">
+        
+        <!-- قۆناغی ١: پیشاندانی بەشە سەرەکییەکان (Main Hubs) -->
+        <div id="viewMainHub">
+            <div class="section-header-bar">
+                <div class="section-title">
+                    <i class="fa-solid fa-shapes" style="color:var(--primary);"></i>
+                    <span>بەشە سەرەکییەکان:</span>
+                </div>
+            </div>
+            <div class="main-hub-grid" id="mainHubContainer">
+                <!-- لێرە دروست دەبن لە ڕێگەی JS -->
+            </div>
+        </div>
+
+        <!-- قۆناغی ٢: پیشاندانی پۆلەکان لەناو بەشە هەڵبژێردراوەکەدا -->
+        <div id="viewGradesInHub" style="display:none;">
+            <div class="section-header-bar">
+                <div class="section-title">
+                    <span id="currentHubIcon"></span>
+                    <span id="currentHubTitle">ناوی بەش</span>
+                </div>
+                <button class="btn-nav-back" onclick="backToMainHub()">
+                    <i class="fa-solid fa-arrow-turn-down-left"></i> <span>بەشەکان</span>
+                </button>
+            </div>
+            <div class="grades-grid" id="gradesContainer">
+                <!-- پۆلەکان لێرە دروست دەبن -->
+            </div>
+        </div>
+
+        <!-- قۆناغی ٣: ناوەڕۆکی پۆلێکی دیاریکراو (Booklets & PDFs) -->
+        <div id="viewBookletsInGrade" style="display:none;">
+            <div class="section-header-bar">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div id="currentGradeIconHolder"></div>
+                    <div>
+                        <div id="currentGradeTitleText" style="font-weight:900; font-size:0.92rem; color:var(--text-main);">پۆل</div>
+                        <div id="currentGradeCountText" style="font-size:0.68rem; color:var(--text-muted); font-weight:700;">0 بابەت</div>
+                    </div>
+                </div>
+                <button class="btn-nav-back" onclick="backToGradesInHub()">
+                    <i class="fa-solid fa-arrow-turn-down-left"></i> <span>پۆلەکان</span>
+                </button>
+            </div>
+
+            <!-- فلتەری وانەکان -->
+            <div class="subject-filter-grid" id="subjectFilterContainer"></div>
+
+            <!-- لیستی مەلزەمەکان -->
+            <div class="booklets-grid" id="bookletsContainer"></div>
+        </div>
+
+    </div>
+
+    <!-- پەڕەی حاسیبەی زیرەکی بیرکاری (AI Math Solver) -->
+    <div id="tabAiMath" class="tab-content-view" style="display:none;">
+        <div class="section-header-bar">
+            <div class="section-title">
+                <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent-cyan);"></i>
+                <span>حاسیبەی زیرەکی بیرکاری (شیکار بە کوردی):</span>
+            </div>
+        </div>
+
+        <div class="ai-math-card">
+            <div class="ai-glow-bar"></div>
+
+            <div class="ai-screen-display">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <span style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">هاوکێشە یان پرسیار:</span>
+                    <label for="mathCameraUpload" style="cursor:pointer; color:var(--accent-cyan); font-size:0.75rem; font-weight:800; display:flex; align-items:center; gap:4px;">
+                        <i class="fa-solid fa-camera"></i> <span>وێنەگرتن</span>
+                    </label>
+                    <input type="file" id="mathCameraUpload" accept="image/*" style="display:none;" onchange="handleAiMathUpload(this)">
+                </div>
+                <input type="text" id="aiMathInputField" class="ai-math-input" placeholder="2x + 10 = 50">
+            </div>
+
+            <!-- کیبۆردی خێرای بیرکاری -->
+            <div class="ai-math-quick-pad">
+                <button class="quick-btn" onclick="insertMathKey('x')">x</button>
+                <button class="quick-btn" onclick="insertMathKey('y')">y</button>
+                <button class="quick-btn op-btn" onclick="insertMathKey('+')">+</button>
+                <button class="quick-btn action-clear" onclick="clearMathInput()"><i class="fa-solid fa-delete-left"></i></button>
+
+                <button class="quick-btn" onclick="insertMathKey('^2')">x²</button>
+                <button class="quick-btn" onclick="insertMathKey('√(')">√</button>
+                <button class="quick-btn op-btn" onclick="insertMathKey('-')">-</button>
+                <button class="quick-btn op-btn" onclick="insertMathKey('*')">×</button>
+
+                <button class="quick-btn" onclick="insertMathKey('(')">(</button>
+                <button class="quick-btn" onclick="insertMathKey(')')">)</button>
+                <button class="quick-btn op-btn" onclick="insertMathKey('/')">÷</button>
+                <button class="quick-btn op-btn" onclick="insertMathKey('=')">=</button>
+            </div>
+
+            <button class="btn-ai-solve" onclick="solveAiMathProblem()">
+                <i class="fa-solid fa-brain"></i> شیکارکردنی هەنگاو بە هەنگاو
+            </button>
+
+            <!-- ناوچەی شەرح و شیکار -->
+            <div id="aiMathResultArea" class="ai-solution-result">
+                <div style="font-size:0.86rem; font-weight:900; color:#10b981; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+                    <i class="fa-solid fa-circle-check"></i> شیکار و شیکردنەوەی هەنگاوەکان:
+                </div>
+                <div id="aiMathStepsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- پەڕەی حاسیبەی کۆنمرە -->
+    <div id="tabCalc" class="tab-content-view" style="display:none;">
+        <div class="section-title" style="margin-bottom:12px;">
+            <i class="fa-solid fa-calculator" style="color:var(--primary);"></i>
+            <span>حاسیبەی کۆنمرە و تێکڕا (پۆلی ١ تا ١٢):</span>
+        </div>
+
+        <div class="calculator-card">
+            <div class="admin-form-group" style="margin-bottom:12px;">
+                <label style="font-weight:900;">پۆلەکەت هەڵبژێرە:</label>
+                <select id="calcGradeSelect" class="admin-input" onchange="onGradeSelectChanged(this.value)">
+                    <option value="12">پۆلی ١٢ی ئامادەیی</option>
+                    <option value="11">پۆلی ١١ی ئامادەیی</option>
+                    <option value="10">پۆلی ١٠ی ئامادەیی</option>
+                    <option value="9">پۆلی ٩ی بنەڕەتی</option>
+                    <option value="8">پۆلی ٨ی بنەڕەتی</option>
+                    <option value="7">پۆلی ٧ی بنەڕەتی</option>
+                    <option value="6">پۆلی ٦ی بنەڕەتی</option>
+                    <option value="5">پۆلی ٥ی سەرەتایی</option>
+                    <option value="4">پۆلی ٤ی سەرەتایی</option>
+                    <option value="3">پۆلی ٣ی سەرەتایی</option>
+                    <option value="2">پۆلی ٢ی سەرەتایی</option>
+                    <option value="1">پۆلی ١ی سەرەتایی</option>
+                </select>
+            </div>
+
+            <div id="calcBranchWrap" style="display:flex; gap:6px; margin-bottom:12px;">
+                <button class="admin-tab-btn active" id="btnCalcSci" style="flex:1;" onclick="switchCalcBranch('sci')">🔬 زانستی</button>
+                <button class="admin-tab-btn" id="btnCalcLit" style="flex:1;" onclick="switchCalcBranch('lit')">📚 ئەدەبی</button>
+            </div>
+
+            <div id="calcSubjectsContainer"></div>
+
+            <div class="calc-result-box">
+                <div style="font-size:0.8rem; font-weight:700;">تێکڕای گشتی نمرەکانت (موعەدەڵ):</div>
+                <div class="calc-score-val" id="calcFinalScore">0.00%</div>
+                <div style="font-size:0.75rem; margin-top:4px;" id="calcTotalSum">کۆی گشتی: 0 لە 0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- دەربارە -->
+    <div id="tabAbout" class="tab-content-view" style="display:none;">
+        <div class="section-title" style="margin-bottom:12px;">
+            <i class="fa-solid fa-circle-info" style="color:var(--primary);"></i>
+            <span>دەربارەی دروستکەر:</span>
+        </div>
+
+        <div class="calculator-card" style="text-align:center; padding:24px 16px;">
+            <div style="width:78px; height:78px; border-radius:50%; background:linear-gradient(135deg, #06b6d4, #4f46e5); display:flex; align-items:center; justify-content:center; color:white; font-size:34px; margin:0 auto 12px auto; box-shadow:0 8px 20px rgba(79,70,229,0.35);">
+                <i class="fa-solid fa-user-tie"></i>
+            </div>
+            
+            <div style="font-size:0.85rem; color:var(--text-muted); font-weight:700;">ئەم پڕۆژەیە دروستکراوە لەلایەن</div>
+            <div style="font-size:1.2rem; font-weight:900; color:var(--primary); margin:4px 0;">هەرکی محمدسلیم عبدالعزیز</div>
+            <div style="font-size:0.85rem; font-weight:800; color:#d97706; margin-bottom:14px;">Harki Tech</div>
+
+            <div style="font-size:0.78rem; color:var(--text-main); line-height:1.6; background:var(--input-bg); padding:12px; border-radius:14px; border:1px solid var(--card-border); margin-bottom:16px; text-align:right;">
+                ئەم سیستەمە خزمەتگوزارییەکی پەروەردەییە بۆ دەستڕاگەیشتنی خێرای قوتابیان و مامۆستایانی کوردستان بە مەلزەمەکان، کتێبی مامۆستا، ئەسیلە وزارییەکان و شیکاری زیرەکی بیرکاری.
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                <a href="https://wa.me/9647504565888" target="_blank" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px; background:#25D366; color:white; padding:11px; border-radius:14px; font-weight:900; font-size:0.82rem;">
+                    <i class="fa-brands fa-whatsapp" style="font-size:18px;"></i> واتسئەپ: 07504565888
+                </a>
+                <a href="tel:07509346362" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px; background:#0284c7; color:white; padding:11px; border-radius:14px; font-weight:900; font-size:0.82rem;">
+                    <i class="fa-solid fa-phone"></i> کورەک: 07509346362
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- پەنجەرەی خوێندنەوەی PDF -->
+<div class="pdf-modal-overlay" id="pdfReaderModal">
+    <div class="pdf-modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-book-open" style="color:#38bdf8;"></i>
+            <span id="pdfModalTitle" style="font-size:0.85rem; font-weight:800; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">فایل</span>
+        </div>
+        <div class="zoom-controls-bar">
+            <button class="btn-zoom-action" onclick="adjustPdfZoom(0.15)"><i class="fa-solid fa-plus"></i></button>
+            <button class="btn-zoom-action" onclick="adjustPdfZoom(-0.15)"><i class="fa-solid fa-minus"></i></button>
+            <button class="btn-zoom-action" onclick="resetPdfZoom()"><i class="fa-solid fa-rotate-left"></i></button>
+            <button onclick="closePdfReader()" style="background:#dc2626; border:none; color:white; width:30px; height:30px; border-radius:8px; cursor:pointer;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+    <div class="pdf-frame-wrapper">
+        <iframe id="pdfFrame" src="" sandbox="allow-scripts allow-same-origin"></iframe>
+    </div>
+</div>
+
+<!-- پەنجەرەی خوێندنەوەی نوسین و دەق -->
+<div class="pdf-modal-overlay" id="textReaderModal" style="display:none;">
+    <div class="pdf-modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-file-lines" style="color:#06b6d4;"></i>
+            <span id="textModalTitle" style="font-size:0.85rem; font-weight:800;">ناوەڕۆکی بابەت</span>
+        </div>
+        <button onclick="closeTextReader()" style="background:#dc2626; border:none; color:white; width:30px; height:30px; border-radius:8px; cursor:pointer;">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <div style="flex:1; background:var(--card-bg); padding:16px; overflow-y:auto; line-height:1.8; font-size:0.88rem; color:var(--text-main);" id="textContentBody"></div>
+</div>
+
+<!-- پەنجەرەی پیشاندانی وێنە بە قەبارەی تەواو -->
+<div class="pdf-modal-overlay" id="imageReaderModal" style="display:none;">
+    <div class="pdf-modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-image" style="color:#10b981;"></i>
+            <span id="imageModalTitle" style="font-size:0.85rem; font-weight:800;">وێنەی بابەت</span>
+        </div>
+        <button onclick="closeImageReader()" style="background:#dc2626; border:none; color:white; width:30px; height:30px; border-radius:8px; cursor:pointer;">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:10px; background:#000; overflow:auto;">
+        <img id="imageModalViewer" src="" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:8px;">
+    </div>
+</div>
+
+<!-- پەنجەرەی کۆنتڕۆڵی ئەدمین (Admin Modal) -->
+<div class="admin-modal-overlay" id="adminControlModal">
+    <div class="admin-modal-card">
+        <div class="admin-modal-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-shield-halved" style="color:var(--primary); font-size:20px;"></i>
+                <span style="font-weight:900; font-size:0.95rem;">کۆنتڕۆڵی Harki Tech</span>
+            </div>
+            <button onclick="closeAdminModal()" style="border:none; background:none; color:var(--text-muted); font-size:18px; cursor:pointer;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="admin-tabs-row">
+            <button class="admin-tab-btn active" id="admTabBtn1" onclick="switchAdminTab('sec')">١. بەشەکان</button>
+            <button class="admin-tab-btn" id="admTabBtn2" onclick="switchAdminTab('grade')">٢. پۆلەکان</button>
+            <button class="admin-tab-btn" id="admTabBtn3" onclick="switchAdminTab('booklet')">٣. مەلزەمە/کتێب</button>
+            <button class="admin-tab-btn" id="admTabBtn4" onclick="switchAdminTab('manage')">٤. سڕینەوە</button>
+        </div>
+
+        <!-- تاب ١: زیادکردنی بەشە سەرەکییەکان -->
+        <div id="adminTabSectionForm">
+            <div class="admin-form-group">
+                <label>ناوی بەش لە سەرەکی:</label>
+                <input type="text" id="admSecTitle" class="admin-input" placeholder="بۆ نموونە: تاقیکردنەوەی ئۆنلاین">
+            </div>
+            <div class="admin-form-group">
+                <label>کۆدی بەش (ئینگلیزی بێ بۆشایی):</label>
+                <input type="text" id="admSecKey" class="admin-input" placeholder="online_quiz" style="direction:ltr;">
+            </div>
+            <div class="admin-form-group">
+                <label>ئایکۆن (FontAwesome):</label>
+                <input type="text" id="admSecIcon" class="admin-input" placeholder="fa-book, fa-star, fa-graduation-cap..." style="direction:ltr;">
+            </div>
+            <div class="admin-form-group">
+                <label>وەسفی کورت:</label>
+                <input type="text" id="admSecDesc" class="admin-input" placeholder="وەسفی بەش...">
+            </div>
+            <button class="btn-admin-submit" onclick="adminAddHubSection()">
+                <i class="fa-solid fa-plus-circle"></i> زیادکردنی بەش بۆ سەرەکی
+            </button>
+        </div>
+
+        <!-- تاب ٢: زیادکردنی پۆل بۆ ناو بەشێک -->
+        <div id="adminTabGradeForm" style="display:none;">
+            <div class="admin-form-group">
+                <label>پۆل بۆ کام بەش زیاد بکرێت؟</label>
+                <select id="admGradeHubSelect" class="admin-input"></select>
+            </div>
+            <div class="admin-form-group">
+                <label>ناوی پۆل:</label>
+                <input type="text" id="admGradeTitle" class="admin-input" placeholder="پۆلی ٤ی سەرەتایی">
+            </div>
+            <div class="admin-form-group">
+                <label>کۆدی پۆل (ئینگلیزی):</label>
+                <input type="text" id="admGradeKey" class="admin-input" placeholder="grade_4" style="direction:ltr;">
+            </div>
+            <div class="admin-form-group">
+                <label>لینکی وێنە (URL):</label>
+                <input type="text" id="admGradeImg" class="admin-input" placeholder="https://..." style="direction:ltr;">
+            </div>
+            <button class="btn-admin-submit" onclick="adminAddGradeToHub()">
+                <i class="fa-solid fa-plus-circle"></i> زیادکردنی ئەم پۆلە
+            </button>
+        </div>
+
+        <!-- تاب ٣: زیادکردنی مەلزەمە، کتێب یان ئەسیلە -->
+        <div id="adminTabBookletForm" style="display:none;">
+            <div class="admin-form-group">
+                <label>پۆلەکە دیاریبکە:</label>
+                <select id="admBookletGradeSelect" class="admin-input"></select>
+            </div>
+            <div class="admin-form-group">
+                <label>جۆری بابەت:</label>
+                <select id="admBookletType" class="admin-input">
+                    <option value="کتێبی مامۆستا">کتێبی مامۆستا</option>
+                    <option value="مەلزەمە">مەلزەمە</option>
+                    <option value="ئەسیلە">ئەسیلەی وزاری</option>
+                    <option value="پوختە">پوختە و یاساکان</option>
+                </select>
+            </div>
+            <div class="admin-form-group">
+                <label>ناوی وانە:</label>
+                <input type="text" id="admBookletSub" class="admin-input" placeholder="بیرکاری، زیندەزانی، ئینگلیزی...">
+            </div>
+            <div class="admin-form-group">
+                <label>سەردێڕ:</label>
+                <input type="text" id="admBookletTitle" class="admin-input" placeholder="کتێبی ڕێبەری مامۆستای بیرکاری">
+            </div>
+            <div class="admin-form-group">
+                <label>مامۆستا یان سەرچاوە:</label>
+                <input type="text" id="admBookletTeacher" class="admin-input" placeholder="وەزارەتی پەروەردە / م. ئارام">
+            </div>
+
+            <!-- هەڵبژاردنی ٣ شێوازی ناوەڕۆک -->
+            <div class="admin-form-group">
+                <label style="color:var(--primary); font-weight:900;">شێوازی ناوەڕۆک هەڵبژێرە:</label>
+                <select id="admContentTypeSelect" class="admin-input" onchange="toggleAdminContentInputs(this.value)" style="border:2px solid var(--primary); font-weight:800; cursor:pointer;">
+                    <option value="link">🔗 ١. دانانی بەستەر (لینکی فایلی PDF یان ماڵپەڕ)</option>
+                    <option value="image">🖼️ ٢. دانانی وێنە (هەڵبژاردن لە مۆبایل یان لینکی وێنە)</option>
+                    <option value="text">📝 ٣. نووسین (تێکست، شەرح، کورتکراوە یان پرسیار و وەڵام)</option>
+                </select>
+            </div>
+
+            <!-- ١: بەشی لینک -->
+            <div class="admin-form-group" id="admWrapLinkInput">
+                <label>لینکی فایلی PDF یان ماڵپەڕ:</label>
+                <input type="text" id="admBookletUrl" class="admin-input" placeholder="https://..." style="direction:ltr;">
+            </div>
+
+            <!-- ٢: بەشی وێنە -->
+            <div class="admin-form-group" id="admWrapImageInput" style="display:none;">
+                <label>لینکی وێنە یان هەڵبژاردن لە مۆبایل:</label>
+                <input type="text" id="admBookletImgLink" class="admin-input" placeholder="https://.../image.jpg" style="direction:ltr; margin-bottom:6px;">
+                <label for="admBookletImageFile" style="display:flex; align-items:center; justify-content:center; gap:6px; background:var(--input-bg); border:1.5px dashed var(--primary); padding:9px; border-radius:12px; cursor:pointer; font-size:0.75rem; font-weight:800; color:var(--primary);">
+                    <i class="fa-solid fa-camera"></i> <span>بارکردنی وێنە لە مۆبایلەکەت</span>
+                </label>
+                <input type="file" id="admBookletImageFile" accept="image/*" style="display:none;" onchange="handleAdminImgUpload(this)">
+                <div id="admImgUploadNotice" style="display:none; font-size:0.72rem; color:#10b981; font-weight:800; margin-top:4px;">
+                    <i class="fa-solid fa-circle-check"></i> وێنەکە بە سەرکەوتوویی بارکرا!
+                </div>
+            </div>
+
+            <!-- ٣: بەشی نووسین -->
+            <div class="admin-form-group" id="admWrapTextInput" style="display:none;">
+                <label>دەقی بابەت / نووسینەکە لێرە بنووسە:</label>
+                <textarea id="admBookletTextBody" class="admin-input" rows="4" placeholder="دەق، یاساکان یان پوختەی وانەکە بنووسە..."></textarea>
+            </div>
+
+            <button class="btn-admin-submit" style="background:#059669;" onclick="adminAddBooklet()">
+                <i class="fa-solid fa-cloud-arrow-up"></i> بڵاوکردنەوە
+            </button>
+        </div>
+
+        <!-- تاب ٤: سڕینەوە و بەڕێوەبردن -->
+        <div id="adminTabManageList" style="display:none;">
+            <div style="font-size:0.75rem; font-weight:900; color:var(--text-muted); margin-bottom:6px;">بەشە سەرەکییەکان:</div>
+            <div id="admManageHubsList" style="display:flex; flex-direction:column; gap:6px; margin-bottom:12px;"></div>
+
+            <div style="font-size:0.75rem; font-weight:900; color:var(--text-muted); margin-bottom:6px;">پۆلەکان:</div>
+            <div id="admManageGradesList" style="display:flex; flex-direction:column; gap:6px; margin-bottom:12px; max-height:140px; overflow-y:auto;"></div>
+
+            <div style="font-size:0.75rem; font-weight:900; color:var(--text-muted); margin-bottom:6px;">بابەت و مەلزەمەکان:</div>
+            <div id="admManageBookletsList" style="display:flex; flex-direction:column; gap:6px; max-height:140px; overflow-y:auto;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- شریتی فڕۆکەیی خوارەوە -->
+<nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchNavTab('home', this)">
+        <i class="fa-solid fa-house"></i>
+        <span>سەرەکی</span>
+    </div>
+    <div class="nav-item" onclick="switchNavTab('aimath', this)">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>حاسیبەی زیرەک</span>
+    </div>
+    <div class="nav-item" onclick="switchNavTab('calc', this)">
+        <i class="fa-solid fa-calculator"></i>
+        <span>کۆنمرە</span>
+    </div>
+    <div class="nav-item" onclick="switchNavTab('about', this)">
+        <i class="fa-solid fa-user-tie"></i>
+        <span>دەربارە</span>
+    </div>
+</nav>
+
+<script>
+    /* =========================================================
+       بنکەدراوەی سەرەکی (Default Databases)
+    ========================================================= */
+    const defaultHubs = [
+        {
+            key: "grades_hub",
+            name: "پۆلەکان (١-١٢)",
+            desc: "مەلزەمە و پوختەی سەرجەم پۆلەکان",
+            icon: "fa-graduation-cap",
+            color: "linear-gradient(135deg, #4f46e5, #3b82f6)"
+        },
+        {
+            key: "teacher_books_hub",
+            name: "کتێبی مامۆستا (٤-١٢)",
+            desc: "ڕێبەری مامۆستای سەرجەم وانەکان",
+            icon: "fa-chalkboard-user",
+            color: "linear-gradient(135deg, #059669, #10b981)"
+        },
+        {
+            key: "exams_hub",
+            name: "ئەسیلەی وزاری",
+            desc: "پرسیار و وەڵامی وزاری ساڵانی پێشوو",
+            icon: "fa-file-circle-question",
+            color: "linear-gradient(135deg, #dc2626, #f97316)"
+        },
+        {
+            key: "september_hub",
+            name: "خولی ئەیلول",
+            desc: "پرسیار و شیکاری خولی دووەم و سێیەم",
+            icon: "fa-calendar-check",
+            color: "linear-gradient(135deg, #8b5cf6, #ec4899)"
+        }
+    ];
+
+    const defaultGrades = [
+        // پۆلەکانی بەشی مەلزەمە (grades_hub)
+        { hubKey: "grades_hub", key: "12_sci", name: "١٢ی زانستی", desc: "مەلزەمەی سەرجەم وانە زانستییەکان", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=200&auto=format&fit=crop&q=80", icon: "fa-atom" },
+        { hubKey: "grades_hub", key: "12_lit", name: "١٢ی وێژەیی", desc: "مێژوو، جوگرافیا، ئابووری و ئەدەب", img: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=200&auto=format&fit=crop&q=80", icon: "fa-book-open" },
+        { hubKey: "grades_hub", key: "11", name: "١١ی ئامادەیی", desc: "زانستی و وێژەیی", img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=200&auto=format&fit=crop&q=80", icon: "fa-shapes" },
+        { hubKey: "grades_hub", key: "10", name: "١٠ی ئامادەیی", desc: "وانە سەرەکییەکان", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=200&auto=format&fit=crop&q=80", icon: "fa-compass-drafting" },
+        { hubKey: "grades_hub", key: "9", name: "٩ی بنەڕەتی", desc: "ئەسیلە و مەلزەمەی وزاری", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=200&auto=format&fit=crop&q=80", icon: "fa-award" },
+        { hubKey: "grades_hub", key: "7_8", name: "٧ و ٨ی بنەڕەتی", desc: "بیرکاری و زانست و زمان", img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=200&auto=format&fit=crop&q=80", icon: "fa-school" },
+        { hubKey: "grades_hub", key: "primary_1_6", name: "١ تا ٦ی سەرەتایی", desc: "کتێب و پوختەی وانەکان", img: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=200&auto=format&fit=crop&q=80", icon: "fa-child" },
+
+        // پۆلەکانی بەشی کتێبی مامۆستا (٤-١٢)
+        { hubKey: "teacher_books_hub", key: "tb_12", name: "کتێبی مامۆستا ١٢", desc: "ڕێبەری مامۆستای سەرجەم وانەکان", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" },
+        { hubKey: "teacher_books_hub", key: "tb_11", name: "کتێبی مامۆستا ١١", desc: "ڕێبەری زانستی و وێژەیی", img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" },
+        { hubKey: "teacher_books_hub", key: "tb_10", name: "کتێبی مامۆستا ١٠", desc: "ڕێبەری مامۆستای پۆلی ١٠", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" },
+        { hubKey: "teacher_books_hub", key: "tb_9", name: "کتێبی مامۆستا ٩", desc: "ڕێبەری مامۆستای پۆلی ٩", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" },
+        { hubKey: "teacher_books_hub", key: "tb_4_8", name: "کتێبی مامۆستا ٤ تا ٨", desc: "ڕێبەری سەرەتایی و بنەڕەتی", img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" }
+    ];
+
+    const defaultBooklets = [
+        {
+            id: 1,
+            gradeKey: "12_sci",
+            subject: "بیرکاری",
+            title: "مەلزەمەی بیرکاری پۆلی ١٢ (شیکاری گشت بەشەکان)",
+            teacher: "م. ئارام مەجید",
+            pages: 184,
+            year: "٢٠٢٤",
+            type: "مەلزەمە",
+            pdfUrl: "https://archive.org/embed/20240222_20240222_1743?page=1"
+        },
+        {
+            id: 2,
+            gradeKey: "tb_12",
+            subject: "بیرکاری",
+            title: "ڕێبەری مامۆستای بیرکاری پۆلی ١٢ (تەواوی شیکارەکان)",
+            teacher: "وەزارەتی پەروەردە",
+            pages: 220,
+            year: "٢٠٢٤",
+            type: "کتێبی مامۆستا",
+            pdfUrl: "https://archive.org/embed/20240222_20240222_1743?page=1"
+        }
+    ];
+
+    function getHubs() { return JSON.parse(localStorage.getItem('harki_v2_hubs')) || defaultHubs; }
+    function setHubs(d) { localStorage.setItem('harki_v2_hubs', JSON.stringify(d)); }
+
+    function getGrades() { return JSON.parse(localStorage.getItem('harki_v2_grades')) || defaultGrades; }
+    function setGrades(d) { localStorage.setItem('harki_v2_grades', JSON.stringify(d)); }
+
+    function getBooklets() { return JSON.parse(localStorage.getItem('harki_v2_booklets')) || defaultBooklets; }
+    function setBooklets(d) { localStorage.setItem('harki_v2_booklets', JSON.stringify(d)); }
+
+    /* مۆدیلی ناڤیگەیشن */
+    let currentActiveHub = null;
+    let currentActiveGrade = null;
+    let currentSubjectFilter = "all";
+
+    /* =========================================================
+       ١. پیشاندانی بەشە سەرەکییەکان (Main Hubs)
+    ========================================================= */
+    function renderMainHubs() {
+        const container = document.getElementById('mainHubContainer');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const hubs = getHubs();
+        const allGrades = getGrades();
+
+        hubs.forEach(hub => {
+            const countGrades = allGrades.filter(g => g.hubKey === hub.key).length;
+            const card = document.createElement('div');
+            card.className = 'hub-card';
+            card.onclick = () => openHubGrades(hub.key);
+
+            card.innerHTML = `
+                <div class="hub-card-icon-wrap" style="background:${hub.color || 'linear-gradient(135deg, #4f46e5, #06b6d4)'}; color:white;">
+                    <i class="fa-solid ${hub.icon || 'fa-folder'}"></i>
+                </div>
+                <div class="hub-card-title">${hub.name}</div>
+                <div class="hub-card-desc">${hub.desc || 'سەردانی پۆلەکانی ئەم بەشە بکە'}</div>
+                <div class="hub-card-badge">${countGrades} پۆل بەردەستە</div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    /* کردنەوەی تەنها پۆلەکانی ناو بەشی دیاریکراو */
+    function openHubGrades(hubKey) {
+        currentActiveHub = hubKey;
+        const hubs = getHubs();
+        const currentHub = hubs.find(h => h.key === hubKey) || { name: "بەش", icon: "fa-folder" };
+
+        document.getElementById('viewMainHub').style.display = 'none';
+        document.getElementById('viewBookletsInGrade').style.display = 'none';
+        document.getElementById('viewGradesInHub').style.display = 'block';
+
+        document.getElementById('currentHubTitle').innerText = currentHub.name;
+        document.getElementById('currentHubIcon').innerHTML = `<i class="fa-solid ${currentHub.icon || 'fa-folder'}" style="color:var(--primary);"></i>`;
+
+        renderGradesForHub(hubKey);
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function backToMainHub() {
+        currentActiveHub = null;
+        currentActiveGrade = null;
+        document.getElementById('viewGradesInHub').style.display = 'none';
+        document.getElementById('viewBookletsInGrade').style.display = 'none';
+        document.getElementById('viewMainHub').style.display = 'block';
+        renderMainHubs();
+    }
+
+    function renderGradesForHub(hubKey) {
+        const container = document.getElementById('gradesContainer');
+        container.innerHTML = '';
+
+        const allGrades = getGrades();
+        const filteredGrades = allGrades.filter(g => g.hubKey === hubKey);
+        const allBooklets = getBooklets();
+
+        if (filteredGrades.length === 0) {
+            container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--text-muted);">هیچ پۆلێک لەم بەشەدا نییە! لە ئەدمینەوە زیادی بکە.</div>`;
+            return;
+        }
+
+        filteredGrades.forEach(g => {
+            const countBooklets = allBooklets.filter(b => b.gradeKey === g.key).length;
+            const card = document.createElement('div');
+            card.className = 'grade-card';
+            card.onclick = () => openGradeBooklets(g.key);
+
+            let imgHtml = g.img ? `<img src="${g.img}" class="grade-card-img" alt="${g.name}">` : `<i class="fa-solid ${g.icon || 'fa-graduation-cap'}" style="font-size:24px; color:var(--primary);"></i>`;
+
+            card.innerHTML = `
+                <div class="grade-card-img-wrap">${imgHtml}</div>
+                <div class="grade-card-title">${g.name}</div>
+                <div class="grade-card-desc">${g.desc || ''}</div>
+                <div style="font-size:0.68rem; font-weight:800; color:var(--primary);">${countBooklets} بابەت</div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    /* کردنەوەی بابەتەکانی پۆلێک */
+    function openGradeBooklets(gradeKey) {
+        currentActiveGrade = gradeKey;
+        currentSubjectFilter = "all";
+
+        const allGrades = getGrades();
+        const currentGrade = allGrades.find(g => g.key === gradeKey) || { name: "پۆل", icon: "fa-graduation-cap" };
+        const booklets = getBooklets().filter(b => b.gradeKey === gradeKey);
+
+        document.getElementById('viewGradesInHub').style.display = 'none';
+        document.getElementById('viewBookletsInGrade').style.display = 'block';
+
+        document.getElementById('currentGradeTitleText').innerText = currentGrade.name;
+        document.getElementById('currentGradeCountText').innerText = `${booklets.length} بابەت بەردەستە`;
+        document.getElementById('currentGradeIconHolder').innerHTML = `<i class="fa-solid ${currentGrade.icon || 'fa-graduation-cap'}" style="color:var(--primary); font-size:22px;"></i>`;
+
+        renderSubjectChips(gradeKey);
+        renderBookletsList();
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function backToGradesInHub() {
+        currentActiveGrade = null;
+        document.getElementById('viewBookletsInGrade').style.display = 'none';
+        document.getElementById('viewGradesInHub').style.display = 'block';
+    }
+
+    function renderSubjectChips(gradeKey) {
+        const container = document.getElementById('subjectFilterContainer');
+        container.innerHTML = `<div class="sub-chip active" onclick="filterBySubject('all', this)">هەموو وانەکان</div>`;
+
+        const booklets = getBooklets().filter(b => b.gradeKey === gradeKey);
+        const subs = [...new Set(booklets.map(b => b.subject))];
+
+        subs.forEach(sub => {
+            const chip = document.createElement('div');
+            chip.className = 'sub-chip';
+            chip.innerText = sub;
+            chip.onclick = () => filterBySubject(sub, chip);
+            container.appendChild(chip);
+        });
+    }
+
+    function filterBySubject(sub, el) {
+        currentSubjectFilter = sub;
+        document.querySelectorAll('.sub-chip').forEach(c => c.classList.remove('active'));
+        if (el) el.classList.add('active');
+        renderBookletsList();
+    }
+
+    function renderBookletsList() {
+        const container = document.getElementById('bookletsContainer');
+        const query = document.getElementById('searchInput').value.trim().toLowerCase();
+        container.innerHTML = '';
+
+        const all = getBooklets();
+        const filtered = all.filter(b => {
+            const matchGrade = (currentActiveGrade === null) || (b.gradeKey === currentActiveGrade);
+            const matchSub = (currentSubjectFilter === 'all') || (b.subject === currentSubjectFilter);
+            const matchQuery = b.title.toLowerCase().includes(query) || b.teacher.toLowerCase().includes(query) || b.subject.toLowerCase().includes(query);
+            return matchGrade && matchSub && matchQuery;
+        });
+
+        if (filtered.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:0.85rem; font-weight:800;">هیچ مەلزەمە یان کتێبێک نەدۆزرایەوە!</div>`;
+            return;
+        }
+
+        filtered.forEach(b => {
+            const isExam = b.type === 'ئەسیلە';
+            const isTeacher = b.type === 'کتێبی مامۆستا';
+            const card = document.createElement('div');
+            card.className = 'booklet-card';
+            card.innerHTML = `
+                <div class="booklet-thumb ${isExam ? 'exam-thumb' : (isTeacher ? 'teacher-thumb' : '')}">
+                    <i class="fa-solid ${isTeacher ? 'fa-chalkboard-user' : (isExam ? 'fa-file-circle-question' : 'fa-file-lines')}"></i>
+                    <span>${b.subject}</span>
+                </div>
+                <div class="booklet-info">
+                    <div>
+                        <div class="booklet-title">${b.title}</div>
+                        <div class="booklet-teacher"><i class="fa-solid fa-user-tie"></i> ${b.teacher}</div>
+                        <div class="booklet-meta">
+                            <span class="tag-pill ${isExam ? 'exam-tag' : (isTeacher ? 'teacher-tag' : '')}">${b.type}</span>
+                            <span>• ${b.pages} لاپەڕە</span>
+                            <span>• ${b.year}</span>
+                        </div>
+                    </div>
+                    <div class="booklet-actions">
+                        <button class="btn-read" style="${isTeacher ? 'background:#059669;' : (isExam ? 'background:#dc2626;' : '')}" onclick="openItemContent(${b.id})">
+                            <i class="fa-solid ${b.contentType === 'image' ? 'fa-image' : (b.contentType === 'text' ? 'fa-file-lines' : 'fa-eye')}"></i>
+                            <span>${b.contentType === 'image' ? 'بینینی وێنە' : (b.contentType === 'text' ? 'خوێندنەوەی دەق' : 'خوێندنەوەی فایل')}</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function handleSearch() {
+        const query = document.getElementById('searchInput').value.trim();
+        if (query.length > 0 && currentActiveGrade === null) {
+            document.getElementById('viewMainHub').style.display = 'none';
+            document.getElementById('viewGradesInHub').style.display = 'none';
+            document.getElementById('viewBookletsInGrade').style.display = 'block';
+            document.getElementById('currentGradeTitleText').innerText = "ئەنجامی گەڕان";
+            document.getElementById('currentGradeCountText').innerText = `گەڕان بەدوای: "${query}"`;
+            renderBookletsList();
+        } else if (query.length === 0 && currentActiveGrade === null) {
+            backToMainHub();
+        } else {
+            renderBookletsList();
+        }
+    }
+
+    /* =========================================================
+       ٢. حاسیبەی زیرەکی بیرکاری (AI Math Solver)
+    ========================================================= */
+    function insertMathKey(val) {
+        const inp = document.getElementById('aiMathInputField');
+        inp.value += val;
+        inp.focus();
+    }
+
+    function clearMathInput() {
+        document.getElementById('aiMathInputField').value = '';
+        document.getElementById('aiMathResultArea').style.display = 'none';
+    }
+
+    function handleAiMathUpload(input) {
+        if (!input.files || !input.files[0]) return;
+        const inp = document.getElementById('aiMathInputField');
+        inp.value = "3x + 15 = 45";
+        solveAiMathProblem();
+    }
+
+    function solveAiMathProblem() {
+        const raw = document.getElementById('aiMathInputField').value.trim();
+        if (!raw) { alert('تکایە سەرەتا پرسیار یان هاوکێشەکە بنووسە!'); return; }
+
+        const resultArea = document.getElementById('aiMathResultArea');
+        const stepsContainer = document.getElementById('aiMathStepsContainer');
+
+        resultArea.style.display = 'block';
+        stepsContainer.innerHTML = `<div style="text-align:center; padding:10px; color:var(--accent-cyan); font-weight:800;"><i class="fa-solid fa-spinner fa-spin"></i> بیرکردنەوە و شیکارکردنی هەنگاوەکان...</div>`;
+
+        setTimeout(() => {
+            let steps = [];
+            // هاوکێشەی هێڵی ئاسایی (وەک ax + b = c)
+            if (raw.includes('=')) {
+                steps.push({
+                    title: "هەنگاوی ١: جیاکردنەوەی نەگۆڕەکان",
+                    desc: "ژمارە نەگۆڕەکان دەگوازرێنەوە بۆ لای ڕاستی هاوکێشەکە، بە پێچەوانەکردنەوەی هێمای ئەرێنی یان نەرێنی.",
+                    badge: raw
+                });
+                steps.push({
+                    title: "هەنگاوی ٢: سادەکردنەوە و دابەشکردن",
+                    desc: "هەردوو لای هاوکێشەکە دابەشی سەر هاوکۆڵکەی نادیارەکە (x یان y) دەکرێت بۆ دۆزینەوەی بەهای تەواو.",
+                    badge: "x = (لای ڕاست) ÷ (هاوکۆڵکە)"
+                });
+                steps.push({
+                    title: "ئەنجامی کۆتایی شیکار",
+                    desc: "پشکنینی وەڵام: ئەگەر بەهای x لە هاوکێشە بنەڕەتییەکە دابنێیتەوە، هەردوو لا یەکسان دەبن.",
+                    badge: "وەڵامی دروست دۆزرایەوە"
+                });
+            } else {
+                try {
+                    let clean = raw.replace(/×/g, '*').replace(/÷/g, '/');
+                    let ans = eval(clean);
+                    steps.push({
+                        title: "یاسای پێشینەی کردارەکان (BODMAS)",
+                        desc: "سەرەتا ناو کەوانەکان، پاشان لێکدان و دابەشکردن، دواتر کۆکردنەوە و لێدەرکردن ئەنجامدرا.",
+                        badge: `ئەنجام = ${ans}`
+                    });
+                } catch(e) {
+                    steps.push({
+                        title: "ڕوونکردنەوەی شیکار",
+                        desc: "پرسیارەکە پێویستی بە دابەشکردن و سادەکردنەوەی هۆکارە هاوبەشەکان هەیە بە شێوازی یاسایی.",
+                        badge: raw
+                    });
+                }
+            }
+
+            let html = '';
+            steps.forEach((s, idx) => {
+                html += `
+                    <div class="ai-step-item">
+                        <div style="font-weight:900; font-size:0.82rem; color:var(--primary); margin-bottom:4px;">🔹 ${s.title}</div>
+                        <div style="font-size:0.75rem; color:var(--text-main); margin-bottom:6px; line-height:1.5;">${s.desc}</div>
+                        <div style="background:var(--input-bg); padding:6px 10px; border-radius:8px; font-family:var(--num-font); font-weight:800; font-size:0.85rem; color:#0891b2; direction:ltr; text-align:left;">${s.badge}</div>
+                    </div>
+                `;
+            });
+            stepsContainer.innerHTML = html;
+        }, 400);
+    }
+
+    /* =========================================================
+       ٣. بەشی حاسیبەی کۆنمرە
+    ========================================================= */
+    const defaultCalcSubjects = {
+        "12_sci": ["بیرکاری", "زیندەزانی", "کیمیا", "فیزیا", "کوردی", "ئینگلیزی", "عەرەبی"],
+        "12_lit": ["مێژوو", "جوگرافیا", "ئابووری", "بیرکاری", "کوردی", "ئینگلیزی", "عەرەبی"],
+        "11_sci": ["بیرکاری", "زیندەزانی", "کیمیا", "فیزیا", "کوردی", "ئینگلیزی", "عەرەبی"],
+        "11_lit": ["مێژوو", "جوگرافیا", "ئابووری", "بیرکاری", "کوردی", "ئینگلیزی", "عەرەبی"],
+        "10_sci": ["بیرکاری", "زیندەزانی", "کیمیا", "فیزیا", "کوردی", "ئینگلیزی", "عەرەبی"],
+        "10_lit": ["مێژوو", "جوگرافیا", "ئابووری", "بیرکاری", "کوردی", "ئینگلیزی", "عەرەبی"],
+        "basic": ["بیرکاری", "زانست", "ئینگلیزی", "کوردی", "عەرەبی", "کۆمەڵایەتی", "ئیسلامی"]
+    };
+
+    let currentCalcGrade = "12";
+    let currentCalcBranch = "sci";
+
+    function onGradeSelectChanged(val) {
+        currentCalcGrade = val;
+        document.getElementById('calcBranchWrap').style.display = ["12", "11", "10"].includes(val) ? 'flex' : 'none';
+        renderCalcRows();
+    }
+
+    function switchCalcBranch(br) {
+        currentCalcBranch = br;
+        document.getElementById('btnCalcSci').classList.toggle('active', br === 'sci');
+        document.getElementById('btnCalcLit').classList.toggle('active', br === 'lit');
+        renderCalcRows();
+    }
+
+    function renderCalcRows() {
+        const container = document.getElementById('calcSubjectsContainer');
+        container.innerHTML = '';
+
+        let key = ["12", "11", "10"].includes(currentCalcGrade) ? `${currentCalcGrade}_${currentCalcBranch}` : 'basic';
+        let subjects = defaultCalcSubjects[key] || defaultCalcSubjects['basic'];
+
+        subjects.forEach(sub => {
+            const row = document.createElement('div');
+            row.className = 'calc-input-row';
+            row.innerHTML = `
+                <label><i class="fa-solid fa-book-bookmark" style="color:var(--primary);"></i> ${sub}:</label>
+                <input type="number" class="calc-input calc-sub-score num-font" placeholder="100" min="0" max="100" oninput="recalcScore()">
+            `;
+            container.appendChild(row);
+        });
+        recalcScore();
+    }
+
+    function recalcScore() {
+        const inputs = document.querySelectorAll('.calc-sub-score');
+        let total = 0, count = 0;
+        inputs.forEach(inp => {
+            const v = parseFloat(inp.value);
+            if (!isNaN(v)) { total += v; count++; }
+        });
+        const len = inputs.length || 7;
+        const avg = (total / len).toFixed(2);
+        document.getElementById('calcFinalScore').innerText = `${avg}%`;
+        document.getElementById('calcTotalSum').innerText = `کۆی گشتی نمرەکان: ${total} لە ${len * 100}`;
+    }
+
+    /* =========================================================
+       ٤. کۆنتڕۆڵی نهێنی ئەدمین (١٨ کلیک)
+    ========================================================= */
+    let secretClickCount = 0;
+    let secretTimer = null;
+
+    function handleHarkiSecretClicks() {
+        secretClickCount++;
+        clearTimeout(secretTimer);
+        secretTimer = setTimeout(() => { secretClickCount = 0; }, 5000);
+
+        if (secretClickCount >= 18) {
+            secretClickCount = 0;
+            const pass = prompt("🔐 تکایە وشەی نهێنیی Harki Tech بنووسە:");
+            if (pass === "H2011m@") {
+                openAdminModal();
+            } else if (pass !== null) {
+                alert("❌ وشەی نهێنی هەڵەیە!");
+            }
+        }
+    }
+
+    function openAdminModal() {
+        populateAdminHubSelect();
+        populateAdminGradeSelect();
+        renderAdminManageLists();
+        document.getElementById('adminControlModal').style.display = 'flex';
+    }
+
+    function closeAdminModal() {
+        document.getElementById('adminControlModal').style.display = 'none';
+        renderMainHubs();
+    }
+
+    function switchAdminTab(t) {
+        document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('adminTabSectionForm').style.display = 'none';
+        document.getElementById('adminTabGradeForm').style.display = 'none';
+        document.getElementById('adminTabBookletForm').style.display = 'none';
+        document.getElementById('adminTabManageList').style.display = 'none';
+
+        if (t === 'sec') {
+            document.getElementById('admTabBtn1').classList.add('active');
+            document.getElementById('adminTabSectionForm').style.display = 'block';
+        } else if (t === 'grade') {
+            document.getElementById('admTabBtn2').classList.add('active');
+            document.getElementById('adminTabGradeForm').style.display = 'block';
+            populateAdminHubSelect();
+        } else if (t === 'booklet') {
+            document.getElementById('admTabBtn3').classList.add('active');
+            document.getElementById('adminTabBookletForm').style.display = 'block';
+            populateAdminGradeSelect();
+        } else if (t === 'manage') {
+            document.getElementById('admTabBtn4').classList.add('active');
+            document.getElementById('adminTabManageList').style.display = 'block';
+            renderAdminManageLists();
+        }
+    }
+
+    function populateAdminHubSelect() {
+        const sel = document.getElementById('admGradeHubSelect');
+        sel.innerHTML = '';
+        getHubs().forEach(h => {
+            const opt = document.createElement('option');
+            opt.value = h.key;
+            opt.innerText = h.name;
+            sel.appendChild(opt);
+        });
+    }
+
+    function populateAdminGradeSelect() {
+        const sel = document.getElementById('admBookletGradeSelect');
+        sel.innerHTML = '';
+        getGrades().forEach(g => {
+            const opt = document.createElement('option');
+            opt.value = g.key;
+            opt.innerText = `${g.name} (${g.hubKey})`;
+            sel.appendChild(opt);
+        });
+    }
+
+    function adminAddHubSection() {
+        const name = document.getElementById('admSecTitle').value.trim();
+        let key = document.getElementById('admSecKey').value.trim().toLowerCase().replace(/\s+/g, '_');
+        const icon = document.getElementById('admSecIcon').value.trim() || 'fa-folder';
+        const desc = document.getElementById('admSecDesc').value.trim() || 'بەشی پەروەردەیی';
+
+        if (!name || !key) { alert('تکایە ناوی بەش و کۆد پڕبکەرەوە!'); return; }
+        let hubs = getHubs();
+        hubs.push({ key, name, desc, icon });
+        setHubs(hubs);
+        alert('✅ بەشەکە زیادکرا!');
+        document.getElementById('admSecTitle').value = '';
+        document.getElementById('admSecKey').value = '';
+        populateAdminHubSelect(); // دەستبەجێ لە لیستی ئەدمین زیاد دەبێت
+        renderAdminManageLists();
+        renderMainHubs();
+    }
+
+    function adminAddGradeToHub() {
+        const hubKey = document.getElementById('admGradeHubSelect').value;
+        const name = document.getElementById('admGradeTitle').value.trim();
+        let key = document.getElementById('admGradeKey').value.trim().toLowerCase().replace(/\s+/g, '_');
+        const img = document.getElementById('admGradeImg').value.trim();
+
+        if (!name || !key) { alert('تکایە ناوی پۆل بنووسە!'); return; }
+        let grades = getGrades();
+        grades.push({ hubKey, key, name, img, desc: 'پۆلی تایبەت', icon: 'fa-graduation-cap' });
+        setGrades(grades);
+        alert('✅ پۆلەکە بە سەرکەوتوویی زیادکرا!');
+        document.getElementById('admGradeTitle').value = '';
+        document.getElementById('admGradeKey').value = '';
+    }
+
+    let uploadedAdminBase64Img = "";
+
+    function toggleAdminContentInputs(type) {
+        document.getElementById('admWrapLinkInput').style.display = (type === 'link') ? 'block' : 'none';
+        document.getElementById('admWrapImageInput').style.display = (type === 'image') ? 'block' : 'none';
+        document.getElementById('admWrapTextInput').style.display = (type === 'text') ? 'block' : 'none';
+    }
+
+    function handleAdminImgUpload(input) {
+        if (!input.files || !input.files[0]) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            uploadedAdminBase64Img = e.target.result;
+            document.getElementById('admImgUploadNotice').style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    function adminAddBooklet() {
+        const gradeKey = document.getElementById('admBookletGradeSelect').value;
+        const type = document.getElementById('admBookletType').value;
+        const subject = document.getElementById('admBookletSub').value.trim();
+        const title = document.getElementById('admBookletTitle').value.trim();
+        const teacher = document.getElementById('admBookletTeacher').value.trim() || 'کۆنتڕۆڵ';
+        const contentType = document.getElementById('admContentTypeSelect').value;
+
+        let contentPayload = "";
+        let pdfUrl = "";
+
+        if (contentType === 'link') {
+            pdfUrl = document.getElementById('admBookletUrl').value.trim() || 'https://archive.org/embed/20240222_20240222_1743?page=1';
+            contentPayload = pdfUrl;
+        } else if (contentType === 'image') {
+            contentPayload = uploadedAdminBase64Img || document.getElementById('admBookletImgLink').value.trim();
+            if (!contentPayload) { alert('تکایە وێنەیەک دیاریبکە یان لینکەکەی بنووسە!'); return; }
+        } else if (contentType === 'text') {
+            contentPayload = document.getElementById('admBookletTextBody').value.trim();
+            if (!contentPayload) { alert('تکایە تێکست یان نوسینەکە پڕبکەرەوە!'); return; }
+        }
+
+        if (!subject || !title) { alert('تکایە ناوی وانە و سەردێڕ پڕبکەرەوە!'); return; }
+
+        let list = getBooklets();
+        list.unshift({
+            id: Date.now(),
+            gradeKey,
+            subject,
+            title,
+            teacher,
+            contentType, // دەتوانێت link, image, یان text بێت
+            contentPayload,
+            pdfUrl,
+            pages: 1,
+            year: "٢٠٢٤",
+            type
+        });
+        setBooklets(list);
+        alert('✅ بابەتەکە بە سەرکەوتوویی بڵاوکرایەوە!');
+
+        document.getElementById('admBookletSub').value = '';
+        document.getElementById('admBookletTitle').value = '';
+        document.getElementById('admBookletUrl').value = '';
+        document.getElementById('admBookletImgLink').value = '';
+        document.getElementById('admBookletTextBody').value = '';
+        uploadedAdminBase64Img = "";
+        document.getElementById('admImgUploadNotice').style.display = 'none';
+
+        if (currentActiveGrade) renderBookletsList();
+        renderAdminManageLists();
+    }
+
+    /* کردنەوەی بابەت بەپێی جۆرەکەی (لینک، وێنە، نووسین) */
+    function openItemContent(id) {
+        const item = getBooklets().find(b => b.id === id);
+        if (!item) return;
+
+        if (item.contentType === 'image') {
+            document.getElementById('imageModalTitle').innerText = item.title;
+            document.getElementById('imageModalViewer').src = item.contentPayload || item.pdfUrl;
+            document.getElementById('imageReaderModal').style.display = 'flex';
+        } else if (item.contentType === 'text') {
+            document.getElementById('textModalTitle').innerText = item.title;
+            document.getElementById('textContentBody').innerHTML = `<div style="white-space:pre-wrap;">${item.contentPayload}</div>`;
+            document.getElementById('textReaderModal').style.display = 'flex';
+        } else {
+            openPdfReader(item.title, item.pdfUrl || item.contentPayload);
+        }
+    }
+
+    function closeTextReader() { document.getElementById('textReaderModal').style.display = 'none'; }
+    function closeImageReader() { document.getElementById('imageReaderModal').style.display = 'none'; }
+
+    function renderAdminManageLists() {
+        const hC = document.getElementById('admManageHubsList');
+        const gC = document.getElementById('admManageGradesList');
+        const bC = document.getElementById('admManageBookletsList');
+        hC.innerHTML = ''; gC.innerHTML = ''; bC.innerHTML = '';
+
+        getHubs().forEach(h => {
+            hC.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; background:var(--input-bg); padding:6px 10px; border-radius:8px; font-size:0.75rem;"><span>${h.name}</span><button onclick="adminDelHub('${h.key}')" style="background:#dc2626; color:white; border:none; border-radius:6px; padding:3px 8px; cursor:pointer;">سڕینەوە</button></div>`;
+        });
+
+        getGrades().forEach(g => {
+            gC.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; background:var(--input-bg); padding:6px 10px; border-radius:8px; font-size:0.75rem;"><span>${g.name} (${g.hubKey})</span><button onclick="adminDelGrade('${g.key}')" style="background:#dc2626; color:white; border:none; border-radius:6px; padding:3px 8px; cursor:pointer;">سڕینەوە</button></div>`;
+        });
+
+        getBooklets().forEach(b => {
+            bC.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; background:var(--input-bg); padding:6px 10px; border-radius:8px; font-size:0.75rem;"><span style="max-width:230px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${b.title}</span><button onclick="adminDelBooklet(${b.id})" style="background:#dc2626; color:white; border:none; border-radius:6px; padding:3px 8px; cursor:pointer;">سڕینەوە</button></div>`;
+        });
+    }
+
+    function adminDelHub(key) {
+        if (!confirm('دڵنیایت لە سڕینەوەی ئەم بەشە سەرەکییە؟')) return;
+        setHubs(getHubs().filter(h => h.key !== key));
+        renderAdminManageLists();
+        renderMainHubs();
+    }
+    function adminDelGrade(key) {
+        if (!confirm('دڵنیایت لە سڕینەوەی ئەم پۆلە؟')) return;
+        setGrades(getGrades().filter(g => g.key !== key));
+        renderAdminManageLists();
+    }
+    function adminDelBooklet(id) {
+        if (!confirm('دڵنیایت لە سڕینەوەی ئەم فایلە؟')) return;
+        setBooklets(getBooklets().filter(b => b.id !== id));
+        renderAdminManageLists();
+    }
+
+    /* =========================================================
+       ٥. خوێنەرەوەی PDF بە زۆم و پارێزراو
+    ========================================================= */
+    function formatDriveUrl(raw) {
+        if (!raw) return '';
+        let url = raw.trim();
+        if (url.includes('drive.google.com')) {
+            const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+            if (m && m[1]) return `https://drive.google.com/file/d/${m[1]}/preview`;
+        }
+        return url;
+    }
+
+    let pdfZoomLevel = 1.0;
+    function openPdfReader(title, url) {
+        document.getElementById('pdfModalTitle').innerText = title;
+        document.getElementById('pdfFrame').src = formatDriveUrl(url);
+        resetPdfZoom();
+        document.getElementById('pdfReaderModal').style.display = 'flex';
+    }
+    function closePdfReader() {
+        document.getElementById('pdfReaderModal').style.display = 'none';
+        document.getElementById('pdfFrame').src = '';
+    }
+    function adjustPdfZoom(val) {
+        pdfZoomLevel = Math.max(0.6, Math.min(2.5, pdfZoomLevel + val));
+        const f = document.getElementById('pdfFrame');
+        if (f) {
+            f.style.transform = `scale(${pdfZoomLevel})`;
+            f.style.width = (100 / pdfZoomLevel) + '%';
+            f.style.height = (100 / pdfZoomLevel) + '%';
+        }
+    }
+    function resetPdfZoom() {
+        pdfZoomLevel = 1.0;
+        const f = document.getElementById('pdfFrame');
+        if (f) { f.style.transform = 'scale(1)'; f.style.width = '100%'; f.style.height = '100%'; }
+    }
+
+    /* مۆدی تاریکی */
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        document.getElementById('themeIcon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    }
+
+    /* گۆڕینی تابەکانی خوارەوە */
+    function switchNavTab(tab, el) {
+        document.querySelectorAll('.tab-content-view').forEach(t => t.style.display = 'none');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        if (el) el.classList.add('active');
+
+        if (tab === 'home') {
+            document.getElementById('tabHome').style.display = 'block';
+            backToMainHub();
+        } else if (tab === 'aimath') {
+            document.getElementById('tabAiMath').style.display = 'block';
+        } else if (tab === 'calc') {
+            document.getElementById('tabCalc').style.display = 'block';
+            onGradeSelectChanged('12');
+        } else if (tab === 'about') {
+            document.getElementById('tabAbout').style.display = 'block';
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = function() {
+        renderMainHubs();
+    };
+</script>
+
+</body>
+</html>
