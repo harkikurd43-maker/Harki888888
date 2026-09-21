@@ -761,6 +761,91 @@
             gap: 6px;
         }
 
+        /* دیزاینی سلایدەری ڕیکلام لە سەرەوە */
+        .ads-banner-wrapper {
+            width: 100%;
+            max-width: 600px;
+            margin: 10px auto 4px auto;
+            position: relative;
+            display: none;
+        }
+        .ads-slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            direction: ltr !important;
+            border-radius: 20px;
+        }
+        .ad-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 1rem;
+        }
+        .ad-nav-prev { left: 8px; }
+        .ad-nav-next { right: 8px; }
+        .ads-track {
+            display: flex;
+            width: 100%;
+            transition: transform 0.4s ease-in-out;
+        }
+        .ad-slide-item {
+            flex: 0 0 100%;
+            min-width: 100%;
+            height: 160px;
+            position: relative;
+            cursor: pointer;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #0f172a;
+        }
+        .ad-slide-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .ad-tag-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 10px;
+            background: rgba(15, 23, 42, 0.75);
+            color: #cbd5e1;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+        .ads-pagination-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .ad-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.35);
+            cursor: pointer;
+        }
+        .ad-dot.active {
+            width: 18px;
+            border-radius: 10px;
+            background: var(--accent-cyan);
+        }
+
         /* شریتی خوارەوە */
         .bottom-nav {
             position: fixed;
@@ -827,6 +912,17 @@
     <div class="search-box-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
         <input type="text" id="searchInput" class="search-input" placeholder="گەڕان بۆ مەلزەمە، کتێب، مامۆستا یان وانە..." oninput="handleSearch()">
+    </div>
+
+    <!-- بەشی سلایدەری ڕیکلام -->
+    <div class="ads-banner-wrapper" id="adsBannerWrapper">
+        <div class="ads-slider-container" id="adsSliderContainer">
+            <button class="ad-nav-btn ad-nav-prev" onclick="manualPrevAd(event)">❮</button>
+            <button class="ad-nav-btn ad-nav-next" onclick="manualNextAd(event)">❯</button>
+            <div class="ads-track" id="adsTrack"></div>
+            <div class="ad-tag-badge">ڕیکلام</div>
+        </div>
+        <div class="ads-pagination-dots" id="adsPaginationDots"></div>
     </div>
 </header>
 
@@ -1097,12 +1193,15 @@
             </button>
         </div>
 
-        <div class="admin-tabs-row" style="grid-template-columns: repeat(5, 1fr);">
-            <button class="admin-tab-btn active" id="admTabBtn1" onclick="switchAdminTab('sec')">١. بەشەکان</button>
-            <button class="admin-tab-btn" id="admTabBtn2" onclick="switchAdminTab('grade')">٢. پۆلەکان</button>
-            <button class="admin-tab-btn" id="admTabBtn3" onclick="switchAdminTab('booklet')">٣. بابەت</button>
-            <button class="admin-tab-btn" id="admTabBtn5" onclick="switchAdminTab('notif')">٤. ئاگاداری 🔔</button>
-            <button class="admin-tab-btn" id="admTabBtn4" onclick="switchAdminTab('manage')">٥. سڕینەوە</button>
+        <div class="admin-tabs-row" style="grid-template-columns: repeat(4, 1fr); gap:4px;">
+            <button class="admin-tab-btn active" id="admTabBtn3" onclick="switchAdminTab('booklet')">📚 دانانی بابەت</button>
+            <button class="admin-tab-btn" id="admTabBtnAds" onclick="switchAdminTab('ads')">📢 ڕیکلامەکان</button>
+            <button class="admin-tab-btn" id="admTabBtn5" onclick="switchAdminTab('notif')">🔔 ئاگاداری</button>
+            <button class="admin-tab-btn" id="admTabBtnTele" onclick="switchAdminTab('tele')">📊 چاودێری</button>
+            <button class="admin-tab-btn" id="admTabBtn1" onclick="switchAdminTab('sec')">بەشەکان</button>
+            <button class="admin-tab-btn" id="admTabBtn2" onclick="switchAdminTab('grade')">پۆلەکان</button>
+            <button class="admin-tab-btn" id="admTabBtn4" onclick="switchAdminTab('manage')">سڕینەوە</button>
+            <button class="admin-tab-btn" id="admTabBtnMaint" onclick="switchAdminTab('maint')">⚙️ کۆنتڕۆڵ</button>
         </div>
 
         <!-- تاب ١: زیادکردنی بەشە سەرەکییەکان -->
@@ -1236,6 +1335,62 @@
             <div id="adminNotifHistoryList" style="display:flex; flex-direction:column; gap:6px; max-height:160px; overflow-y:auto;"></div>
         </div>
 
+        <!-- تاب ڕیکلامەکان (وەک کۆدی یەکەم) -->
+        <div id="adminTabAdsForm" style="display:none;">
+            <div style="background:var(--input-bg); border:1.5px solid var(--accent-amber); border-radius:14px; padding:12px; margin-bottom:12px;">
+                <div style="font-weight:900; font-size:0.85rem; color:var(--accent-amber); margin-bottom:8px;">
+                    <i class="fa-solid fa-rectangle-ad"></i> دانانی ڕیکلامی نوێ (لە مۆبایل و فایل):
+                </div>
+                <label for="adminAdFileInput" style="display:flex; align-items:center; justify-content:center; gap:6px; background:var(--primary); color:#fff; padding:10px; border-radius:12px; font-size:0.78rem; font-weight:900; cursor:pointer; margin-bottom:8px;">
+                    <i class="fa-solid fa-images"></i> <span>هەڵبژاردنی وێنە لە مۆبایل / فایل</span>
+                </label>
+                <input type="file" id="adminAdFileInput" accept="image/*" style="display:none;" onchange="handleAdFileSelect(this)">
+                
+                <div id="adminAdFilePreviewWrap" style="display:none; text-align:center; margin-bottom:8px;">
+                    <img id="adminAdFilePreviewImg" src="" style="max-height:85px; border-radius:10px; border:2px solid #10b981; object-fit:cover;">
+                </div>
+
+                <input type="text" id="adminAdTargetUrl" class="admin-input" placeholder="لینکی کردنەوە لە کاتی کلیک (ئارەزوومەندانە)..." style="direction:ltr; margin-bottom:8px;">
+                
+                <button type="button" class="btn-admin-submit" style="background:#059669;" onclick="addAdFromAdmin()">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> <span>پاشەکەوتکردن و بڵاوکردنەوەی ڕیکلام</span>
+                </button>
+            </div>
+            <div style="font-size:0.75rem; font-weight:900; color:var(--text-muted); margin-bottom:6px;">لیستی ڕیکلامە چالاکەکان:</div>
+            <div id="adminAdsListContainer" style="display:flex; flex-direction:column; gap:6px;"></div>
+        </div>
+
+        <!-- تاب چاودێریی لایڤ و مۆبایلی قوتابیان -->
+        <div id="adminTabTelemetry" style="display:none;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px; text-align:center;">
+                <div style="background:rgba(16,185,129,0.1); border:1px solid #10b981; border-radius:12px; padding:8px;">
+                    <span style="font-size:0.68rem; color:var(--text-muted); display:block;">ئێستا لەسەر بەرنامەن</span>
+                    <span id="adminLiveOnlineCount" style="font-size:1.1rem; font-weight:900; color:#10b981;">١ چالاک</span>
+                </div>
+                <div style="background:rgba(6,182,212,0.1); border:1px solid #06b6d4; border-radius:12px; padding:8px;">
+                    <span style="font-size:0.68rem; color:var(--text-muted); display:block;">کۆی سەردانیکەران</span>
+                    <span id="adminTotalVisits" style="font-size:1.1rem; font-weight:900; color:#06b6d4;">١</span>
+                </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="font-size:0.75rem; font-weight:900; color:var(--text-muted);">زانیاری و مۆبایلی سەردانیکەران:</span>
+                <button onclick="clearAdminLogs()" style="background:#dc2626; color:#fff; border:none; border-radius:6px; padding:2px 8px; font-size:0.65rem; cursor:pointer;">سڕینەوە</button>
+            </div>
+            <div id="adminUserLogsList" style="max-height:220px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;"></div>
+        </div>
+
+        <!-- تاب کۆنتڕۆڵ (چاکسازی و هۆشداری) -->
+        <div id="adminTabMaint" style="display:none;">
+            <div style="background:rgba(239,68,68,0.08); border:1.5px solid #ef4444; border-radius:12px; padding:10px; margin-bottom:10px;">
+                <div style="font-size:0.8rem; font-weight:900; color:#ef4444; margin-bottom:6px;"><i class="fa-solid fa-triangle-exclamation"></i> دۆخی چاکسازیی بەرنامە:</div>
+                <input type="text" id="adminMaintenanceMsg" class="admin-input" placeholder="پەیامی چاکسازی..." value="بەرنامە بۆ ماوەیەکی کاتی لە چاکسازیدایە، بەم زووانە دەگەڕێینەوە." style="font-size:0.75rem; margin-bottom:6px;">
+                <div style="display:flex; gap:6px;">
+                    <button class="btn-admin-submit" style="flex:1; background:#dc2626; margin:0;" onclick="adminToggleMaintenance(true)"><i class="fa-solid fa-lock"></i> داخستن (چاکسازی)</button>
+                    <button class="btn-admin-submit" style="flex:1; background:#059669; margin:0;" onclick="adminToggleMaintenance(false)"><i class="fa-solid fa-lock-open"></i> کردنەوەی ئەپ</button>
+                </div>
+            </div>
+        </div>
+
         <!-- تاب ٤: سڕینەوە و بەڕێوەبردن -->
         <div id="adminTabManageList" style="display:none;">
             <div style="font-size:0.75rem; font-weight:900; color:var(--text-muted); margin-bottom:6px;">بەشە سەرەکییەکان:</div>
@@ -1290,13 +1445,6 @@
             color: "linear-gradient(135deg, #0284c7, #06b6d4)"
         },
         {
-            key: "student_books_hub",
-            name: "کتێبی قوتابی (١-١٢)",
-            desc: "سەرجەم کتێبەکانی خوێندنی پۆلی ١ تا ١٢",
-            icon: "fa-book-open",
-            color: "linear-gradient(135deg, #0284c7, #06b6d4)"
-        },
-        {
             key: "teacher_books_hub",
             name: "کتێبی مامۆستا (٤-١٢)",
             desc: "ڕێبەری مامۆستای سەرجەم وانەکان",
@@ -1334,21 +1482,6 @@
         { hubKey: "grades_hub", key: "3", num: "٣", name: "پۆلی ٣ی سەرەتایی", desc: "ڕاهێنان و وانە بنەڕەتییەکان", bg: "linear-gradient(135deg, #9333ea, #c084fc)" },
         { hubKey: "grades_hub", key: "2", num: "٢", name: "پۆلی ٢ی سەرەتایی", desc: "پیت و ژمارەکان و زانست", bg: "linear-gradient(135deg, #e11d48, #fb7185)" },
         { hubKey: "grades_hub", key: "1", num: "١", name: "پۆلی ١ی سەرەتایی", desc: "دەستپێکی فێربوونی پیتەکان", bg: "linear-gradient(135deg, #4f46e5, #818cf8)" },
-
-        // پۆلەکانی بەشی کتێبی قوتابی (student_books_hub)
-        { hubKey: "student_books_hub", key: "sb_12_sci", num: "١٢", name: "کتێبی ١٢ی زانستی", desc: "سەرجەم کتێبەکانی ١٢ی زانستی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_12_lit", num: "١٢", name: "کتێبی ١٢ی وێژەیی", desc: "سەرجەم کتێبەکانی ١٢ی وێژەیی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_11", num: "١١", name: "کتێبی پۆلی ١١", desc: "کتێبەکانی پۆلی ١١ی ئامادەیی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_10", num: "١٠", name: "کتێبی پۆلی ١٠", desc: "کتێبەکانی پۆلی ١٠ی ئامادەیی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_9", num: "٩", name: "کتێبی پۆلی ٩", desc: "کتێبەکانی پۆلی ٩ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_8", num: "٨", name: "کتێبی پۆلی ٨", desc: "کتێبەکانی پۆلی ٨ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_7", num: "٧", name: "کتێبی پۆلی ٧", desc: "کتێبەکانی پۆلی ٧ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_6", num: "٦", name: "کتێبی پۆلی ٦", desc: "کتێبەکانی پۆلی ٦ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_5", num: "٥", name: "کتێبی پۆلی ٥", desc: "کتێبەکانی پۆلی ٥ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_4", num: "٤", name: "کتێبی پۆلی ٤", desc: "کتێبەکانی پۆلی ٤ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_3", num: "٣", name: "کتێبی پۆلی ٣", desc: "کتێبەکانی پۆلی ٣ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_2", num: "٢", name: "کتێبی پۆلی ٢", desc: "کتێبەکانی پۆلی ٢ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_1", num: "١", name: "کتێبی پۆلی ١", desc: "کتێبەکانی پۆلی ١ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
 
         // پۆلەکانی بەشی کتێبی قوتابی (student_books_hub)
         { hubKey: "student_books_hub", key: "sb_12_sci", num: "١٢", name: "کتێبی ١٢ی زانستی", desc: "سەرجەم کتێبەکانی پۆلی ١٢ی زانستی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
@@ -1424,12 +1557,18 @@
     function setHubs(d) { localStorage.setItem('harki_v2_hubs', JSON.stringify(d)); }
 
     function getGrades() { 
-        let grades = JSON.parse(localStorage.getItem('harki_v2_grades'));
-        if (!grades || !grades.some(g => g.hubKey === 'student_books_hub')) {
-            grades = defaultGrades;
-            localStorage.setItem('harki_v2_grades', JSON.stringify(grades));
-        }
-        return grades;
+        let grades = JSON.parse(localStorage.getItem('harki_v2_grades')) || defaultGrades;
+        // فلتەرکردنی هەموو پۆلێکی دووبارە بەپێی کلیلەکەی
+        const unique = [];
+        const seen = new Set();
+        grades.forEach(g => {
+            if (!seen.has(g.key)) {
+                seen.add(g.key);
+                unique.push(g);
+            }
+        });
+        localStorage.setItem('harki_v2_grades', JSON.stringify(unique));
+        return unique;
     }
     function setGrades(d) { localStorage.setItem('harki_v2_grades', JSON.stringify(d)); }
 
@@ -1847,7 +1986,173 @@
         populateAdminHubSelect();
         populateAdminGradeSelect();
         renderAdminManageLists();
+        renderAdminAdsList();
+        renderAdminLogs();
         document.getElementById('adminControlModal').style.display = 'flex';
+    }
+
+    /* سیستەمی سلایدەری ڕیکلام لە مۆبایل و فایل */
+    let userAdsList = [];
+    let currentAdSlideIndex = 0;
+    let adAutoSlideTimer = null;
+    let preparedAdBase64 = "";
+
+    function getStoredAds() {
+        try { return JSON.parse(localStorage.getItem('harki_ads_list')) || []; }
+        catch(e) { return []; }
+    }
+    function setStoredAds(ads) {
+        userAdsList = ads;
+        localStorage.setItem('harki_ads_list', JSON.stringify(ads));
+        renderUserAdsSlider();
+        renderAdminAdsList();
+    }
+
+    function initAdsSlider() {
+        userAdsList = getStoredAds();
+        renderUserAdsSlider();
+        clearInterval(adAutoSlideTimer);
+        adAutoSlideTimer = setInterval(() => { nextAdSlide(); }, 10000);
+    }
+
+    function renderUserAdsSlider() {
+        const wrap = document.getElementById('adsBannerWrapper');
+        const track = document.getElementById('adsTrack');
+        const dots = document.getElementById('adsPaginationDots');
+        if (!wrap || !track) return;
+
+        if (userAdsList.length === 0) {
+            wrap.style.display = 'none';
+            return;
+        }
+        wrap.style.display = 'block';
+        track.innerHTML = '';
+        if (dots) dots.innerHTML = '';
+
+        userAdsList.forEach((ad, idx) => {
+            const slide = document.createElement('div');
+            slide.className = 'ad-slide-item';
+            slide.onclick = () => { if (ad.url) window.open(ad.url, '_blank'); };
+            slide.innerHTML = `<img src="${ad.img}"><div class="ad-tag-badge">ڕیکلام</div>`;
+            track.appendChild(slide);
+
+            if (dots && userAdsList.length > 1) {
+                const dot = document.createElement('div');
+                dot.className = `ad-dot ${idx === 0 ? 'active' : ''}`;
+                dot.onclick = () => goToAdSlide(idx);
+                dots.appendChild(dot);
+            }
+        });
+        updateAdSlidePosition();
+    }
+
+    function updateAdSlidePosition() {
+        const track = document.getElementById('adsTrack');
+        if (track) track.style.transform = `translateX(-${currentAdSlideIndex * 100}%)`;
+        document.querySelectorAll('.ad-dot').forEach((d, i) => d.classList.toggle('active', i === currentAdSlideIndex));
+    }
+
+    function nextAdSlide() {
+        if (userAdsList.length <= 1) return;
+        currentAdSlideIndex = (currentAdSlideIndex + 1) % userAdsList.length;
+        updateAdSlidePosition();
+    }
+    function prevAdSlide() {
+        if (userAdsList.length <= 1) return;
+        currentAdSlideIndex = (currentAdSlideIndex - 1 + userAdsList.length) % userAdsList.length;
+        updateAdSlidePosition();
+    }
+    function manualNextAd(e) { if (e) e.stopPropagation(); nextAdSlide(); }
+    function manualPrevAd(e) { if (e) e.stopPropagation(); prevAdSlide(); }
+    function goToAdSlide(idx) { currentAdSlideIndex = idx; updateAdSlidePosition(); }
+
+    function handleAdFileSelect(input) {
+        if (!input.files || !input.files[0]) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preparedAdBase64 = e.target.result;
+            const prev = document.getElementById('adminAdFilePreviewImg');
+            const wrap = document.getElementById('adminAdFilePreviewWrap');
+            if (prev && wrap) { prev.src = preparedAdBase64; wrap.style.display = 'block'; }
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    function addAdFromAdmin() {
+        if (!preparedAdBase64) { alert('تکایە سەرەتا وێنەیەک لە مۆبایلەکەت دیاریبکە!'); return; }
+        const url = document.getElementById('adminAdTargetUrl')?.value.trim() || '';
+        let ads = getStoredAds();
+        ads.push({ id: Date.now(), img: preparedAdBase64, url: url });
+        setStoredAds(ads);
+        alert('✅ وێنەی ڕیکلام بە سەرکەوتوویی پاشەکەوتکرا!');
+        preparedAdBase64 = "";
+        document.getElementById('adminAdFileInput').value = '';
+        document.getElementById('adminAdTargetUrl').value = '';
+        document.getElementById('adminAdFilePreviewWrap').style.display = 'none';
+    }
+
+    function renderAdminAdsList() {
+        const c = document.getElementById('adminAdsListContainer');
+        if (!c) return;
+        c.innerHTML = '';
+        const ads = getStoredAds();
+        if (ads.length === 0) { c.innerHTML = '<div style="text-align:center; font-size:0.72rem; color:var(--text-muted);">هیچ ڕیکلامێک دانەنراوە.</div>'; return; }
+        ads.forEach((ad, i) => {
+            const item = document.createElement('div');
+            item.style = "background:var(--input-bg); border:1px solid var(--card-border); border-radius:8px; padding:6px; display:flex; justify-content:space-between; align-items:center;";
+            item.innerHTML = `
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <img src="${ad.img}" style="width:40px; height:30px; object-fit:cover; border-radius:6px;">
+                    <span style="font-size:0.72rem; font-weight:800;">ڕیکلام #${i+1}</span>
+                </div>
+                <button onclick="deleteAdFromAdmin(${i})" style="background:#dc2626; color:#fff; border:none; border-radius:6px; padding:3px 8px; font-size:0.65rem; cursor:pointer;">سڕینەوە</button>
+            `;
+            c.appendChild(item);
+        });
+    }
+
+    function deleteAdFromAdmin(idx) {
+        let ads = getStoredAds();
+        ads.splice(idx, 1);
+        setStoredAds(ads);
+    }
+
+    /* سیستەمی چاودێری مۆبایل و سەردانیکەران */
+    async function trackVisitor() {
+        try {
+            const dev = navigator.userAgent.includes('iPhone') ? 'Apple iPhone 🍏' : (navigator.userAgent.includes('Android') ? 'Android Phone 📱' : 'Computer 💻');
+            const now = new Date();
+            const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+            let logs = JSON.parse(localStorage.getItem('harki_visitor_logs')) || [];
+            logs.unshift({ id: Date.now(), dev: dev, time: timeStr, screen: `${window.screen.width}×${window.screen.height}` });
+            if (logs.length > 40) logs = logs.slice(0, 40);
+            localStorage.setItem('harki_visitor_logs', JSON.stringify(logs));
+        } catch(e) {}
+    }
+
+    function renderAdminLogs() {
+        const list = document.getElementById('adminUserLogsList');
+        if (!list) return;
+        list.innerHTML = '';
+        const logs = JSON.parse(localStorage.getItem('harki_visitor_logs')) || [];
+        document.getElementById('adminTotalVisits').innerText = logs.length;
+        if (logs.length === 0) { list.innerHTML = '<div style="text-align:center; font-size:0.72rem; color:var(--text-muted);">هیچ تۆمارێک نییە.</div>'; return; }
+        logs.forEach(l => {
+            const row = document.createElement('div');
+            row.style = "background:var(--input-bg); border:1px solid var(--card-border); border-radius:8px; padding:6px 8px; display:flex; justify-content:space-between; font-size:0.72rem;";
+            row.innerHTML = `<span>📱 ${l.dev} (${l.screen})</span><span style="color:var(--text-muted); font-family:var(--num-font);">${l.time}</span>`;
+            list.appendChild(row);
+        });
+    }
+
+    function clearAdminLogs() {
+        localStorage.removeItem('harki_visitor_logs');
+        renderAdminLogs();
+    }
+
+    function adminToggleMaintenance(enabled) {
+        localStorage.setItem('harki_maint_mode', enabled ? 'true' : 'false');
+        alert(enabled ? 'دۆخی چاکسازی چالاک کرا!' : 'بەرنامە کرایەوە!');
     }
 
     function closeAdminModal() {
@@ -1863,7 +2168,22 @@
         document.getElementById('adminTabNotifForm').style.display = 'none';
         document.getElementById('adminTabManageList').style.display = 'none';
 
-        if (t === 'sec') {
+        document.getElementById('adminTabAdsForm').style.display = 'none';
+        document.getElementById('adminTabTelemetry').style.display = 'none';
+        document.getElementById('adminTabMaint').style.display = 'none';
+
+        if (t === 'ads') {
+            document.getElementById('admTabBtnAds').classList.add('active');
+            document.getElementById('adminTabAdsForm').style.display = 'block';
+            renderAdminAdsList();
+        } else if (t === 'tele') {
+            document.getElementById('admTabBtnTele').classList.add('active');
+            document.getElementById('adminTabTelemetry').style.display = 'block';
+            renderAdminLogs();
+        } else if (t === 'maint') {
+            document.getElementById('admTabBtnMaint').classList.add('active');
+            document.getElementById('adminTabMaint').style.display = 'block';
+        } else if (t === 'sec') {
             document.getElementById('admTabBtn1').classList.add('active');
             document.getElementById('adminTabSectionForm').style.display = 'block';
         } else if (t === 'grade') {
@@ -2352,6 +2672,8 @@
 
     window.onload = function() {
         renderMainHubs();
+        initAdsSlider();
+        trackVisitor();
         updateStudentBellBadge();
         listenForStudentLiveNotifs();
     };
