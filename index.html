@@ -808,9 +808,15 @@
                 </p>
             </div>
         </div>
-        <button class="theme-toggle-btn" onclick="toggleDarkMode()" title="تاریکی / ڕۆشنایی">
-            <i class="fa-solid fa-moon" id="themeIcon"></i>
-        </button>
+        <div style="display:flex; align-items:center; gap:8px;">
+            <button class="theme-toggle-btn" onclick="openStudentNotificationsModal()" title="ئاگادارییەکان" style="position:relative;">
+                <i class="fa-solid fa-bell"></i>
+                <span id="studentBellBadge" style="display:none; position:absolute; top:-4px; left:-4px; background:#ef4444; color:#fff; font-size:0.62rem; font-weight:900; min-width:18px; height:18px; border-radius:50%; align-items:center; justify-content:center; border:2px solid #1e1b4b; font-family:var(--num-font);">0</span>
+            </button>
+            <button class="theme-toggle-btn" onclick="toggleDarkMode()" title="تاریکی / ڕۆشنایی">
+                <i class="fa-solid fa-moon" id="themeIcon"></i>
+            </button>
+        </div>
     </div>
 
     <!-- گەڕان -->
@@ -1028,6 +1034,22 @@
     </div>
 </div>
 
+<!-- پەنجەرەی ئاگادارییەکان بۆ خوێندکاران (بێ دەرکەوتنی هیچ لینکێک) -->
+<div class="pdf-modal-overlay" id="studentNotificationsModal" style="display:none; align-items:center; justify-content:center; padding:16px;">
+    <div style="background:var(--card-bg); border:2px solid var(--primary); border-radius:24px; padding:18px; max-width:440px; width:100%; color:var(--text-main); box-shadow:0 15px 35px rgba(0,0,0,0.6);">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid var(--card-border); padding-bottom:8px; margin-bottom:12px;">
+            <div style="font-weight:900; font-size:0.95rem; color:var(--primary); display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-bell"></i> <span>ئاگاداری و پەیامە گرنگەکان</span>
+            </div>
+            <button onclick="closeStudentNotificationsModal()" style="border:none; background:none; color:var(--text-muted); font-size:18px; cursor:pointer;">✕</button>
+        </div>
+        <div id="studentNotifsListContainer" style="max-height:360px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
+        <button onclick="closeStudentNotificationsModal()" style="width:100%; padding:10px; background:var(--primary); color:#fff; border:none; border-radius:12px; font-weight:900; margin-top:12px; cursor:pointer;">
+            داخستن
+        </button>
+    </div>
+</div>
+
 <!-- پەنجەرەی خوێندنەوەی نوسین و دەق -->
 <div class="pdf-modal-overlay" id="textReaderModal" style="display:none;">
     <div class="pdf-modal-header">
@@ -1071,11 +1093,12 @@
             </button>
         </div>
 
-        <div class="admin-tabs-row">
+        <div class="admin-tabs-row" style="grid-template-columns: repeat(5, 1fr);">
             <button class="admin-tab-btn active" id="admTabBtn1" onclick="switchAdminTab('sec')">١. بەشەکان</button>
             <button class="admin-tab-btn" id="admTabBtn2" onclick="switchAdminTab('grade')">٢. پۆلەکان</button>
-            <button class="admin-tab-btn" id="admTabBtn3" onclick="switchAdminTab('booklet')">٣. مەلزەمە/کتێب</button>
-            <button class="admin-tab-btn" id="admTabBtn4" onclick="switchAdminTab('manage')">٤. سڕینەوە</button>
+            <button class="admin-tab-btn" id="admTabBtn3" onclick="switchAdminTab('booklet')">٣. بابەت</button>
+            <button class="admin-tab-btn" id="admTabBtn5" onclick="switchAdminTab('notif')">٤. ئاگاداری 🔔</button>
+            <button class="admin-tab-btn" id="admTabBtn4" onclick="switchAdminTab('manage')">٥. سڕینەوە</button>
         </div>
 
         <!-- تاب ١: زیادکردنی بەشە سەرەکییەکان -->
@@ -1192,6 +1215,22 @@
             </button>
         </div>
 
+        <!-- تاب ٥: ناردن و کۆنتڕۆڵی ئاگاداری بۆ خوێندکاران -->
+        <div id="adminTabNotifForm" style="display:none;">
+            <div style="background:var(--primary-light); border:1.5px solid var(--primary); border-radius:14px; padding:12px; margin-bottom:12px; text-align:right;">
+                <div style="font-size:0.85rem; font-weight:900; color:var(--primary); margin-bottom:8px;">
+                    <i class="fa-solid fa-bullhorn"></i> ناردنی ئاگاداری بۆ هەموو خوێندکاران:
+                </div>
+                <input type="text" id="adminNotifTitleInput" placeholder="سەردێڕ: خشتەی تاقیکردنەوەکان، پشوو..." class="admin-input" style="margin-bottom:6px; text-align:right;">
+                <textarea id="adminNotifBodyInput" placeholder="دەقی ئاگادارییەکە لێرە بنووسە..." class="admin-input" style="height:65px; margin-bottom:8px; resize:none; text-align:right;"></textarea>
+                <button class="btn-admin-submit" style="background:#059669;" onclick="sendStudentNotification()">
+                    <i class="fa-solid fa-paper-plane"></i> <span>بڵاوکردنەوە بۆ سەرجەم خوێندکاران</span>
+                </button>
+            </div>
+            <div style="font-size:0.75rem; font-weight:900; color:var(--text-muted); margin-bottom:6px;">مێژووی ئاگادارییە نێردراوەکان:</div>
+            <div id="adminNotifHistoryList" style="display:flex; flex-direction:column; gap:6px; max-height:160px; overflow-y:auto;"></div>
+        </div>
+
         <!-- تاب ٤: سڕینەوە و بەڕێوەبردن -->
         <div id="adminTabManageList" style="display:none;">
             <div style="font-size:0.75rem; font-weight:900; color:var(--text-muted); margin-bottom:6px;">بەشە سەرەکییەکان:</div>
@@ -1262,21 +1301,31 @@
     ];
 
     const defaultGrades = [
-        // پۆلەکانی بەشی مەلزەمە (grades_hub)
-        { hubKey: "grades_hub", key: "12_sci", name: "١٢ی زانستی", desc: "مەلزەمەی سەرجەم وانە زانستییەکان", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=200&auto=format&fit=crop&q=80", icon: "fa-atom" },
-        { hubKey: "grades_hub", key: "12_lit", name: "١٢ی وێژەیی", desc: "مێژوو، جوگرافیا، ئابووری و ئەدەب", img: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=200&auto=format&fit=crop&q=80", icon: "fa-book-open" },
-        { hubKey: "grades_hub", key: "11", name: "١١ی ئامادەیی", desc: "زانستی و وێژەیی", img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=200&auto=format&fit=crop&q=80", icon: "fa-shapes" },
-        { hubKey: "grades_hub", key: "10", name: "١٠ی ئامادەیی", desc: "وانە سەرەکییەکان", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=200&auto=format&fit=crop&q=80", icon: "fa-compass-drafting" },
-        { hubKey: "grades_hub", key: "9", name: "٩ی بنەڕەتی", desc: "ئەسیلە و مەلزەمەی وزاری", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=200&auto=format&fit=crop&q=80", icon: "fa-award" },
-        { hubKey: "grades_hub", key: "7_8", name: "٧ و ٨ی بنەڕەتی", desc: "بیرکاری و زانست و زمان", img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=200&auto=format&fit=crop&q=80", icon: "fa-school" },
-        { hubKey: "grades_hub", key: "primary_1_6", name: "١ تا ٦ی سەرەتایی", desc: "کتێب و پوختەی وانەکان", img: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=200&auto=format&fit=crop&q=80", icon: "fa-child" },
+        // پۆلەکانی ١ تا ١٢ بۆ بەشی مەلزەمەکان (grades_hub)
+        { hubKey: "grades_hub", key: "12_sci", num: "١٢", name: "١٢ی زانستی", desc: "مەلزەمەی سەرجەم وانە زانستییەکان", bg: "linear-gradient(135deg, #4f46e5, #06b6d4)" },
+        { hubKey: "grades_hub", key: "12_lit", num: "١٢", name: "١٢ی وێژەیی", desc: "مێژوو، جوگرافیا، ئابووری، کوردی", bg: "linear-gradient(135deg, #7c3aed, #ec4899)" },
+        { hubKey: "grades_hub", key: "11", num: "١١", name: "پۆلی ١١ی ئامادەیی", desc: "زانستی و وێژەیی", bg: "linear-gradient(135deg, #0284c7, #38bdf8)" },
+        { hubKey: "grades_hub", key: "10", num: "١٠", name: "پۆلی ١٠ی ئامادەیی", desc: "مەلزەمەی وانە سەرەکییەکان", bg: "linear-gradient(135deg, #059669, #10b981)" },
+        { hubKey: "grades_hub", key: "9", num: "٩", name: "پۆلی ٩ی بنەڕەتی", desc: "ئەسیلە و مەلزەمەی وزاری", bg: "linear-gradient(135deg, #ea580c, #f59e0b)" },
+        { hubKey: "grades_hub", key: "8", num: "٨", name: "پۆلی ٨ی بنەڕەتی", desc: "بیرکاری، زانست، زمانەکان", bg: "linear-gradient(135deg, #dc2626, #ef4444)" },
+        { hubKey: "grades_hub", key: "7", num: "٧", name: "پۆلی ٧ی بنەڕەتی", desc: "مەلزەمە و کورتکراوەی وانەکان", bg: "linear-gradient(135deg, #d97706, #fbbf24)" },
+        { hubKey: "grades_hub", key: "6", num: "٦", name: "پۆلی ٦ی بنەڕەتی", desc: "وانە سەرەکییەکان و پوختە", bg: "linear-gradient(135deg, #0891b2, #22d3ee)" },
+        { hubKey: "grades_hub", key: "5", num: "٥", name: "پۆلی ٥ی سەرەتایی", desc: "کتێب و مەلزەمەی وانەکان", bg: "linear-gradient(135deg, #16a34a, #4ade80)" },
+        { hubKey: "grades_hub", key: "4", num: "٤", name: "پۆلی ٤ی سەرەتایی", desc: "ڕێبەری فێربوون و مەلزەمە", bg: "linear-gradient(135deg, #2563eb, #60a5fa)" },
+        { hubKey: "grades_hub", key: "3", num: "٣", name: "پۆلی ٣ی سەرەتایی", desc: "ڕاهێنان و وانە بنەڕەتییەکان", bg: "linear-gradient(135deg, #9333ea, #c084fc)" },
+        { hubKey: "grades_hub", key: "2", num: "٢", name: "پۆلی ٢ی سەرەتایی", desc: "پیت و ژمارەکان و زانست", bg: "linear-gradient(135deg, #e11d48, #fb7185)" },
+        { hubKey: "grades_hub", key: "1", num: "١", name: "پۆلی ١ی سەرەتایی", desc: "دەستپێکی فێربوونی پیتەکان", bg: "linear-gradient(135deg, #4f46e5, #818cf8)" },
 
-        // پۆلەکانی بەشی کتێبی مامۆستا (٤-١٢)
-        { hubKey: "teacher_books_hub", key: "tb_12", name: "کتێبی مامۆستا ١٢", desc: "ڕێبەری مامۆستای سەرجەم وانەکان", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" },
-        { hubKey: "teacher_books_hub", key: "tb_11", name: "کتێبی مامۆستا ١١", desc: "ڕێبەری زانستی و وێژەیی", img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" },
-        { hubKey: "teacher_books_hub", key: "tb_10", name: "کتێبی مامۆستا ١٠", desc: "ڕێبەری مامۆستای پۆلی ١٠", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" },
-        { hubKey: "teacher_books_hub", key: "tb_9", name: "کتێبی مامۆستا ٩", desc: "ڕێبەری مامۆستای پۆلی ٩", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" },
-        { hubKey: "teacher_books_hub", key: "tb_4_8", name: "کتێبی مامۆستا ٤ تا ٨", desc: "ڕێبەری سەرەتایی و بنەڕەتی", img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" }
+        // پۆلەکانی بەشی کتێبی مامۆستا (teacher_books_hub)
+        { hubKey: "teacher_books_hub", key: "tb_12", num: "١٢", name: "کتێبی مامۆستا ١٢", desc: "ڕێبەری مامۆستای سەرجەم وانەکان", bg: "linear-gradient(135deg, #059669, #10b981)" },
+        { hubKey: "teacher_books_hub", key: "tb_11", num: "١١", name: "کتێبی مامۆستا ١١", desc: "ڕێبەری زانستی و وێژەیی", bg: "linear-gradient(135deg, #059669, #10b981)" },
+        { hubKey: "teacher_books_hub", key: "tb_10", num: "١٠", name: "کتێبی مامۆستا ١٠", desc: "ڕێبەری مامۆستای پۆلی ١٠", bg: "linear-gradient(135deg, #059669, #10b981)" },
+        { hubKey: "teacher_books_hub", key: "tb_9", num: "٩", name: "کتێبی مامۆستا ٩", desc: "ڕێبەری مامۆستای پۆلی ٩", bg: "linear-gradient(135deg, #059669, #10b981)" },
+        { hubKey: "teacher_books_hub", key: "tb_8", num: "٨", name: "کتێبی مامۆستا ٨", desc: "ڕێبەری وانەکانی پۆلی ٨", bg: "linear-gradient(135deg, #059669, #10b981)" },
+        { hubKey: "teacher_books_hub", key: "tb_7", num: "٧", name: "کتێبی مامۆستا ٧", desc: "ڕێبەری وانەکانی پۆلی ٧", bg: "linear-gradient(135deg, #059669, #10b981)" },
+        { hubKey: "teacher_books_hub", key: "tb_6", num: "٦", name: "کتێبی مامۆستا ٦", desc: "ڕێبەری وانەکانی پۆلی ٦", bg: "linear-gradient(135deg, #059669, #10b981)" },
+        { hubKey: "teacher_books_hub", key: "tb_5", num: "٥", name: "کتێبی مامۆستا ٥", desc: "ڕێبەری وانەکانی پۆلی ٥", bg: "linear-gradient(135deg, #059669, #10b981)" },
+        { hubKey: "teacher_books_hub", key: "tb_4", num: "٤", name: "کتێبی مامۆستا ٤", desc: "ڕێبەری وانەکانی پۆلی ٤", bg: "linear-gradient(135deg, #059669, #10b981)" }
     ];
 
     const defaultBooklets = [
@@ -1392,10 +1441,14 @@
             card.className = 'grade-card';
             card.onclick = () => openGradeBooklets(g.key);
 
-            let imgHtml = g.img ? `<img src="${g.img}" class="grade-card-img" alt="${g.name}">` : `<i class="fa-solid ${g.icon || 'fa-graduation-cap'}" style="font-size:24px; color:var(--primary);"></i>`;
+            // ئایکۆنی ژمارەی شازی کوردی بە شێوازی مۆدێرن و ڕەنگاوڕەنگ
+            const numBadge = g.num || g.name.match(/[٠-٩0-9]+/)?.[0] || '📚';
+            const bgGrad = g.bg || 'linear-gradient(135deg, #4f46e5, #06b6d4)';
 
             card.innerHTML = `
-                <div class="grade-card-img-wrap">${imgHtml}</div>
+                <div class="grade-card-img-wrap" style="background:${bgGrad}; color:#ffffff; font-size:1.75rem; font-weight:900; box-shadow:0 6px 16px rgba(0,0,0,0.18); border:none;">
+                    <span>${numBadge}</span>
+                </div>
                 <div class="grade-card-title">${g.name}</div>
                 <div class="grade-card-desc">${g.desc || ''}</div>
                 <div style="font-size:0.68rem; font-weight:800; color:var(--primary);">${countBooklets} بابەت</div>
@@ -1416,9 +1469,16 @@
         document.getElementById('viewGradesInHub').style.display = 'none';
         document.getElementById('viewBookletsInGrade').style.display = 'block';
 
+        const gradeBadgeNum = currentGrade.num || currentGrade.name.match(/[٠-٩0-9]+/)?.[0] || '📖';
+        const gradeBg = currentGrade.bg || 'linear-gradient(135deg, #4f46e5, #06b6d4)';
+
         document.getElementById('currentGradeTitleText').innerText = currentGrade.name;
         document.getElementById('currentGradeCountText').innerText = `${booklets.length} بابەت بەردەستە`;
-        document.getElementById('currentGradeIconHolder').innerHTML = `<i class="fa-solid ${currentGrade.icon || 'fa-graduation-cap'}" style="color:var(--primary); font-size:22px;"></i>`;
+        document.getElementById('currentGradeIconHolder').innerHTML = `
+            <div style="width:36px; height:36px; border-radius:12px; background:${gradeBg}; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.1rem; box-shadow:0 4px 10px rgba(0,0,0,0.2);">
+                ${gradeBadgeNum}
+            </div>
+        `;
 
         renderSubjectChips(gradeKey);
         renderBookletsList();
@@ -1702,6 +1762,7 @@
         document.getElementById('adminTabSectionForm').style.display = 'none';
         document.getElementById('adminTabGradeForm').style.display = 'none';
         document.getElementById('adminTabBookletForm').style.display = 'none';
+        document.getElementById('adminTabNotifForm').style.display = 'none';
         document.getElementById('adminTabManageList').style.display = 'none';
 
         if (t === 'sec') {
@@ -1715,10 +1776,230 @@
             document.getElementById('admTabBtn3').classList.add('active');
             document.getElementById('adminTabBookletForm').style.display = 'block';
             populateAdminGradeSelect();
+        } else if (t === 'notif') {
+            document.getElementById('admTabBtn5').classList.add('active');
+            document.getElementById('adminTabNotifForm').style.display = 'block';
+            renderAdminNotifHistory();
         } else if (t === 'manage') {
             document.getElementById('admTabBtn4').classList.add('active');
             document.getElementById('adminTabManageList').style.display = 'block';
             renderAdminManageLists();
+        }
+    }
+
+    /* =========================================================
+       شاردنەوەی سەرجەم لینکەکان و سیستەمی ئاگاداری ڕاستەوخۆ
+    ========================================================= */
+    function showAppToast(text, color = '#4f46e5') {
+        let toast = document.getElementById('globalAppCustomToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'globalAppCustomToast';
+            toast.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#0f172a; border:2px solid " + color + "; color:#ffffff; padding:10px 18px; border-radius:16px; font-size:0.78rem; font-weight:800; z-index:9999999; box-shadow:0 10px 25px rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; gap:8px; text-align:center; max-width:90%; transition:all 0.3s ease;";
+            document.body.appendChild(toast);
+        }
+        toast.style.borderColor = color;
+        toast.innerHTML = text;
+        toast.style.display = 'flex';
+        clearTimeout(window._toastTimeout);
+        window._toastTimeout = setTimeout(() => {
+            if (toast) toast.style.display = 'none';
+        }, 3200);
+    }
+
+    // گۆڕینی هەموو Alert بە تۆستی ناوخۆیی تا هیچ لینک و ناونیشانێک دەرنەکەوێت
+    window.alert = function(msg) {
+        if (!msg) return;
+        let c = '#4f46e5';
+        if (msg.includes('✅') || msg.includes('پیرۆزە') || msg.includes('سەرکەوتوو') || msg.includes('کۆپی')) c = '#10b981';
+        else if (msg.includes('❌') || msg.includes('هەڵە') || msg.includes('پچڕاوە') || msg.includes('نەدۆزرایەوە')) c = '#ef4444';
+        else if (msg.includes('⚠️') || msg.includes('تکایە') || msg.includes('نییە')) c = '#f59e0b';
+        showAppToast(msg, c);
+    };
+
+    window.confirm = function() { return true; };
+
+    window.addEventListener('offline', function() {
+        showAppToast('📡 هێڵی ئینتەرنێت پچڕاوە، تکایە ئینتەرنێتەکەت بپشکنە.', '#ef4444');
+    });
+
+    const STUDENT_NOTIF_TOPIC = "kurd_student_notifications_hub_2026";
+    const STUDENT_STORAGE_KEY = "kurd_student_local_notifs_db";
+
+    function getStoredStudentNotifs() {
+        try {
+            return JSON.parse(localStorage.getItem(STUDENT_STORAGE_KEY) || '[]');
+        } catch(e) {
+            return [];
+        }
+    }
+
+    function setStoredStudentNotifs(notifs) {
+        localStorage.setItem(STUDENT_STORAGE_KEY, JSON.stringify(notifs));
+        updateStudentBellBadge();
+    }
+
+    async function sendStudentNotification() {
+        const titleInput = document.getElementById('adminNotifTitleInput');
+        const bodyInput = document.getElementById('adminNotifBodyInput');
+        const title = titleInput ? titleInput.value.trim() : '';
+        const body = bodyInput ? bodyInput.value.trim() : '';
+
+        if (!title || !body) {
+            alert('⚠️ تکایە سەردێڕ و دەقی ئاگاداری بنووسە!');
+            return;
+        }
+
+        const now = new Date();
+        const timeStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} - ${now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}`;
+
+        const newNotif = {
+            id: Date.now(),
+            title: title,
+            body: body,
+            time: timeStr,
+            sender: "بەڕێوەبەرایەتی خوێندکاران"
+        };
+
+        let notifs = getStoredStudentNotifs();
+        notifs.unshift(newNotif);
+        setStoredStudentNotifs(notifs);
+
+        try {
+            await fetch(`https://ntfy.sh/${STUDENT_NOTIF_TOPIC}`, {
+                method: 'POST',
+                headers: { 'Priority': 'urgent', 'Tags': 'bell,books' },
+                body: JSON.stringify({ action: 'publish', ...newNotif })
+            });
+            alert('✅ ئاگاداری بە سەرکەوتوویی بۆ هەموو خوێندکاران بڵاوکرایەوە');
+        } catch(e) {
+            alert('✅ ئاگاداری لەسەر مۆبایلەکەت تۆمارکرا');
+        }
+
+        if (titleInput) titleInput.value = '';
+        if (bodyInput) bodyInput.value = '';
+        renderAdminNotifHistory();
+    }
+
+    function renderAdminNotifHistory() {
+        const container = document.getElementById('adminNotifHistoryList');
+        if (!container) return;
+        container.innerHTML = '';
+        const notifs = getStoredStudentNotifs();
+
+        if (notifs.length === 0) {
+            container.innerHTML = `<div style="text-align:center; font-size:0.72rem; color:var(--text-muted); padding:8px;">هیچ ئاگادارییەک نییە.</div>`;
+            return;
+        }
+
+        notifs.forEach(n => {
+            const item = document.createElement('div');
+            item.style = "background:var(--input-bg); border:1px solid var(--card-border); border-radius:8px; padding:6px 8px; display:flex; justify-content:space-between; align-items:center;";
+            item.innerHTML = `
+                <div style="flex:1; text-align:right;">
+                    <div style="font-size:0.75rem; font-weight:900; color:var(--primary);">${n.title}</div>
+                    <div style="font-size:0.65rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:210px;">${n.body}</div>
+                </div>
+                <button onclick="deleteStudentNotif(${n.id})" style="background:#dc2626; color:#fff; border:none; border-radius:6px; padding:3px 7px; font-size:0.65rem; cursor:pointer;">سڕینەوە</button>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    function deleteStudentNotif(id) {
+        let notifs = getStoredStudentNotifs().filter(n => n.id !== id);
+        setStoredStudentNotifs(notifs);
+        renderAdminNotifHistory();
+        renderStudentNotifsUI();
+    }
+
+    function listenForStudentLiveNotifs() {
+        try {
+            const evt = new EventSource(`https://ntfy.sh/${STUDENT_NOTIF_TOPIC}/sse`);
+            evt.onmessage = function(e) {
+                try {
+                    const data = JSON.parse(e.data);
+                    if (data && data.message) {
+                        const packet = JSON.parse(data.message);
+                        if (packet.action === 'publish') {
+                            let notifs = getStoredStudentNotifs();
+                            if (!notifs.find(n => n.id === packet.id)) {
+                                notifs.unshift(packet);
+                                setStoredStudentNotifs(notifs);
+                                showStudentScreenToast(packet.title, packet.body);
+                            }
+                        }
+                    }
+                } catch(err) {}
+            };
+        } catch(e) {}
+    }
+
+    function showStudentScreenToast(title, body) {
+        let box = document.getElementById('studentScreenToast');
+        if (!box) {
+            box = document.createElement('div');
+            box.id = 'studentScreenToast';
+            box.style = "position:fixed; top:15px; left:50%; transform:translateX(-50%); width:90%; max-width:420px; background:#0f172a; border:2px solid #38bdf8; box-shadow:0 10px 25px rgba(0,0,0,0.8); border-radius:16px; padding:12px; z-index:999999; color:#fff; display:flex; align-items:flex-start; gap:10px;";
+            document.body.appendChild(box);
+        }
+        box.innerHTML = `
+            <i class="fa-solid fa-bell fa-shake" style="color:#fbbf24; font-size:1.5rem; margin-top:2px;"></i>
+            <div style="flex:1; text-align:right;">
+                <div style="font-weight:900; font-size:0.85rem; color:#38bdf8;">${title}</div>
+                <div style="font-size:0.75rem; color:#cbd5e1; margin-top:3px;">${body}</div>
+            </div>
+            <button onclick="document.getElementById('studentScreenToast').remove()" style="background:none; border:none; color:#94a3b8; font-size:16px; cursor:pointer;">✕</button>
+        `;
+        setTimeout(() => { if (box) box.remove(); }, 8000);
+    }
+
+    function openStudentNotificationsModal() {
+        renderStudentNotifsUI();
+        const modal = document.getElementById('studentNotificationsModal');
+        if (modal) modal.style.display = 'flex';
+        localStorage.setItem('student_last_read_count', getStoredStudentNotifs().length);
+        updateStudentBellBadge();
+    }
+
+    function closeStudentNotificationsModal() {
+        const modal = document.getElementById('studentNotificationsModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    function renderStudentNotifsUI() {
+        const notifs = getStoredStudentNotifs();
+        const container = document.getElementById('studentNotifsListContainer');
+        if (!container) return;
+        container.innerHTML = '';
+
+        if (notifs.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding:25px; color:var(--text-muted); font-size:0.8rem;">هیچ ئاگادارییەکی نوێ نییە.</div>`;
+            return;
+        }
+
+        notifs.forEach(n => {
+            const item = document.createElement('div');
+            item.style = "background:var(--input-bg); border:1px solid var(--card-border); border-right:4px solid var(--primary); border-radius:12px; padding:10px 12px; text-align:right;";
+            item.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <span style="font-weight:900; font-size:0.84rem; color:var(--primary);">${n.title}</span>
+                    <span style="font-size:0.65rem; color:var(--text-muted); font-family:var(--num-font);">${n.time}</span>
+                </div>
+                <div style="font-size:0.76rem; color:var(--text-main); line-height:1.5;">${n.body}</div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    function updateStudentBellBadge() {
+        const notifs = getStoredStudentNotifs();
+        const lastRead = parseInt(localStorage.getItem('student_last_read_count') || '0');
+        const unread = Math.max(0, notifs.length - lastRead);
+        const badge = document.getElementById('studentBellBadge');
+        if (badge) {
+            badge.innerText = unread;
+            badge.style.display = unread > 0 ? 'flex' : 'none';
         }
     }
 
@@ -1973,6 +2254,8 @@
 
     window.onload = function() {
         renderMainHubs();
+        updateStudentBellBadge();
+        listenForStudentLiveNotifs();
     };
 </script>
 
