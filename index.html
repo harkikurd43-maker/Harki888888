@@ -408,6 +408,9 @@
         .booklet-thumb.teacher-thumb {
             background: linear-gradient(135deg, #065f46, #059669);
         }
+        .booklet-thumb.student-thumb {
+            background: linear-gradient(135deg, #0284c7, #06b6d4);
+        }
 
         .booklet-thumb i { font-size: 26px; margin-bottom: 4px; }
         .booklet-thumb span {
@@ -456,6 +459,7 @@
         }
         .tag-pill.exam-tag { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
         .tag-pill.teacher-tag { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
+        .tag-pill.student-tag { background: rgba(6, 182, 212, 0.18); color: #0284c7; }
 
         .booklet-actions {
             display: flex;
@@ -1156,8 +1160,9 @@
             <div class="admin-form-group">
                 <label>جۆری بابەت:</label>
                 <select id="admBookletType" class="admin-input">
-                    <option value="کتێبی مامۆستا">کتێبی مامۆستا</option>
                     <option value="مەلزەمە">مەلزەمە</option>
+                    <option value="کتێبی قوتابی">کتێبی قوتابی</option>
+                    <option value="کتێبی مامۆستا">کتێبی مامۆستا</option>
                     <option value="ئەسیلە">ئەسیلەی وزاری</option>
                     <option value="پوختە">پوختە و یاساکان</option>
                 </select>
@@ -1272,10 +1277,24 @@
     const defaultHubs = [
         {
             key: "grades_hub",
-            name: "پۆلەکان (١-١٢)",
+            name: "مەلزەمەکان (١-١٢)",
             desc: "مەلزەمە و پوختەی سەرجەم پۆلەکان",
-            icon: "fa-graduation-cap",
+            icon: "fa-file-lines",
             color: "linear-gradient(135deg, #4f46e5, #3b82f6)"
+        },
+        {
+            key: "student_books_hub",
+            name: "کتێبی قوتابی (١-١٢)",
+            desc: "سەرجەم کتێبەکانی خوێندنی پۆلی ١ تا ١٢",
+            icon: "fa-book-open",
+            color: "linear-gradient(135deg, #0284c7, #06b6d4)"
+        },
+        {
+            key: "student_books_hub",
+            name: "کتێبی قوتابی (١-١٢)",
+            desc: "سەرجەم کتێبەکانی خوێندنی پۆلی ١ تا ١٢",
+            icon: "fa-book-open",
+            color: "linear-gradient(135deg, #0284c7, #06b6d4)"
         },
         {
             key: "teacher_books_hub",
@@ -1293,7 +1312,7 @@
         },
         {
             key: "september_hub",
-            name: "خولی ئەیلول",
+            name: "ئەسیلەی پۆلە ناکۆتاکان",
             desc: "پرسیار و شیکاری خولی دووەم و سێیەم",
             icon: "fa-calendar-check",
             color: "linear-gradient(135deg, #8b5cf6, #ec4899)"
@@ -1315,6 +1334,36 @@
         { hubKey: "grades_hub", key: "3", num: "٣", name: "پۆلی ٣ی سەرەتایی", desc: "ڕاهێنان و وانە بنەڕەتییەکان", bg: "linear-gradient(135deg, #9333ea, #c084fc)" },
         { hubKey: "grades_hub", key: "2", num: "٢", name: "پۆلی ٢ی سەرەتایی", desc: "پیت و ژمارەکان و زانست", bg: "linear-gradient(135deg, #e11d48, #fb7185)" },
         { hubKey: "grades_hub", key: "1", num: "١", name: "پۆلی ١ی سەرەتایی", desc: "دەستپێکی فێربوونی پیتەکان", bg: "linear-gradient(135deg, #4f46e5, #818cf8)" },
+
+        // پۆلەکانی بەشی کتێبی قوتابی (student_books_hub)
+        { hubKey: "student_books_hub", key: "sb_12_sci", num: "١٢", name: "کتێبی ١٢ی زانستی", desc: "سەرجەم کتێبەکانی ١٢ی زانستی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_12_lit", num: "١٢", name: "کتێبی ١٢ی وێژەیی", desc: "سەرجەم کتێبەکانی ١٢ی وێژەیی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_11", num: "١١", name: "کتێبی پۆلی ١١", desc: "کتێبەکانی پۆلی ١١ی ئامادەیی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_10", num: "١٠", name: "کتێبی پۆلی ١٠", desc: "کتێبەکانی پۆلی ١٠ی ئامادەیی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_9", num: "٩", name: "کتێبی پۆلی ٩", desc: "کتێبەکانی پۆلی ٩ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_8", num: "٨", name: "کتێبی پۆلی ٨", desc: "کتێبەکانی پۆلی ٨ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_7", num: "٧", name: "کتێبی پۆلی ٧", desc: "کتێبەکانی پۆلی ٧ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_6", num: "٦", name: "کتێبی پۆلی ٦", desc: "کتێبەکانی پۆلی ٦ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_5", num: "٥", name: "کتێبی پۆلی ٥", desc: "کتێبەکانی پۆلی ٥ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_4", num: "٤", name: "کتێبی پۆلی ٤", desc: "کتێبەکانی پۆلی ٤ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_3", num: "٣", name: "کتێبی پۆلی ٣", desc: "کتێبەکانی پۆلی ٣ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_2", num: "٢", name: "کتێبی پۆلی ٢", desc: "کتێبەکانی پۆلی ٢ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_1", num: "١", name: "کتێبی پۆلی ١", desc: "کتێبەکانی پۆلی ١ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+
+        // پۆلەکانی بەشی کتێبی قوتابی (student_books_hub)
+        { hubKey: "student_books_hub", key: "sb_12_sci", num: "١٢", name: "کتێبی ١٢ی زانستی", desc: "سەرجەم کتێبەکانی پۆلی ١٢ی زانستی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_12_lit", num: "١٢", name: "کتێبی ١٢ی وێژەیی", desc: "سەرجەم کتێبەکانی پۆلی ١٢ی وێژەیی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_11", num: "١١", name: "کتێبی پۆلی ١١", desc: "کتێبەکانی پۆلی ١١ی ئامادەیی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_10", num: "١٠", name: "کتێبی پۆلی ١٠", desc: "کتێبەکانی پۆلی ١٠ی ئامادەیی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_9", num: "٩", name: "کتێبی پۆلی ٩", desc: "کتێبەکانی پۆلی ٩ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_8", num: "٨", name: "کتێبی پۆلی ٨", desc: "کتێبەکانی پۆلی ٨ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_7", num: "٧", name: "کتێبی پۆلی ٧", desc: "کتێبەکانی پۆلی ٧ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_6", num: "٦", name: "کتێبی پۆلی ٦", desc: "کتێبەکانی پۆلی ٦ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_5", num: "٥", name: "کتێبی پۆلی ٥", desc: "کتێبەکانی پۆلی ٥ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_4", num: "٤", name: "کتێبی پۆلی ٤", desc: "کتێبەکانی پۆلی ٤ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_3", num: "٣", name: "کتێبی پۆلی ٣", desc: "کتێبەکانی پۆلی ٣ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_2", num: "٢", name: "کتێبی پۆلی ٢", desc: "کتێبەکانی پۆلی ٢ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
+        { hubKey: "student_books_hub", key: "sb_1", num: "١", name: "کتێبی پۆلی ١", desc: "کتێبەکانی پۆلی ١ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
 
         // پۆلەکانی بەشی کتێبی مامۆستا (teacher_books_hub)
         { hubKey: "teacher_books_hub", key: "tb_12", num: "١٢", name: "کتێبی مامۆستا ١٢", desc: "ڕێبەری مامۆستای سەرجەم وانەکان", bg: "linear-gradient(135deg, #059669, #10b981)" },
@@ -1353,10 +1402,35 @@
         }
     ];
 
-    function getHubs() { return JSON.parse(localStorage.getItem('harki_v2_hubs')) || defaultHubs; }
+    function getHubs() { 
+        let hubs = JSON.parse(localStorage.getItem('harki_v2_hubs'));
+        if (!hubs) hubs = defaultHubs;
+        // لابردنی هەر دووبارەبوونەوەیەک تاوەکو تەنها یەک جار دەربکەوێت
+        const uniqueHubs = [];
+        const seenKeys = new Set();
+        hubs.forEach(h => {
+            if (!seenKeys.has(h.key)) {
+                seenKeys.add(h.key);
+                uniqueHubs.push(h);
+            }
+        });
+        if (!seenKeys.has('student_books_hub')) {
+            const sbHub = defaultHubs.find(d => d.key === 'student_books_hub');
+            if (sbHub) uniqueHubs.splice(1, 0, sbHub);
+        }
+        localStorage.setItem('harki_v2_hubs', JSON.stringify(uniqueHubs));
+        return uniqueHubs;
+    }
     function setHubs(d) { localStorage.setItem('harki_v2_hubs', JSON.stringify(d)); }
 
-    function getGrades() { return JSON.parse(localStorage.getItem('harki_v2_grades')) || defaultGrades; }
+    function getGrades() { 
+        let grades = JSON.parse(localStorage.getItem('harki_v2_grades'));
+        if (!grades || !grades.some(g => g.hubKey === 'student_books_hub')) {
+            grades = defaultGrades;
+            localStorage.setItem('harki_v2_grades', JSON.stringify(grades));
+        }
+        return grades;
+    }
     function setGrades(d) { localStorage.setItem('harki_v2_grades', JSON.stringify(d)); }
 
     function getBooklets() { return JSON.parse(localStorage.getItem('harki_v2_booklets')) || defaultBooklets; }
@@ -1535,11 +1609,35 @@
         filtered.forEach(b => {
             const isExam = b.type === 'ئەسیلە';
             const isTeacher = b.type === 'کتێبی مامۆستا';
+            const isStudentBook = b.type === 'کتێبی قوتابی';
             const card = document.createElement('div');
             card.className = 'booklet-card';
+            
+            let thumbClass = '';
+            let iconClass = 'fa-file-lines';
+            let btnBg = 'var(--primary)';
+            let tagClass = '';
+
+            if (isExam) {
+                thumbClass = 'exam-thumb';
+                iconClass = 'fa-file-circle-question';
+                btnBg = '#dc2626';
+                tagClass = 'exam-tag';
+            } else if (isTeacher) {
+                thumbClass = 'teacher-thumb';
+                iconClass = 'fa-chalkboard-user';
+                btnBg = '#059669';
+                tagClass = 'teacher-tag';
+            } else if (isStudentBook) {
+                thumbClass = 'student-thumb';
+                iconClass = 'fa-book-open';
+                btnBg = '#0284c7';
+                tagClass = 'student-tag';
+            }
+
             card.innerHTML = `
-                <div class="booklet-thumb ${isExam ? 'exam-thumb' : (isTeacher ? 'teacher-thumb' : '')}">
-                    <i class="fa-solid ${isTeacher ? 'fa-chalkboard-user' : (isExam ? 'fa-file-circle-question' : 'fa-file-lines')}"></i>
+                <div class="booklet-thumb ${thumbClass}">
+                    <i class="fa-solid ${iconClass}"></i>
                     <span>${b.subject}</span>
                 </div>
                 <div class="booklet-info">
@@ -1547,15 +1645,15 @@
                         <div class="booklet-title">${b.title}</div>
                         <div class="booklet-teacher"><i class="fa-solid fa-user-tie"></i> ${b.teacher}</div>
                         <div class="booklet-meta">
-                            <span class="tag-pill ${isExam ? 'exam-tag' : (isTeacher ? 'teacher-tag' : '')}">${b.type}</span>
+                            <span class="tag-pill ${tagClass}">${b.type}</span>
                             <span>• ${b.pages} لاپەڕە</span>
                             <span>• ${b.year}</span>
                         </div>
                     </div>
                     <div class="booklet-actions">
-                        <button class="btn-read" style="${isTeacher ? 'background:#059669;' : (isExam ? 'background:#dc2626;' : '')}" onclick="openItemContent(${b.id})">
+                        <button class="btn-read" style="background:${btnBg};" onclick="openItemContent(${b.id})">
                             <i class="fa-solid ${b.contentType === 'image' ? 'fa-image' : (b.contentType === 'text' ? 'fa-file-lines' : 'fa-eye')}"></i>
-                            <span>${b.contentType === 'image' ? 'بینینی وێنە' : (b.contentType === 'text' ? 'خوێندنەوەی دەق' : 'خوێندنەوەی فایل')}</span>
+                            <span>${b.contentType === 'image' ? 'بینینی وێنە' : (b.contentType === 'text' ? 'خوێندنەوەی دەق' : 'خوێندنەوەی کتێب')}</span>
                         </button>
                     </div>
                 </div>
