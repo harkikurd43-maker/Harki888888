@@ -19,6 +19,217 @@
     <!-- ئایکۆنەکان -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- ستایل و بزوێنەری بیرکاری KaTeX بۆ Cymath -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <!-- کتێبخانەی داتابەیسی Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* دیزاینی شوشەیی و گڵۆپی سەرەتا (Glassmorphism & Neon) */
+        .auth-gate-blur-screen {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 60%, #020617 100%);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            overflow-y: auto;
+        }
+
+        .auth-glass-box {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 32px;
+            padding: 26px 22px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 0 40px rgba(79, 70, 229, 0.25), inset 0 0 15px rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            position: relative;
+            animation: fadeInGlass 0.4s ease-out;
+        }
+
+        @keyframes fadeInGlass {
+            from { opacity: 0; transform: scale(0.94); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .auth-glow-orb {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, #06b6d4, #4f46e5);
+            filter: blur(60px);
+            border-radius: 50%;
+            pointer-events: none;
+            top: -30px;
+            right: -30px;
+            opacity: 0.6;
+        }
+
+        .auth-toggle-pill {
+            display: flex;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 4px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-pill-btn {
+            flex: 1;
+            padding: 9px;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            font-size: 0.82rem;
+            font-weight: 800;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .auth-pill-btn.active {
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.45);
+        }
+
+        .auth-input-group {
+            margin-bottom: 12px;
+            text-align: right;
+            position: relative;
+        }
+
+        .auth-input-group label {
+            font-size: 0.73rem;
+            color: #cbd5e1;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .auth-field {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            outline: none;
+            transition: all 0.25s;
+        }
+
+        .auth-field:focus {
+            border-color: #38bdf8;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+        }
+
+        /* پێوەری هێزی وشەی نهێنی */
+        .password-strength-bar {
+            height: 5px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            margin-top: 6px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .strength-indicator {
+            height: 100%;
+            width: 0%;
+            border-radius: 6px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .strength-label-text {
+            font-size: 0.68rem;
+            font-weight: 800;
+            margin-top: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-neon-action {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #06b6d4, #4f46e5);
+            color: #ffffff;
+            border: none;
+            border-radius: 16px;
+            font-size: 0.92rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.45);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.2s;
+        }
+        .btn-neon-action:active { transform: scale(0.97); }
+
+        /* دیزاینی پڕۆفایل */
+        .profile-hero-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--card-border);
+            border-radius: 28px;
+            padding: 24px 16px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .profile-avatar-wrap {
+            width: 86px;
+            height: 86px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #06b6d4, #4f46e5);
+            color: white;
+            font-size: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px auto;
+            box-shadow: 0 0 25px rgba(79, 70, 229, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .profile-info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 9px;
+            text-align: right;
+            margin-top: 14px;
+        }
+
+        .profile-row-item {
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+    </style>
+
     <style>
         :root {
             --primary: #4f46e5;
@@ -408,9 +619,6 @@
         .booklet-thumb.teacher-thumb {
             background: linear-gradient(135deg, #065f46, #059669);
         }
-        .booklet-thumb.student-thumb {
-            background: linear-gradient(135deg, #0284c7, #06b6d4);
-        }
 
         .booklet-thumb i { font-size: 26px; margin-bottom: 4px; }
         .booklet-thumb span {
@@ -459,7 +667,6 @@
         }
         .tag-pill.exam-tag { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
         .tag-pill.teacher-tag { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
-        .tag-pill.student-tag { background: rgba(6, 182, 212, 0.18); color: #0284c7; }
 
         .booklet-actions {
             display: flex;
@@ -484,108 +691,180 @@
             gap: 6px;
         }
 
-        /* =========================================================
-           حاسیبەی زیرەکی بیرکاری (دیزاینی مۆدێرن و شاز)
-        ========================================================= */
-        .ai-math-card {
+/* دیزاینی ڕاستەقینەی Cymath بە ئاڕاستەی دروست */
+        .cymath-wrap {
             background: var(--card-bg);
-            border: 2px solid var(--card-border);
-            border-radius: 26px;
-            padding: 18px;
-            box-shadow: var(--shadow);
-            position: relative;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
             overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
         }
 
-        .ai-glow-bar {
-            height: 4px;
-            background: linear-gradient(90deg, #06b6d4, #4f46e5, #ec4899);
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+        .cymath-top-bar {
+            padding: 12px 14px 4px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
-        .ai-screen-display {
-            background: var(--input-bg);
-            border: 1.5px solid var(--card-border);
-            border-radius: 18px;
-            padding: 14px;
-            margin-bottom: 12px;
-        }
-
-        .ai-math-input {
-            width: 100%;
-            background: transparent;
+        .btn-cymath-topic {
+            background: #2ecc71;
+            color: #fff;
             border: none;
-            outline: none;
-            font-size: 1.25rem;
-            font-weight: 900;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .btn-cymath-clear {
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cymath-input-wrapper {
+            position: relative;
+            margin: 0 12px 10px 12px;
+        }
+        .cymath-input-field {
+            width: 100%;
+            height: 48px;
+            border: 1.5px solid var(--card-border);
+            border-radius: 8px;
+            padding: 0 12px;
+            font-size: 1.15rem;
             font-family: var(--num-font);
-            direction: ltr;
             color: var(--text-main);
-            text-align: left;
-        }
-
-        .ai-math-quick-pad {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .quick-btn {
-            background: var(--card-bg);
-            border: 1.5px solid var(--card-border);
-            color: var(--text-main);
-            padding: 10px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 900;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            user-select: none;
-        }
-        .quick-btn:active { transform: scale(0.92); background: var(--input-bg); }
-        .quick-btn.op-btn { color: var(--accent-cyan); font-weight: 900; }
-        .quick-btn.action-clear { color: var(--accent-red); }
-
-        .btn-ai-solve {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #06b6d4 0%, #4f46e5 100%);
-            color: white;
-            border: none;
-            border-radius: 16px;
-            font-size: 0.88rem;
-            font-weight: 900;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 6px 18px rgba(6, 182, 212, 0.35);
-        }
-        .btn-ai-solve:active { transform: scale(0.98); }
-
-        .ai-solution-result {
-            margin-top: 14px;
             background: var(--input-bg);
-            border: 1.5px solid var(--card-border);
-            border-radius: 18px;
-            padding: 14px;
+            direction: ltr !important;
+            text-align: left !important;
+            outline: none;
+            cursor: default;
+        }
+
+        .cymath-preview-bubble {
+            margin: 0 12px 14px 12px;
+            background: var(--input-bg);
+            color: var(--text-main);
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-size: 1.25rem;
+            font-family: var(--num-font);
+            direction: ltr !important;
+            border: 1px solid var(--card-border);
+        }
+
+        /* بەشی پیشاندانی هەنگاوەکان */
+        .cymath-steps-view {
+            padding: 16px 18px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--card-border);
             display: none;
         }
-
-        .ai-step-item {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 8px;
+        .cymath-step-row {
+            margin-bottom: 20px;
         }
+        .cymath-step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            direction: rtl;
+        }
+        .cymath-step-num {
+            width: 24px;
+            height: 24px;
+            background: #22c55e;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 900;
+            flex-shrink: 0;
+            font-family: var(--num-font);
+        }
+        .cymath-step-math {
+            font-size: 1.3rem;
+            direction: ltr !important;
+            text-align: left;
+            margin-top: 4px;
+            color: var(--text-main);
+        }
+        .cymath-done-badge {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+            color: #16a34a;
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-top: 20px;
+            direction: rtl;
+        }
+
+        /* تەختەکلیلی دوو پەڕەیی بە ئاڕاستەی تەواو LTR */
+        .cymath-pad-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: var(--input-bg);
+            border-top: 1px solid var(--card-border);
+        }
+        .cymath-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #94a3b8;
+            cursor: pointer;
+        }
+        .cymath-dot.active {
+            background: #3b82f6;
+            width: 18px;
+            border-radius: 10px;
+        }
+
+        .cymath-keyboard-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            background: var(--card-bg);
+            border-top: 1px solid var(--card-border);
+            user-select: none;
+            direction: ltr !important;
+        }
+        .cy-btn {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 0.5px solid var(--card-border);
+            background: var(--card-bg);
+            font-size: 1.25rem;
+            font-family: var(--num-font);
+            color: var(--text-main);
+            cursor: pointer;
+            outline: none;
+        }
+        .cy-btn:active { background: var(--input-bg); }
+        .cy-btn-op { color: #0284c7; font-weight: 800; }
+        .cy-btn-del { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        .cy-btn-solve { background: #00bb66 !important; color: #ffffff !important; font-size: 1.35rem; }
 
         /* حاسیبەی کۆنمرە */
         .calculator-card {
@@ -761,91 +1040,6 @@
             gap: 6px;
         }
 
-        /* دیزاینی سلایدەری ڕیکلام لە سەرەوە */
-        .ads-banner-wrapper {
-            width: 100%;
-            max-width: 600px;
-            margin: 10px auto 4px auto;
-            position: relative;
-            display: none;
-        }
-        .ads-slider-container {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-            direction: ltr !important;
-            border-radius: 20px;
-        }
-        .ad-nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: rgba(15, 23, 42, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 10;
-            font-size: 1rem;
-        }
-        .ad-nav-prev { left: 8px; }
-        .ad-nav-next { right: 8px; }
-        .ads-track {
-            display: flex;
-            width: 100%;
-            transition: transform 0.4s ease-in-out;
-        }
-        .ad-slide-item {
-            flex: 0 0 100%;
-            min-width: 100%;
-            height: 160px;
-            position: relative;
-            cursor: pointer;
-            border-radius: 20px;
-            overflow: hidden;
-            background: #0f172a;
-        }
-        .ad-slide-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-        .ad-tag-badge {
-            position: absolute;
-            bottom: 8px;
-            right: 10px;
-            background: rgba(15, 23, 42, 0.75);
-            color: #cbd5e1;
-            font-size: 0.65rem;
-            font-weight: 800;
-            padding: 2px 8px;
-            border-radius: 6px;
-        }
-        .ads-pagination-dots {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 6px;
-        }
-        .ad-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.35);
-            cursor: pointer;
-        }
-        .ad-dot.active {
-            width: 18px;
-            border-radius: 10px;
-            background: var(--accent-cyan);
-        }
-
         /* شریتی خوارەوە */
         .bottom-nav {
             position: fixed;
@@ -883,6 +1077,106 @@
 </head>
 <body>
 
+<!-- پەنجەرەی شوشەیی چوونەژوورەوە و قفڵکردنی بەرنامە -->
+<div class="auth-gate-blur-screen" id="appAuthGateScreen" style="display: none;">
+<script>
+    // پشکنینی ڕاستەوخۆ بەبێ ١ چرکە دواکەوتن
+    if (localStorage.getItem('harki_is_logged_in') !== 'true') {
+        document.getElementById('appAuthGateScreen').style.display = 'flex';
+    }
+</script>
+    <div class="auth-glass-box">
+        <div class="auth-glow-orb"></div>
+
+        <div style="text-align:center; margin-bottom:18px;">
+            <div style="font-size:1.6rem; font-weight:900; color:#38bdf8; text-shadow:0 0 15px rgba(56,189,248,0.5);">
+                <i class="fa-solid fa-graduation-cap"></i> مەلزەمەی کوردستان
+            </div>
+            <p style="font-size:0.75rem; color:#cbd5e1; margin-top:4px;">تکایە هەژمار دروست بکە یان بچۆ ژوورەوە بۆ دەستڕاگەیشتن</p>
+        </div>
+
+        <!-- دوگمەکانی گۆڕینی نێوان Sign Up و Login -->
+        <div class="auth-toggle-pill">
+            <button class="auth-pill-btn active" id="btnToggleRegister" onclick="switchAuthMode('register')">خۆتۆمارکردن (نوێ)</button>
+            <button class="auth-pill-btn" id="btnToggleLogin" onclick="switchAuthMode('login')">چوونەژوورەوە</button>
+        </div>
+
+        <!-- فۆڕمی دروستکردنی هەژمار (Sign Up) -->
+        <div id="formSectionRegister">
+            <div class="auth-input-group">
+                <label><i class="fa-solid fa-id-card"></i> ناوی چواری (کوردی یان ئینگلیزی):</label>
+                <input type="text" id="regFullName" class="auth-field" placeholder="نموونە: ئارام ئەحمەد قادر عەلی">
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <div class="auth-input-group">
+                    <label><i class="fa-solid fa-at"></i> یوزەرنەیم:</label>
+                    <input type="text" id="regUsername" class="auth-field" placeholder="aram_99" style="direction:ltr;">
+                </div>
+                <div class="auth-input-group">
+                    <label><i class="fa-solid fa-venus-mars"></i> ڕەگەز:</label>
+                    <select id="regGender" class="auth-field" style="background:#1e293b;">
+                        <option value="نێر">نێر (کوڕ)</option>
+                        <option value="مێ">مێ (کچ)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="auth-input-group">
+                <label><i class="fa-solid fa-envelope"></i> ئیمەیڵ:</label>
+                <input type="email" id="regEmail" class="auth-field" placeholder="name@gmail.com" style="direction:ltr;">
+            </div>
+
+            <div class="auth-input-group">
+                <label><i class="fa-solid fa-phone"></i> ژمارەی مۆبایل:</label>
+                <input type="tel" id="regPhone" class="auth-field" placeholder="0750XXXXXXX" style="direction:ltr;">
+            </div>
+
+            <div class="auth-input-group">
+                <label><i class="fa-solid fa-location-dot"></i> ناونیشان / شار (ئارەزوومەندانە):</label>
+                <input type="text" id="regAddress" class="auth-field" placeholder="هەولێر، سلێمانی، دهۆک...">
+            </div>
+
+            <!-- بەشی وشەی نهێنی لەگەڵ هێڵ و گڵۆپی هێز -->
+            <div class="auth-input-group">
+                <label><i class="fa-solid fa-lock"></i> وشەی نهێنی:</label>
+                <input type="password" id="regPassword" class="auth-field" placeholder="••••••••" oninput="checkPasswordStrength(this.value)">
+                
+                <div class="password-strength-bar">
+                    <div class="strength-indicator" id="passStrengthBar"></div>
+                </div>
+                <div class="strength-label-text">
+                    <span id="passStrengthText" style="color:#94a3b8;">هێزی وشەی نهێنی</span>
+                    <span id="passStrengthBadge" style="font-weight:900;"></span>
+                </div>
+            </div>
+
+            <button class="btn-neon-action" onclick="handleStudentSignUp()">
+                <i class="fa-solid fa-user-plus"></i> دروستکردنی هەژمار و چوونەژوورەوە
+            </button>
+        </div>
+
+        <!-- فۆڕمی چوونەژوورەوەی ئاسایی (Login) -->
+        <div id="formSectionLogin" style="display:none;">
+            <div class="auth-input-group">
+                <label><i class="fa-solid fa-envelope"></i> ئیمەیڵ:</label>
+                <input type="email" id="loginEmail" class="auth-field" placeholder="name@gmail.com" style="direction:ltr;">
+            </div>
+
+            <div class="auth-input-group">
+                <label><i class="fa-solid fa-lock"></i> وشەی نهێنی:</label>
+                <input type="password" id="loginPassword" class="auth-field" placeholder="••••••••">
+            </div>
+
+            <button class="btn-neon-action" onclick="handleStudentLogin()">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> چوونەژوورەوە بە هەژمارەکەم
+            </button>
+        </div>
+
+        <div id="authNoticeMessage" style="margin-top:14px; text-align:center; font-size:0.78rem; font-weight:800;"></div>
+    </div>
+</div>
+
 <!-- سەرپەڕە -->
 <header>
     <div class="header-top">
@@ -892,37 +1186,21 @@
             </div>
             <div class="brand-text">
                 <h1>مەلزەمەی کوردستان</h1>
-                <p class="brand-harki-secret" onclick="handleHarkiSecretClicks()" title="کۆنتڕۆڵی ئەدمین">
-                    Harki Tech • هەموو بەشەکان 🔐
+<!-- بە شێوەی خۆکارانە لە بەردەم قوتابیان شاردراوەیە و تەنها بۆ ئەدمین دەردەکەوێت -->
+                <p class="brand-harki-secret" id="adminHeaderBadge" onclick="openAdminModal()" style="display:none; background:linear-gradient(135deg, #f59e0b, #d97706); color:white; padding:3px 8px; border-radius:8px; cursor:pointer;" title="کۆنتڕۆڵی ئەدمین">
+                    👑 کۆنتڕۆڵی ئەدمین
                 </p>
-            </div>
+           </div>
         </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-            <button class="theme-toggle-btn" onclick="openStudentNotificationsModal()" title="ئاگادارییەکان" style="position:relative;">
-                <i class="fa-solid fa-bell"></i>
-                <span id="studentBellBadge" style="display:none; position:absolute; top:-4px; left:-4px; background:#ef4444; color:#fff; font-size:0.62rem; font-weight:900; min-width:18px; height:18px; border-radius:50%; align-items:center; justify-content:center; border:2px solid #1e1b4b; font-family:var(--num-font);">0</span>
-            </button>
-            <button class="theme-toggle-btn" onclick="toggleDarkMode()" title="تاریکی / ڕۆشنایی">
-                <i class="fa-solid fa-moon" id="themeIcon"></i>
-            </button>
-        </div>
+        <button class="theme-toggle-btn" onclick="toggleDarkMode()" title="تاریکی / ڕۆشنایی">
+            <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
     </div>
 
     <!-- گەڕان -->
     <div class="search-box-wrap">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
         <input type="text" id="searchInput" class="search-input" placeholder="گەڕان بۆ مەلزەمە، کتێب، مامۆستا یان وانە..." oninput="handleSearch()">
-    </div>
-
-    <!-- بەشی سلایدەری ڕیکلام -->
-    <div class="ads-banner-wrapper" id="adsBannerWrapper">
-        <div class="ads-slider-container" id="adsSliderContainer">
-            <button class="ad-nav-btn ad-nav-prev" onclick="manualPrevAd(event)">❮</button>
-            <button class="ad-nav-btn ad-nav-next" onclick="manualNextAd(event)">❯</button>
-            <div class="ads-track" id="adsTrack"></div>
-            <div class="ad-tag-badge">ڕیکلام</div>
-        </div>
-        <div class="ads-pagination-dots" id="adsPaginationDots"></div>
     </div>
 </header>
 
@@ -984,57 +1262,127 @@
 
     </div>
 
-    <!-- پەڕەی حاسیبەی زیرەکی بیرکاری (AI Math Solver) -->
+    <!-- پەڕەی حاسیبەی Cymath (بە شێوازی ١٠٠٪ تەواو و پارێزراو) -->
     <div id="tabAiMath" class="tab-content-view" style="display:none;">
-        <div class="section-header-bar">
-            <div class="section-title">
-                <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent-cyan);"></i>
-                <span>حاسیبەی زیرەکی بیرکاری (شیکار بە کوردی):</span>
+        <div class="cymath-wrap">
+            <div class="cymath-top-bar">
+                <button class="btn-cymath-topic" type="button">Choose Topic</button>
+                <button type="button" class="btn-cymath-clear" onclick="clearCymathInput()">
+                    <i class="fa-solid fa-rotate-left"></i> <span>سفرکردنەوە</span>
+                </button>
             </div>
-        </div>
 
-        <div class="ai-math-card">
-            <div class="ai-glow-bar"></div>
+            <!-- کیبۆردی مۆبایل ناکرێتەوە بەهۆی readonly و inputmode="none" -->
+            <div class="cymath-input-wrapper">
+                <input type="text" id="cymathMainInput" class="cymath-input-field" placeholder="Enter problem or choose topic." readonly inputmode="none">
+            </div>
 
-            <div class="ai-screen-display">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                    <span style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">هاوکێشە یان پرسیار:</span>
-                    <label for="mathCameraUpload" style="cursor:pointer; color:var(--accent-cyan); font-size:0.75rem; font-weight:800; display:flex; align-items:center; gap:4px;">
-                        <i class="fa-solid fa-camera"></i> <span>وێنەگرتن</span>
-                    </label>
-                    <input type="file" id="mathCameraUpload" accept="image/*" style="display:none;" onchange="handleAiMathUpload(this)">
+            <div style="text-align:center;">
+                <div class="cymath-preview-bubble" id="cymathBubbleDisplay">2x + 5 = 9</div>
+            </div>
+
+            <!-- پیشاندانی شیکاری هەنگاو بە هەنگاو بە کوردی -->
+            <div class="cymath-steps-view" id="cymathStepsView">
+                <div id="cymathStepsContent"></div>
+                <div class="cymath-done-badge">
+                    <span>شیکار کرا</span> <i class="fa-solid fa-circle-check"></i>
                 </div>
-                <input type="text" id="aiMathInputField" class="ai-math-input" placeholder="2x + 10 = 50">
             </div>
 
-            <!-- کیبۆردی خێرای بیرکاری -->
-            <div class="ai-math-quick-pad">
-                <button class="quick-btn" onclick="insertMathKey('x')">x</button>
-                <button class="quick-btn" onclick="insertMathKey('y')">y</button>
-                <button class="quick-btn op-btn" onclick="insertMathKey('+')">+</button>
-                <button class="quick-btn action-clear" onclick="clearMathInput()"><i class="fa-solid fa-delete-left"></i></button>
-
-                <button class="quick-btn" onclick="insertMathKey('^2')">x²</button>
-                <button class="quick-btn" onclick="insertMathKey('√(')">√</button>
-                <button class="quick-btn op-btn" onclick="insertMathKey('-')">-</button>
-                <button class="quick-btn op-btn" onclick="insertMathKey('*')">×</button>
-
-                <button class="quick-btn" onclick="insertMathKey('(')">(</button>
-                <button class="quick-btn" onclick="insertMathKey(')')">)</button>
-                <button class="quick-btn op-btn" onclick="insertMathKey('/')">÷</button>
-                <button class="quick-btn op-btn" onclick="insertMathKey('=')">=</button>
+            <!-- خاڵەکانی گۆڕینی پەڕەی کیبۆرد (Dots) -->
+            <div class="cymath-pad-dots">
+                <div class="cymath-dot active" id="cyDot1" onclick="switchCymathKeypad(1)"></div>
+                <div class="cymath-dot" id="cyDot2" onclick="switchCymathKeypad(2)"></div>
             </div>
 
-            <button class="btn-ai-solve" onclick="solveAiMathProblem()">
-                <i class="fa-solid fa-brain"></i> شیکارکردنی هەنگاو بە هەنگاو
-            </button>
+            <!-- پەڕەی ١: ژمارەکان و هێما سەرەکییەکان -->
+            <div class="cymath-keyboard-grid" id="cymathPage1">
+                <div class="cy-btn" onclick="cyPress('(')">(</div>
+                <div class="cy-btn" onclick="cyPress(')')">)</div>
+                <div class="cy-btn" onclick="cyPress('7')">7</div>
+                <div class="cy-btn" onclick="cyPress('8')">8</div>
+                <div class="cy-btn" onclick="cyPress('9')">9</div>
+                <div class="cy-btn cy-btn-op" onclick="cyPress('+')">+</div>
 
-            <!-- ناوچەی شەرح و شیکار -->
-            <div id="aiMathResultArea" class="ai-solution-result">
-                <div style="font-size:0.86rem; font-weight:900; color:#10b981; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
-                    <i class="fa-solid fa-circle-check"></i> شیکار و شیکردنەوەی هەنگاوەکان:
-                </div>
-                <div id="aiMathStepsContainer"></div>
+                <div class="cy-btn" onclick="cyPress('x')"><i>x</i></div>
+                <div class="cy-btn" onclick="cyPress('y')"><i>y</i></div>
+                <div class="cy-btn" onclick="cyPress('4')">4</div>
+                <div class="cy-btn" onclick="cyPress('5')">5</div>
+                <div class="cy-btn" onclick="cyPress('6')">6</div>
+                <div class="cy-btn cy-btn-op" onclick="cyPress('-')">-</div>
+
+                <div class="cy-btn" onclick="cyPress('w')"><i>w</i></div>
+                <div class="cy-btn" onclick="cyPress('z')"><i>z</i></div>
+                <div class="cy-btn" onclick="cyPress('1')">1</div>
+                <div class="cy-btn" onclick="cyPress('2')">2</div>
+                <div class="cy-btn" onclick="cyPress('3')">3</div>
+                <div class="cy-btn cy-btn-op" onclick="cyPress('×')">×</div>
+
+                <div class="cy-btn" onclick="cyPress('^2')">□²</div>
+                <div class="cy-btn" onclick="cyPress('^')">□<sup>□</sup></div>
+                <div class="cy-btn" onclick="cyPress(',')">,</div>
+                <div class="cy-btn" onclick="cyPress('0')">0</div>
+                <div class="cy-btn" onclick="cyPress('.')">.</div>
+                <div class="cy-btn cy-btn-op" onclick="cyPress('/')">÷</div>
+
+                <div class="cy-btn" onclick="cyPress('/')"><sup>□</sup>/<sub>□</sub></div>
+                <div class="cy-btn" onclick="cyPress('|')">|□|</div>
+                <div class="cy-btn" onclick="cyPress('<')">&lt;</div>
+                <div class="cy-btn" onclick="cyPress('>')">&gt;</div>
+                <div class="cy-btn" onclick="cyPress('=')">=</div>
+                <div class="cy-btn cy-btn-del" onclick="cyBackspace()"><i class="fa-solid fa-delete-left"></i></div>
+
+                <div class="cy-btn" onclick="cyPress('sqrt(')">√</div>
+                <div class="cy-btn" onclick="cyPress('nroot(')"><sup>□</sup>√</div>
+                <div class="cy-btn" onclick="cyPress('<=')">≤</div>
+                <div class="cy-btn" onclick="cyPress('>=')">≥</div>
+                <div class="cy-btn" onclick="cyPress('!=')">≠</div>
+                <div class="cy-btn cy-btn-solve" onclick="runCymathSolver()"><i class="fa-solid fa-play"></i></div>
+            </div>
+
+            <!-- پەڕەی ٢: نەخشەکان و پیتەکان -->
+            <div class="cymath-keyboard-grid" id="cymathPage2" style="display:none;">
+                <div class="cy-btn" onclick="cyPress('sin(')">sin</div>
+                <div class="cy-btn" onclick="cyPress('cos(')">cos</div>
+                <div class="cy-btn" onclick="cyPress('tan(')">tan</div>
+                <div class="cy-btn" onclick="cyPress('log(')">log</div>
+                <div class="cy-btn" onclick="cyPress('log_(')">log<sub>□</sub></div>
+                <div class="cy-btn" onclick="cyPress('ln(')">ln</div>
+
+                <div class="cy-btn" onclick="cyPress('csc(')">csc</div>
+                <div class="cy-btn" onclick="cyPress('sec(')">sec</div>
+                <div class="cy-btn" onclick="cyPress('cot(')">cot</div>
+                <div class="cy-btn" onclick="cyPress('pi')">π</div>
+                <div class="cy-btn" onclick="cyPress('infty')">∞</div>
+                <div class="cy-btn" onclick="cyPress('%')">%</div>
+
+                <div class="cy-btn" onclick="cyPress('a')"><i>a</i></div>
+                <div class="cy-btn" onclick="cyPress('b')"><i>b</i></div>
+                <div class="cy-btn" onclick="cyPress('c')"><i>c</i></div>
+                <div class="cy-btn" onclick="cyPress('d')"><i>d</i></div>
+                <div class="cy-btn" onclick="cyPress('e')"><i>e</i></div>
+                <div class="cy-btn" onclick="cyPress('f')"><i>f</i></div>
+
+                <div class="cy-btn" onclick="cyPress('g')"><i>g</i></div>
+                <div class="cy-btn" onclick="cyPress('h')"><i>h</i></div>
+                <div class="cy-btn" onclick="cyPress('i')"><i>i</i></div>
+                <div class="cy-btn" onclick="cyPress('j')"><i>j</i></div>
+                <div class="cy-btn" onclick="cyPress('k')"><i>k</i></div>
+                <div class="cy-btn" onclick="cyPress('l')"><i>l</i></div>
+
+                <div class="cy-btn" onclick="cyPress('m')"><i>m</i></div>
+                <div class="cy-btn" onclick="cyPress('n')"><i>n</i></div>
+                <div class="cy-btn" onclick="cyPress('o')"><i>o</i></div>
+                <div class="cy-btn" onclick="cyPress('p')"><i>p</i></div>
+                <div class="cy-btn" onclick="cyPress('q')"><i>q</i></div>
+                <div class="cy-btn cy-btn-del" onclick="cyBackspace()"><i class="fa-solid fa-delete-left"></i></div>
+
+                <div class="cy-btn" onclick="cyPress('r')"><i>r</i></div>
+                <div class="cy-btn" onclick="cyPress('s')"><i>s</i></div>
+                <div class="cy-btn" onclick="cyPress('t')"><i>t</i></div>
+                <div class="cy-btn" onclick="cyPress('u')"><i>u</i></div>
+                <div class="cy-btn" onclick="cyPress('v')"><i>v</i></div>
+                <div class="cy-btn cy-btn-solve" onclick="runCymathSolver()"><i class="fa-solid fa-play"></i></div>
             </div>
         </div>
     </div>
@@ -1111,6 +1459,49 @@
         </div>
     </div>
 
+    <!-- پەڕەی پڕۆفایلی قوتابی -->
+    <div id="tabProfile" class="tab-content-view" style="display:none;">
+        <div class="section-title" style="margin-bottom:12px;">
+            <i class="fa-solid fa-user-circle" style="color:var(--primary);"></i>
+            <span>پڕۆفایلی من:</span>
+        </div>
+
+        <div class="profile-hero-card">
+            <div class="profile-avatar-wrap" id="profAvatarWrap">
+                <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            <h2 id="profDisplayFullName" style="font-size:1.15rem; font-weight:900; color:var(--text-main); margin-bottom:2px;">ناوی قوتابی</h2>
+            <div id="profDisplayUsername" style="font-size:0.75rem; color:var(--primary); font-weight:800; direction:ltr;">@username</div>
+
+            <div class="profile-info-grid">
+                <div class="profile-row-item">
+                    <span style="color:var(--text-muted);"><i class="fa-solid fa-envelope"></i> ئیمەیڵ:</span>
+                    <span id="profDisplayEmail" class="num-font" style="font-weight:800;">---</span>
+                </div>
+                <div class="profile-row-item">
+                    <span style="color:var(--text-muted);"><i class="fa-solid fa-phone"></i> ژمارەی مۆبایل:</span>
+                    <span id="profDisplayPhone" class="num-font" style="font-weight:800;">---</span>
+                </div>
+                <div class="profile-row-item">
+                    <span style="color:var(--text-muted);"><i class="fa-solid fa-venus-mars"></i> ڕەگەز:</span>
+                    <span id="profDisplayGender" style="font-weight:800; color:var(--accent-cyan);">---</span>
+                </div>
+                <div class="profile-row-item">
+                    <span style="color:var(--text-muted);"><i class="fa-solid fa-location-dot"></i> ناونیشان:</span>
+                    <span id="profDisplayAddress" style="font-weight:800;">---</span>
+                </div>
+                <div class="profile-row-item">
+                    <span style="color:var(--text-muted);"><i class="fa-solid fa-shield-check"></i> دۆخی هەژمار:</span>
+                    <span style="color:#10b981; font-weight:900;"><i class="fa-solid fa-circle-check"></i> کارایە لە سێرڤەر</span>
+                </div>
+            </div>
+
+            <button onclick="handleStudentLogout()" style="width:100%; margin-top:16px; padding:12px; background:rgba(239, 68, 68, 0.12); color:var(--accent-red); border:1.5px solid rgba(239, 68, 68, 0.3); border-radius:16px; font-weight:900; font-size:0.85rem; cursor:pointer;">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> دەرچوون لە هەژمار (Logout)
+            </button>
+        </div>
+    </div>
+
 </div>
 
 <!-- پەنجەرەی خوێندنەوەی PDF -->
@@ -1131,22 +1522,6 @@
     </div>
     <div class="pdf-frame-wrapper">
         <iframe id="pdfFrame" src="" sandbox="allow-scripts allow-same-origin"></iframe>
-    </div>
-</div>
-
-<!-- پەنجەرەی ئاگادارییەکان بۆ خوێندکاران (بێ دەرکەوتنی هیچ لینکێک) -->
-<div class="pdf-modal-overlay" id="studentNotificationsModal" style="display:none; align-items:center; justify-content:center; padding:16px;">
-    <div style="background:var(--card-bg); border:2px solid var(--primary); border-radius:24px; padding:18px; max-width:440px; width:100%; color:var(--text-main); box-shadow:0 15px 35px rgba(0,0,0,0.6);">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid var(--card-border); padding-bottom:8px; margin-bottom:12px;">
-            <div style="font-weight:900; font-size:0.95rem; color:var(--primary); display:flex; align-items:center; gap:8px;">
-                <i class="fa-solid fa-bell"></i> <span>ئاگاداری و پەیامە گرنگەکان</span>
-            </div>
-            <button onclick="closeStudentNotificationsModal()" style="border:none; background:none; color:var(--text-muted); font-size:18px; cursor:pointer;">✕</button>
-        </div>
-        <div id="studentNotifsListContainer" style="max-height:360px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
-        <button onclick="closeStudentNotificationsModal()" style="width:100%; padding:10px; background:var(--primary); color:#fff; border:none; border-radius:12px; font-weight:900; margin-top:12px; cursor:pointer;">
-            داخستن
-        </button>
     </div>
 </div>
 
@@ -1193,15 +1568,15 @@
             </button>
         </div>
 
-        <div class="admin-tabs-row" style="grid-template-columns: repeat(4, 1fr); gap:4px;">
-            <button class="admin-tab-btn active" id="admTabBtn3" onclick="switchAdminTab('booklet')">📚 دانانی بابەت</button>
-            <button class="admin-tab-btn" id="admTabBtnAds" onclick="switchAdminTab('ads')">📢 ڕیکلامەکان</button>
-            <button class="admin-tab-btn" id="admTabBtn5" onclick="switchAdminTab('notif')">🔔 ئاگاداری</button>
-            <button class="admin-tab-btn" id="admTabBtnTele" onclick="switchAdminTab('tele')">📊 چاودێری</button>
-            <button class="admin-tab-btn" id="admTabBtn1" onclick="switchAdminTab('sec')">بەشەکان</button>
-            <button class="admin-tab-btn" id="admTabBtn2" onclick="switchAdminTab('grade')">پۆلەکان</button>
-            <button class="admin-tab-btn" id="admTabBtn4" onclick="switchAdminTab('manage')">سڕینەوە</button>
-            <button class="admin-tab-btn" id="admTabBtnMaint" onclick="switchAdminTab('maint')">⚙️ کۆنتڕۆڵ</button>
+        <div class="admin-tabs-row" style="display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none;">
+            <button class="admin-tab-btn active" id="admTabBtn1" onclick="switchAdminTab('sec')">١. بەش</button>
+            <button class="admin-tab-btn" id="admTabBtn2" onclick="switchAdminTab('grade')">٢. پۆل</button>
+            <button class="admin-tab-btn" id="admTabBtn3" onclick="switchAdminTab('booklet')">٣. کتێب</button>
+            <button class="admin-tab-btn" id="admTabBtn4" onclick="switchAdminTab('manage')">٤. سڕینەوە</button>
+            <button class="admin-tab-btn" id="admTabBtn5" onclick="switchAdminTab('database')">٥. داتابەیس</button>
+            <button class="admin-tab-btn" id="admTabBtn6" onclick="switchAdminTab('inbox')" style="background:rgba(2,132,199,0.15); color:#0284c7; border-color:#0284c7; min-width:90px;">
+                📬 پەیامەکان <span id="admMsgBadge" style="background:#ef4444; color:white; border-radius:8px; padding:1px 5px; font-size:0.65rem;"></span>
+            </button>
         </div>
 
         <!-- تاب ١: زیادکردنی بەشە سەرەکییەکان -->
@@ -1259,11 +1634,11 @@
             <div class="admin-form-group">
                 <label>جۆری بابەت:</label>
                 <select id="admBookletType" class="admin-input">
-                    <option value="مەلزەمە">مەلزەمە</option>
-                    <option value="کتێبی قوتابی">کتێبی قوتابی</option>
-                    <option value="کتێبی مامۆستا">کتێبی مامۆستا</option>
-                    <option value="ئەسیلە">ئەسیلەی وزاری</option>
-                    <option value="پوختە">پوختە و یاساکان</option>
+                    <option value="کتێبی قوتابی">📘 کتێبی قوتابی (مەنهەجی فەرمی)</option>
+                    <option value="کتێبی مامۆستا">📗 کتێبی مامۆستا (ڕێبەر)</option>
+                    <option value="مەلزەمە">📙 مەلزەمە</option>
+                    <option value="ئەسیلە">📕 ئەسیلەی وزاری</option>
+                    <option value="پوختە">📜 پوختە و یاساکان</option>
                 </select>
             </div>
             <div class="admin-form-group">
@@ -1319,78 +1694,6 @@
             </button>
         </div>
 
-        <!-- تاب ٥: ناردن و کۆنتڕۆڵی ئاگاداری بۆ خوێندکاران -->
-        <div id="adminTabNotifForm" style="display:none;">
-            <div style="background:var(--primary-light); border:1.5px solid var(--primary); border-radius:14px; padding:12px; margin-bottom:12px; text-align:right;">
-                <div style="font-size:0.85rem; font-weight:900; color:var(--primary); margin-bottom:8px;">
-                    <i class="fa-solid fa-bullhorn"></i> ناردنی ئاگاداری بۆ هەموو خوێندکاران:
-                </div>
-                <input type="text" id="adminNotifTitleInput" placeholder="سەردێڕ: خشتەی تاقیکردنەوەکان، پشوو..." class="admin-input" style="margin-bottom:6px; text-align:right;">
-                <textarea id="adminNotifBodyInput" placeholder="دەقی ئاگادارییەکە لێرە بنووسە..." class="admin-input" style="height:65px; margin-bottom:8px; resize:none; text-align:right;"></textarea>
-                <button class="btn-admin-submit" style="background:#059669;" onclick="sendStudentNotification()">
-                    <i class="fa-solid fa-paper-plane"></i> <span>بڵاوکردنەوە بۆ سەرجەم خوێندکاران</span>
-                </button>
-            </div>
-            <div style="font-size:0.75rem; font-weight:900; color:var(--text-muted); margin-bottom:6px;">مێژووی ئاگادارییە نێردراوەکان:</div>
-            <div id="adminNotifHistoryList" style="display:flex; flex-direction:column; gap:6px; max-height:160px; overflow-y:auto;"></div>
-        </div>
-
-        <!-- تاب ڕیکلامەکان (وەک کۆدی یەکەم) -->
-        <div id="adminTabAdsForm" style="display:none;">
-            <div style="background:var(--input-bg); border:1.5px solid var(--accent-amber); border-radius:14px; padding:12px; margin-bottom:12px;">
-                <div style="font-weight:900; font-size:0.85rem; color:var(--accent-amber); margin-bottom:8px;">
-                    <i class="fa-solid fa-rectangle-ad"></i> دانانی ڕیکلامی نوێ (لە مۆبایل و فایل):
-                </div>
-                <label for="adminAdFileInput" style="display:flex; align-items:center; justify-content:center; gap:6px; background:var(--primary); color:#fff; padding:10px; border-radius:12px; font-size:0.78rem; font-weight:900; cursor:pointer; margin-bottom:8px;">
-                    <i class="fa-solid fa-images"></i> <span>هەڵبژاردنی وێنە لە مۆبایل / فایل</span>
-                </label>
-                <input type="file" id="adminAdFileInput" accept="image/*" style="display:none;" onchange="handleAdFileSelect(this)">
-                
-                <div id="adminAdFilePreviewWrap" style="display:none; text-align:center; margin-bottom:8px;">
-                    <img id="adminAdFilePreviewImg" src="" style="max-height:85px; border-radius:10px; border:2px solid #10b981; object-fit:cover;">
-                </div>
-
-                <input type="text" id="adminAdTargetUrl" class="admin-input" placeholder="لینکی کردنەوە لە کاتی کلیک (ئارەزوومەندانە)..." style="direction:ltr; margin-bottom:8px;">
-                
-                <button type="button" class="btn-admin-submit" style="background:#059669;" onclick="addAdFromAdmin()">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> <span>پاشەکەوتکردن و بڵاوکردنەوەی ڕیکلام</span>
-                </button>
-            </div>
-            <div style="font-size:0.75rem; font-weight:900; color:var(--text-muted); margin-bottom:6px;">لیستی ڕیکلامە چالاکەکان:</div>
-            <div id="adminAdsListContainer" style="display:flex; flex-direction:column; gap:6px;"></div>
-        </div>
-
-        <!-- تاب چاودێریی لایڤ و مۆبایلی قوتابیان -->
-        <div id="adminTabTelemetry" style="display:none;">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px; text-align:center;">
-                <div style="background:rgba(16,185,129,0.1); border:1px solid #10b981; border-radius:12px; padding:8px;">
-                    <span style="font-size:0.68rem; color:var(--text-muted); display:block;">ئێستا لەسەر بەرنامەن</span>
-                    <span id="adminLiveOnlineCount" style="font-size:1.1rem; font-weight:900; color:#10b981;">١ چالاک</span>
-                </div>
-                <div style="background:rgba(6,182,212,0.1); border:1px solid #06b6d4; border-radius:12px; padding:8px;">
-                    <span style="font-size:0.68rem; color:var(--text-muted); display:block;">کۆی سەردانیکەران</span>
-                    <span id="adminTotalVisits" style="font-size:1.1rem; font-weight:900; color:#06b6d4;">١</span>
-                </div>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                <span style="font-size:0.75rem; font-weight:900; color:var(--text-muted);">زانیاری و مۆبایلی سەردانیکەران:</span>
-                <button onclick="clearAdminLogs()" style="background:#dc2626; color:#fff; border:none; border-radius:6px; padding:2px 8px; font-size:0.65rem; cursor:pointer;">سڕینەوە</button>
-            </div>
-            <div id="adminUserLogsList" style="max-height:220px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;"></div>
-        </div>
-
-        <!-- تاب کۆنتڕۆڵ (چاکسازی و هۆشداری) -->
-        <div id="adminTabMaint" style="display:none;">
-            <div style="background:rgba(239,68,68,0.08); border:1.5px solid #ef4444; border-radius:12px; padding:10px; margin-bottom:10px;">
-                <div style="font-size:0.8rem; font-weight:900; color:#ef4444; margin-bottom:6px;"><i class="fa-solid fa-triangle-exclamation"></i> دۆخی چاکسازیی بەرنامە:</div>
-                <input type="text" id="adminMaintenanceMsg" class="admin-input" placeholder="پەیامی چاکسازی..." value="بەرنامە بۆ ماوەیەکی کاتی لە چاکسازیدایە، بەم زووانە دەگەڕێینەوە." style="font-size:0.75rem; margin-bottom:6px;">
-                <div style="display:flex; gap:6px;">
-                    <button class="btn-admin-submit" style="flex:1; background:#dc2626; margin:0;" onclick="adminToggleMaintenance(true)"><i class="fa-solid fa-lock"></i> داخستن (چاکسازی)</button>
-                    <button class="btn-admin-submit" style="flex:1; background:#059669; margin:0;" onclick="adminToggleMaintenance(false)"><i class="fa-solid fa-lock-open"></i> کردنەوەی ئەپ</button>
-                </div>
-            </div>
-        </div>
-
         <!-- تاب ٤: سڕینەوە و بەڕێوەبردن -->
         <div id="adminTabManageList" style="display:none;">
             <div style="font-size:0.75rem; font-weight:900; color:var(--text-muted); margin-bottom:6px;">بەشە سەرەکییەکان:</div>
@@ -1402,6 +1705,121 @@
             <div style="font-size:0.75rem; font-weight:900; color:var(--text-muted); margin-bottom:6px;">بابەت و مەلزەمەکان:</div>
             <div id="admManageBookletsList" style="display:flex; flex-direction:column; gap:6px; max-height:140px; overflow-y:auto;"></div>
         </div>
+
+        <!-- تاب ٥: سەرجەم زانیارییەکانی داتابەیس و پاشەکەوتکردن -->
+        <div id="adminTabDatabaseInfo" style="display:none;">
+            <div style="background:var(--input-bg); border:1.5px solid var(--card-border); border-radius:16px; padding:12px; margin-bottom:12px;">
+                <div style="font-size:0.82rem; font-weight:900; color:var(--primary); margin-bottom:8px;">📊 ئاماری گشتیی سەرجەم داتابەیسەکە:</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.75rem; font-weight:800;">
+                    <div style="background:var(--card-bg); padding:8px; border-radius:10px; border:1px solid var(--card-border);">
+                        بەشە سەرەکییەکان: <span id="statHubsCount" style="color:var(--primary);">0</span>
+                    </div>
+                    <div style="background:var(--card-bg); padding:8px; border-radius:10px; border:1px solid var(--card-border);">
+                        پۆلەکان: <span id="statGradesCount" style="color:var(--accent-cyan);">0</span>
+                    </div>
+                    <div style="background:var(--card-bg); padding:8px; border-radius:10px; border:1px solid var(--card-border);">
+                        کتێبەکانی قوتابی: <span id="statStudentBooksCount" style="color:#2563eb;">0</span>
+                    </div>
+                    <div style="background:var(--card-bg); padding:8px; border-radius:10px; border:1px solid var(--card-border);">
+                        کۆی گشتی بابەتەکان: <span id="statTotalItemsCount" style="color:#10b981;">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-form-group">
+                <label style="font-weight:900;"><i class="fa-solid fa-download"></i> هەناردەکردنی هەموو داتابەیسەکە (Backup):</label>
+                <button class="btn-admin-submit" style="background:#0284c7;" onclick="exportFullDatabaseJson()">
+                    <i class="fa-solid fa-file-arrow-down"></i> دابەزاندنی فایلی یەدەگی هەموو داتاکان (.JSON)
+                </button>
+            </div>
+
+            <div class="admin-form-group" style="margin-top:14px;">
+                <label style="font-weight:900;"><i class="fa-solid fa-upload"></i> هاوردەکردنەوەی داتابەیس لەسەر مۆبایلێکی تر:</label>
+                <input type="file" id="admDbImportFile" accept=".json" class="admin-input" style="padding:6px;" onchange="importFullDatabaseJson(this)">
+            </div>
+
+            <!-- بەشی لیستی قوتابیان لەناو داتابەیس -->
+            <div style="margin-top:20px; border-top:2px dashed var(--card-border); padding-top:14px;">
+                <div style="font-size:0.85rem; font-weight:900; color:var(--text-main); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <span><i class="fa-solid fa-users" style="color:var(--primary);"></i> هەژمارە تۆمارکراوەکان:</span>
+                    <span id="admTotalUsersBadge" style="font-size:0.7rem; background:var(--primary-light); color:var(--primary); padding:2px 8px; border-radius:10px;">0 قوتابی</span>
+                </div>
+                <div id="admStudentsListContainer" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; padding-right:2px;">
+                    <!-- یوزەرەکان لێرە بە شێوازی یوزەر + دوگمەی بینین دروست دەبن -->
+                </div>
+            </div>
+        </div>
+
+        <!-- تاب ٦: سندوقی نامە و داواکارییەکانی قوتابیان -->
+        <div id="adminTabInboxView" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <span style="font-weight:900; font-size:0.85rem; color:var(--text-main);">
+                    <i class="fa-solid fa-inbox" style="color:#0284c7;"></i> نامە هاتووەکان لەلایەن قوتابیانەوە:
+                </span>
+                <button onclick="clearAllAdminMessages()" style="background:rgba(239,68,68,0.15); color:#ef4444; border:none; padding:5px 10px; border-radius:8px; font-size:0.72rem; font-weight:800; cursor:pointer;">
+                    <i class="fa-solid fa-trash"></i> سڕینەوەی هەمووی
+                </button>
+            </div>
+            <div id="admInboxListContainer" style="display:flex; flex-direction:column; gap:8px; max-height:350px; overflow-y:auto; padding-right:2px;">
+                <!-- نامەکان لێرە پیشان دەدرێن -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- پەنجەرەی مۆدێرنی بینینی سەرجەم زانیارییەکانی قوتابی (User Details Modal) -->
+<div class="admin-modal-overlay" id="studentDetailModal" style="display:none; z-index:999999;">
+    <div class="admin-modal-card" style="max-width:380px; text-align:center;">
+        <div class="admin-modal-header">
+            <span style="font-weight:900; font-size:0.9rem;"><i class="fa-solid fa-address-card" style="color:var(--primary);"></i> پەڕگەی زانیاریی قوتابی</span>
+            <button onclick="closeStudentDetailModal()" style="border:none; background:none; color:var(--text-muted); font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div id="studentModalAvatar" style="width:70px; height:70px; border-radius:50%; margin:0 auto 10px auto; display:flex; align-items:center; justify-content:center; font-size:30px; color:white; background:linear-gradient(135deg, #06b6d4, #4f46e5);"><i class="fa-solid fa-user-graduate"></i></div>
+        <h3 id="detFullName" style="font-size:1.05rem; font-weight:900; margin-bottom:2px;">ناوی قوتابی</h3>
+        <div id="detUsername" style="font-size:0.78rem; font-weight:800; color:var(--primary); direction:ltr; margin-bottom:14px;">@username</div>
+
+        <div style="display:flex; flex-direction:column; gap:8px; text-align:right; font-size:0.78rem;">
+            <div class="profile-row-item"><span>ئیمەیڵ:</span><span id="detEmail">---</span></div>
+            <div class="profile-row-item"><span>مۆبایل:</span><span id="detPhone">---</span></div>
+            <div class="profile-row-item"><span>ڕەگەز:</span><span id="detGender">---</span></div>
+            <div class="profile-row-item"><span>ناونیشان:</span><span id="detAddress">---</span></div>
+            <div class="profile-row-item" style="background:rgba(16,185,129,0.12); border-color:#10b981;">
+                <span style="color:#059669; font-weight:900;">کۆتا جار لە ئەپ بوو:</span>
+                <span id="detLastSeen" style="color:#059669; font-weight:900;">ئێستا</span>
+            </div>
+
+            <!-- بەشی ٢: گۆڕینی وشەی نهێنی قوتابی لەلایەن ئەدمینەوە -->
+            <button onclick="adminResetStudentPassword()" style="width:100%; margin-top:6px; padding:10px; background:#f59e0b; color:white; border:none; border-radius:12px; font-weight:900; font-size:0.8rem; cursor:pointer;">
+                <i class="fa-solid fa-key"></i> گۆڕینی وشەی نهێنی قوتابی
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- بەشی ١: پەنجەرەی ئاگاداری بەپەلەی سەر شاشەی قوتابیان (Pop-up Alert) -->
+<div class="admin-modal-overlay" id="studentPopupNoticeModal" style="display:none; z-index:9999999;">
+    <div class="admin-modal-card" style="max-width:360px; text-align:center; border:2px solid #f59e0b; border-radius:24px;">
+        <div style="font-size:2.8rem; color:#f59e0b; margin-bottom:8px;"><i class="fa-solid fa-bell"></i></div>
+        <h3 style="font-weight:900; font-size:1.1rem; color:var(--text-main); margin-bottom:6px;">ئاگادارییەکی گرنگ!</h3>
+        <p id="popupNoticeBody" style="font-size:0.82rem; line-height:1.7; color:var(--text-main); margin-bottom:16px; background:var(--input-bg); padding:10px; border-radius:12px;"></p>
+        <button onclick="closeStudentPopupNotice()" class="btn-neon-action" style="padding:11px; margin-top:0;">
+            <i class="fa-solid fa-check"></i> تێگەیشتم و داخستن
+        </button>
+    </div>
+</div>
+
+<!-- پەنجەرەی ناردنی پەیام لەلایەن قوتابییەوە بۆ ئەدمین -->
+<div class="admin-modal-overlay" id="studentContactAdminModal" style="display:none; z-index:999999;">
+    <div class="admin-modal-card" style="max-width:360px; text-align:right;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <span style="font-weight:900; font-size:0.9rem;"><i class="fa-solid fa-paper-plane" style="color:var(--primary);"></i> ناردنی داواکاری بۆ بەڕێوەبەر</span>
+            <button onclick="closeStudentContactModal()" style="border:none; background:none; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <textarea id="studentMsgToAdminInput" class="admin-input" rows="4" placeholder="داواکاری مەلزەمە یان هەر کێشەیەکت هەیە لێرە بینوسە..."></textarea>
+        <button class="btn-admin-submit" style="background:#0284c7; margin-top:8px;" onclick="sendStudentMessageToAdmin()">
+            <i class="fa-solid fa-paper-plane"></i> ناردن
+        </button>
     </div>
 </div>
 
@@ -1419,6 +1837,10 @@
         <i class="fa-solid fa-calculator"></i>
         <span>کۆنمرە</span>
     </div>
+    <div class="nav-item" onclick="switchNavTab('profile', this)">
+        <i class="fa-solid fa-user-circle"></i>
+        <span>پڕۆفایل</span>
+    </div>
     <div class="nav-item" onclick="switchNavTab('about', this)">
         <i class="fa-solid fa-user-tie"></i>
         <span>دەربارە</span>
@@ -1431,18 +1853,18 @@
     ========================================================= */
     const defaultHubs = [
         {
-            key: "grades_hub",
-            name: "مەلزەمەکان (١-١٢)",
-            desc: "مەلزەمە و پوختەی سەرجەم پۆلەکان",
-            icon: "fa-file-lines",
-            color: "linear-gradient(135deg, #4f46e5, #3b82f6)"
-        },
-        {
             key: "student_books_hub",
             name: "کتێبی قوتابی (١-١٢)",
-            desc: "سەرجەم کتێبەکانی خوێندنی پۆلی ١ تا ١٢",
-            icon: "fa-book-open",
-            color: "linear-gradient(135deg, #0284c7, #06b6d4)"
+            desc: "کتێبەکانی خوێندنی وەزارەتی پەروەردە",
+            icon: "fa-book",
+            color: "linear-gradient(135deg, #2563eb, #06b6d4)"
+        },
+        {
+            key: "grades_hub",
+            name: "پۆلەکان (١-١٢)",
+            desc: "مەلزەمە و پوختەی سەرجەم پۆلەکان",
+            icon: "fa-graduation-cap",
+            color: "linear-gradient(135deg, #4f46e5, #3b82f6)"
         },
         {
             key: "teacher_books_hub",
@@ -1460,7 +1882,7 @@
         },
         {
             key: "september_hub",
-            name: "ئەسیلەی پۆلە ناکۆتاکان",
+            name: "خولی ئەیلول",
             desc: "پرسیار و شیکاری خولی دووەم و سێیەم",
             icon: "fa-calendar-check",
             color: "linear-gradient(135deg, #8b5cf6, #ec4899)"
@@ -1468,46 +1890,21 @@
     ];
 
     const defaultGrades = [
-        // پۆلەکانی ١ تا ١٢ بۆ بەشی مەلزەمەکان (grades_hub)
-        { hubKey: "grades_hub", key: "12_sci", num: "١٢", name: "١٢ی زانستی", desc: "مەلزەمەی سەرجەم وانە زانستییەکان", bg: "linear-gradient(135deg, #4f46e5, #06b6d4)" },
-        { hubKey: "grades_hub", key: "12_lit", num: "١٢", name: "١٢ی وێژەیی", desc: "مێژوو، جوگرافیا، ئابووری، کوردی", bg: "linear-gradient(135deg, #7c3aed, #ec4899)" },
-        { hubKey: "grades_hub", key: "11", num: "١١", name: "پۆلی ١١ی ئامادەیی", desc: "زانستی و وێژەیی", bg: "linear-gradient(135deg, #0284c7, #38bdf8)" },
-        { hubKey: "grades_hub", key: "10", num: "١٠", name: "پۆلی ١٠ی ئامادەیی", desc: "مەلزەمەی وانە سەرەکییەکان", bg: "linear-gradient(135deg, #059669, #10b981)" },
-        { hubKey: "grades_hub", key: "9", num: "٩", name: "پۆلی ٩ی بنەڕەتی", desc: "ئەسیلە و مەلزەمەی وزاری", bg: "linear-gradient(135deg, #ea580c, #f59e0b)" },
-        { hubKey: "grades_hub", key: "8", num: "٨", name: "پۆلی ٨ی بنەڕەتی", desc: "بیرکاری، زانست، زمانەکان", bg: "linear-gradient(135deg, #dc2626, #ef4444)" },
-        { hubKey: "grades_hub", key: "7", num: "٧", name: "پۆلی ٧ی بنەڕەتی", desc: "مەلزەمە و کورتکراوەی وانەکان", bg: "linear-gradient(135deg, #d97706, #fbbf24)" },
-        { hubKey: "grades_hub", key: "6", num: "٦", name: "پۆلی ٦ی بنەڕەتی", desc: "وانە سەرەکییەکان و پوختە", bg: "linear-gradient(135deg, #0891b2, #22d3ee)" },
-        { hubKey: "grades_hub", key: "5", num: "٥", name: "پۆلی ٥ی سەرەتایی", desc: "کتێب و مەلزەمەی وانەکان", bg: "linear-gradient(135deg, #16a34a, #4ade80)" },
-        { hubKey: "grades_hub", key: "4", num: "٤", name: "پۆلی ٤ی سەرەتایی", desc: "ڕێبەری فێربوون و مەلزەمە", bg: "linear-gradient(135deg, #2563eb, #60a5fa)" },
-        { hubKey: "grades_hub", key: "3", num: "٣", name: "پۆلی ٣ی سەرەتایی", desc: "ڕاهێنان و وانە بنەڕەتییەکان", bg: "linear-gradient(135deg, #9333ea, #c084fc)" },
-        { hubKey: "grades_hub", key: "2", num: "٢", name: "پۆلی ٢ی سەرەتایی", desc: "پیت و ژمارەکان و زانست", bg: "linear-gradient(135deg, #e11d48, #fb7185)" },
-        { hubKey: "grades_hub", key: "1", num: "١", name: "پۆلی ١ی سەرەتایی", desc: "دەستپێکی فێربوونی پیتەکان", bg: "linear-gradient(135deg, #4f46e5, #818cf8)" },
+        // پۆلەکانی بەشی مەلزەمە (grades_hub)
+        { hubKey: "grades_hub", key: "12_sci", name: "١٢ی زانستی", desc: "مەلزەمەی سەرجەم وانە زانستییەکان", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=200&auto=format&fit=crop&q=80", icon: "fa-atom" },
+        { hubKey: "grades_hub", key: "12_lit", name: "١٢ی وێژەیی", desc: "مێژوو، جوگرافیا، ئابووری و ئەدەب", img: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=200&auto=format&fit=crop&q=80", icon: "fa-book-open" },
+        { hubKey: "grades_hub", key: "11", name: "١١ی ئامادەیی", desc: "زانستی و وێژەیی", img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=200&auto=format&fit=crop&q=80", icon: "fa-shapes" },
+        { hubKey: "grades_hub", key: "10", name: "١٠ی ئامادەیی", desc: "وانە سەرەکییەکان", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=200&auto=format&fit=crop&q=80", icon: "fa-compass-drafting" },
+        { hubKey: "grades_hub", key: "9", name: "٩ی بنەڕەتی", desc: "ئەسیلە و مەلزەمەی وزاری", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=200&auto=format&fit=crop&q=80", icon: "fa-award" },
+        { hubKey: "grades_hub", key: "7_8", name: "٧ و ٨ی بنەڕەتی", desc: "بیرکاری و زانست و زمان", img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=200&auto=format&fit=crop&q=80", icon: "fa-school" },
+        { hubKey: "grades_hub", key: "primary_1_6", name: "١ تا ٦ی سەرەتایی", desc: "کتێب و پوختەی وانەکان", img: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=200&auto=format&fit=crop&q=80", icon: "fa-child" },
 
-        // پۆلەکانی بەشی کتێبی قوتابی (student_books_hub)
-        { hubKey: "student_books_hub", key: "sb_12_sci", num: "١٢", name: "کتێبی ١٢ی زانستی", desc: "سەرجەم کتێبەکانی پۆلی ١٢ی زانستی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_12_lit", num: "١٢", name: "کتێبی ١٢ی وێژەیی", desc: "سەرجەم کتێبەکانی پۆلی ١٢ی وێژەیی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_11", num: "١١", name: "کتێبی پۆلی ١١", desc: "کتێبەکانی پۆلی ١١ی ئامادەیی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_10", num: "١٠", name: "کتێبی پۆلی ١٠", desc: "کتێبەکانی پۆلی ١٠ی ئامادەیی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_9", num: "٩", name: "کتێبی پۆلی ٩", desc: "کتێبەکانی پۆلی ٩ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_8", num: "٨", name: "کتێبی پۆلی ٨", desc: "کتێبەکانی پۆلی ٨ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_7", num: "٧", name: "کتێبی پۆلی ٧", desc: "کتێبەکانی پۆلی ٧ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_6", num: "٦", name: "کتێبی پۆلی ٦", desc: "کتێبەکانی پۆلی ٦ی بنەڕەتی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_5", num: "٥", name: "کتێبی پۆلی ٥", desc: "کتێبەکانی پۆلی ٥ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_4", num: "٤", name: "کتێبی پۆلی ٤", desc: "کتێبەکانی پۆلی ٤ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_3", num: "٣", name: "کتێبی پۆلی ٣", desc: "کتێبەکانی پۆلی ٣ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_2", num: "٢", name: "کتێبی پۆلی ٢", desc: "کتێبەکانی پۆلی ٢ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-        { hubKey: "student_books_hub", key: "sb_1", num: "١", name: "کتێبی پۆلی ١", desc: "کتێبەکانی پۆلی ١ی سەرەتایی", bg: "linear-gradient(135deg, #0284c7, #06b6d4)" },
-
-        // پۆلەکانی بەشی کتێبی مامۆستا (teacher_books_hub)
-        { hubKey: "teacher_books_hub", key: "tb_12", num: "١٢", name: "کتێبی مامۆستا ١٢", desc: "ڕێبەری مامۆستای سەرجەم وانەکان", bg: "linear-gradient(135deg, #059669, #10b981)" },
-        { hubKey: "teacher_books_hub", key: "tb_11", num: "١١", name: "کتێبی مامۆستا ١١", desc: "ڕێبەری زانستی و وێژەیی", bg: "linear-gradient(135deg, #059669, #10b981)" },
-        { hubKey: "teacher_books_hub", key: "tb_10", num: "١٠", name: "کتێبی مامۆستا ١٠", desc: "ڕێبەری مامۆستای پۆلی ١٠", bg: "linear-gradient(135deg, #059669, #10b981)" },
-        { hubKey: "teacher_books_hub", key: "tb_9", num: "٩", name: "کتێبی مامۆستا ٩", desc: "ڕێبەری مامۆستای پۆلی ٩", bg: "linear-gradient(135deg, #059669, #10b981)" },
-        { hubKey: "teacher_books_hub", key: "tb_8", num: "٨", name: "کتێبی مامۆستا ٨", desc: "ڕێبەری وانەکانی پۆلی ٨", bg: "linear-gradient(135deg, #059669, #10b981)" },
-        { hubKey: "teacher_books_hub", key: "tb_7", num: "٧", name: "کتێبی مامۆستا ٧", desc: "ڕێبەری وانەکانی پۆلی ٧", bg: "linear-gradient(135deg, #059669, #10b981)" },
-        { hubKey: "teacher_books_hub", key: "tb_6", num: "٦", name: "کتێبی مامۆستا ٦", desc: "ڕێبەری وانەکانی پۆلی ٦", bg: "linear-gradient(135deg, #059669, #10b981)" },
-        { hubKey: "teacher_books_hub", key: "tb_5", num: "٥", name: "کتێبی مامۆستا ٥", desc: "ڕێبەری وانەکانی پۆلی ٥", bg: "linear-gradient(135deg, #059669, #10b981)" },
-        { hubKey: "teacher_books_hub", key: "tb_4", num: "٤", name: "کتێبی مامۆستا ٤", desc: "ڕێبەری وانەکانی پۆلی ٤", bg: "linear-gradient(135deg, #059669, #10b981)" }
+        // پۆلەکانی بەشی کتێبی مامۆستا (٤-١٢)
+        { hubKey: "teacher_books_hub", key: "tb_12", name: "کتێبی مامۆستا ١٢", desc: "ڕێبەری مامۆستای سەرجەم وانەکان", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" },
+        { hubKey: "teacher_books_hub", key: "tb_11", name: "کتێبی مامۆستا ١١", desc: "ڕێبەری زانستی و وێژەیی", img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" },
+        { hubKey: "teacher_books_hub", key: "tb_10", name: "کتێبی مامۆستا ١٠", desc: "ڕێبەری مامۆستای پۆلی ١٠", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" },
+        { hubKey: "teacher_books_hub", key: "tb_9", name: "کتێبی مامۆستا ٩", desc: "ڕێبەری مامۆستای پۆلی ٩", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" },
+        { hubKey: "teacher_books_hub", key: "tb_4_8", name: "کتێبی مامۆستا ٤ تا ٨", desc: "ڕێبەری سەرەتایی و بنەڕەتی", img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=200&auto=format&fit=crop&q=80", icon: "fa-chalkboard-user" }
     ];
 
     const defaultBooklets = [
@@ -1535,41 +1932,10 @@
         }
     ];
 
-    function getHubs() { 
-        let hubs = JSON.parse(localStorage.getItem('harki_v2_hubs'));
-        if (!hubs) hubs = defaultHubs;
-        // لابردنی هەر دووبارەبوونەوەیەک تاوەکو تەنها یەک جار دەربکەوێت
-        const uniqueHubs = [];
-        const seenKeys = new Set();
-        hubs.forEach(h => {
-            if (!seenKeys.has(h.key)) {
-                seenKeys.add(h.key);
-                uniqueHubs.push(h);
-            }
-        });
-        if (!seenKeys.has('student_books_hub')) {
-            const sbHub = defaultHubs.find(d => d.key === 'student_books_hub');
-            if (sbHub) uniqueHubs.splice(1, 0, sbHub);
-        }
-        localStorage.setItem('harki_v2_hubs', JSON.stringify(uniqueHubs));
-        return uniqueHubs;
-    }
+    function getHubs() { return JSON.parse(localStorage.getItem('harki_v2_hubs')) || defaultHubs; }
     function setHubs(d) { localStorage.setItem('harki_v2_hubs', JSON.stringify(d)); }
 
-    function getGrades() { 
-        let grades = JSON.parse(localStorage.getItem('harki_v2_grades')) || defaultGrades;
-        // فلتەرکردنی هەموو پۆلێکی دووبارە بەپێی کلیلەکەی
-        const unique = [];
-        const seen = new Set();
-        grades.forEach(g => {
-            if (!seen.has(g.key)) {
-                seen.add(g.key);
-                unique.push(g);
-            }
-        });
-        localStorage.setItem('harki_v2_grades', JSON.stringify(unique));
-        return unique;
-    }
+    function getGrades() { return JSON.parse(localStorage.getItem('harki_v2_grades')) || defaultGrades; }
     function setGrades(d) { localStorage.setItem('harki_v2_grades', JSON.stringify(d)); }
 
     function getBooklets() { return JSON.parse(localStorage.getItem('harki_v2_booklets')) || defaultBooklets; }
@@ -1654,14 +2020,10 @@
             card.className = 'grade-card';
             card.onclick = () => openGradeBooklets(g.key);
 
-            // ئایکۆنی ژمارەی شازی کوردی بە شێوازی مۆدێرن و ڕەنگاوڕەنگ
-            const numBadge = g.num || g.name.match(/[٠-٩0-9]+/)?.[0] || '📚';
-            const bgGrad = g.bg || 'linear-gradient(135deg, #4f46e5, #06b6d4)';
+            let imgHtml = g.img ? `<img src="${g.img}" class="grade-card-img" alt="${g.name}">` : `<i class="fa-solid ${g.icon || 'fa-graduation-cap'}" style="font-size:24px; color:var(--primary);"></i>`;
 
             card.innerHTML = `
-                <div class="grade-card-img-wrap" style="background:${bgGrad}; color:#ffffff; font-size:1.75rem; font-weight:900; box-shadow:0 6px 16px rgba(0,0,0,0.18); border:none;">
-                    <span>${numBadge}</span>
-                </div>
+                <div class="grade-card-img-wrap">${imgHtml}</div>
                 <div class="grade-card-title">${g.name}</div>
                 <div class="grade-card-desc">${g.desc || ''}</div>
                 <div style="font-size:0.68rem; font-weight:800; color:var(--primary);">${countBooklets} بابەت</div>
@@ -1682,16 +2044,9 @@
         document.getElementById('viewGradesInHub').style.display = 'none';
         document.getElementById('viewBookletsInGrade').style.display = 'block';
 
-        const gradeBadgeNum = currentGrade.num || currentGrade.name.match(/[٠-٩0-9]+/)?.[0] || '📖';
-        const gradeBg = currentGrade.bg || 'linear-gradient(135deg, #4f46e5, #06b6d4)';
-
         document.getElementById('currentGradeTitleText').innerText = currentGrade.name;
         document.getElementById('currentGradeCountText').innerText = `${booklets.length} بابەت بەردەستە`;
-        document.getElementById('currentGradeIconHolder').innerHTML = `
-            <div style="width:36px; height:36px; border-radius:12px; background:${gradeBg}; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.1rem; box-shadow:0 4px 10px rgba(0,0,0,0.2);">
-                ${gradeBadgeNum}
-            </div>
-        `;
+        document.getElementById('currentGradeIconHolder').innerHTML = `<i class="fa-solid ${currentGrade.icon || 'fa-graduation-cap'}" style="color:var(--primary); font-size:22px;"></i>`;
 
         renderSubjectChips(gradeKey);
         renderBookletsList();
@@ -1748,35 +2103,11 @@
         filtered.forEach(b => {
             const isExam = b.type === 'ئەسیلە';
             const isTeacher = b.type === 'کتێبی مامۆستا';
-            const isStudentBook = b.type === 'کتێبی قوتابی';
             const card = document.createElement('div');
             card.className = 'booklet-card';
-            
-            let thumbClass = '';
-            let iconClass = 'fa-file-lines';
-            let btnBg = 'var(--primary)';
-            let tagClass = '';
-
-            if (isExam) {
-                thumbClass = 'exam-thumb';
-                iconClass = 'fa-file-circle-question';
-                btnBg = '#dc2626';
-                tagClass = 'exam-tag';
-            } else if (isTeacher) {
-                thumbClass = 'teacher-thumb';
-                iconClass = 'fa-chalkboard-user';
-                btnBg = '#059669';
-                tagClass = 'teacher-tag';
-            } else if (isStudentBook) {
-                thumbClass = 'student-thumb';
-                iconClass = 'fa-book-open';
-                btnBg = '#0284c7';
-                tagClass = 'student-tag';
-            }
-
             card.innerHTML = `
-                <div class="booklet-thumb ${thumbClass}">
-                    <i class="fa-solid ${iconClass}"></i>
+                <div class="booklet-thumb ${isExam ? 'exam-thumb' : (isTeacher ? 'teacher-thumb' : '')}">
+                    <i class="fa-solid ${isTeacher ? 'fa-chalkboard-user' : (isExam ? 'fa-file-circle-question' : 'fa-file-lines')}"></i>
                     <span>${b.subject}</span>
                 </div>
                 <div class="booklet-info">
@@ -1784,15 +2115,15 @@
                         <div class="booklet-title">${b.title}</div>
                         <div class="booklet-teacher"><i class="fa-solid fa-user-tie"></i> ${b.teacher}</div>
                         <div class="booklet-meta">
-                            <span class="tag-pill ${tagClass}">${b.type}</span>
+                            <span class="tag-pill ${isExam ? 'exam-tag' : (isTeacher ? 'teacher-tag' : '')}">${b.type}</span>
                             <span>• ${b.pages} لاپەڕە</span>
                             <span>• ${b.year}</span>
                         </div>
                     </div>
                     <div class="booklet-actions">
-                        <button class="btn-read" style="background:${btnBg};" onclick="openItemContent(${b.id})">
+                        <button class="btn-read" style="${isTeacher ? 'background:#059669;' : (isExam ? 'background:#dc2626;' : '')}" onclick="openItemContent(${b.id})">
                             <i class="fa-solid ${b.contentType === 'image' ? 'fa-image' : (b.contentType === 'text' ? 'fa-file-lines' : 'fa-eye')}"></i>
-                            <span>${b.contentType === 'image' ? 'بینینی وێنە' : (b.contentType === 'text' ? 'خوێندنەوەی دەق' : 'خوێندنەوەی کتێب')}</span>
+                            <span>${b.contentType === 'image' ? 'بینینی وێنە' : (b.contentType === 'text' ? 'خوێندنەوەی دەق' : 'خوێندنەوەی فایل')}</span>
                         </button>
                     </div>
                 </div>
@@ -1817,86 +2148,173 @@
         }
     }
 
-    /* =========================================================
-       ٢. حاسیبەی زیرەکی بیرکاری (AI Math Solver)
+/* =========================================================
+       بزوێنەری زیرەکی بیرکاری Cymath بە هەنگاوی کوردی
     ========================================================= */
-    function insertMathKey(val) {
-        const inp = document.getElementById('aiMathInputField');
-        inp.value += val;
-        inp.focus();
-    }
+    let cymathInputVal = "2x + 5 = 9";
 
-    function clearMathInput() {
-        document.getElementById('aiMathInputField').value = '';
-        document.getElementById('aiMathResultArea').style.display = 'none';
-    }
-
-    function handleAiMathUpload(input) {
-        if (!input.files || !input.files[0]) return;
-        const inp = document.getElementById('aiMathInputField');
-        inp.value = "3x + 15 = 45";
-        solveAiMathProblem();
-    }
-
-    function solveAiMathProblem() {
-        const raw = document.getElementById('aiMathInputField').value.trim();
-        if (!raw) { alert('تکایە سەرەتا پرسیار یان هاوکێشەکە بنووسە!'); return; }
-
-        const resultArea = document.getElementById('aiMathResultArea');
-        const stepsContainer = document.getElementById('aiMathStepsContainer');
-
-        resultArea.style.display = 'block';
-        stepsContainer.innerHTML = `<div style="text-align:center; padding:10px; color:var(--accent-cyan); font-weight:800;"><i class="fa-solid fa-spinner fa-spin"></i> بیرکردنەوە و شیکارکردنی هەنگاوەکان...</div>`;
-
-        setTimeout(() => {
-            let steps = [];
-            // هاوکێشەی هێڵی ئاسایی (وەک ax + b = c)
-            if (raw.includes('=')) {
-                steps.push({
-                    title: "هەنگاوی ١: جیاکردنەوەی نەگۆڕەکان",
-                    desc: "ژمارە نەگۆڕەکان دەگوازرێنەوە بۆ لای ڕاستی هاوکێشەکە، بە پێچەوانەکردنەوەی هێمای ئەرێنی یان نەرێنی.",
-                    badge: raw
-                });
-                steps.push({
-                    title: "هەنگاوی ٢: سادەکردنەوە و دابەشکردن",
-                    desc: "هەردوو لای هاوکێشەکە دابەشی سەر هاوکۆڵکەی نادیارەکە (x یان y) دەکرێت بۆ دۆزینەوەی بەهای تەواو.",
-                    badge: "x = (لای ڕاست) ÷ (هاوکۆڵکە)"
-                });
-                steps.push({
-                    title: "ئەنجامی کۆتایی شیکار",
-                    desc: "پشکنینی وەڵام: ئەگەر بەهای x لە هاوکێشە بنەڕەتییەکە دابنێیتەوە، هەردوو لا یەکسان دەبن.",
-                    badge: "وەڵامی دروست دۆزرایەوە"
-                });
-            } else {
-                try {
-                    let clean = raw.replace(/×/g, '*').replace(/÷/g, '/');
-                    let ans = eval(clean);
-                    steps.push({
-                        title: "یاسای پێشینەی کردارەکان (BODMAS)",
-                        desc: "سەرەتا ناو کەوانەکان، پاشان لێکدان و دابەشکردن، دواتر کۆکردنەوە و لێدەرکردن ئەنجامدرا.",
-                        badge: `ئەنجام = ${ans}`
-                    });
-                } catch(e) {
-                    steps.push({
-                        title: "ڕوونکردنەوەی شیکار",
-                        desc: "پرسیارەکە پێویستی بە دابەشکردن و سادەکردنەوەی هۆکارە هاوبەشەکان هەیە بە شێوازی یاسایی.",
-                        badge: raw
-                    });
+    function updateCymathDisplay() {
+        const inp = document.getElementById('cymathMainInput');
+        const bubble = document.getElementById('cymathBubbleDisplay');
+        if (inp) inp.value = cymathInputVal;
+        if (bubble) {
+            try {
+                if (window.katex) {
+                    bubble.innerHTML = katex.renderToString(cymathInputVal || "0", { throwOnError: false });
+                } else {
+                    bubble.innerText = cymathInputVal || "0";
                 }
+            } catch(e) {
+                bubble.innerText = cymathInputVal || "0";
             }
+        }
+    }
 
-            let html = '';
-            steps.forEach((s, idx) => {
-                html += `
-                    <div class="ai-step-item">
-                        <div style="font-weight:900; font-size:0.82rem; color:var(--primary); margin-bottom:4px;">🔹 ${s.title}</div>
-                        <div style="font-size:0.75rem; color:var(--text-main); margin-bottom:6px; line-height:1.5;">${s.desc}</div>
-                        <div style="background:var(--input-bg); padding:6px 10px; border-radius:8px; font-family:var(--num-font); font-weight:800; font-size:0.85rem; color:#0891b2; direction:ltr; text-align:left;">${s.badge}</div>
-                    </div>
-                `;
-            });
-            stepsContainer.innerHTML = html;
-        }, 400);
+    function cyPress(char) {
+        cymathInputVal += char;
+        updateCymathDisplay();
+    }
+
+    function cyBackspace() {
+        cymathInputVal = cymathInputVal.slice(0, -1);
+        updateCymathDisplay();
+    }
+
+    function clearCymathInput() {
+        cymathInputVal = "";
+        updateCymathDisplay();
+        const view = document.getElementById('cymathStepsView');
+        if (view) view.style.display = 'none';
+        const bubble = document.getElementById('cymathBubbleDisplay');
+        if (bubble) bubble.innerText = "0";
+    }
+
+    function switchCymathKeypad(page) {
+        document.getElementById('cymathPage1').style.display = (page === 1) ? 'grid' : 'none';
+        document.getElementById('cymathPage2').style.display = (page === 2) ? 'grid' : 'none';
+        document.getElementById('cyDot1').classList.toggle('active', page === 1);
+        document.getElementById('cyDot2').classList.toggle('active', page === 2);
+    }
+
+    async function runCymathSolver() {
+        const raw = cymathInputVal.trim();
+        if (!raw) return;
+
+        const view = document.getElementById('cymathStepsView');
+        const content = document.getElementById('cymathStepsContent');
+        view.style.display = 'block';
+
+        let mathExp = raw
+            .replace(/×/g, '*')
+            .replace(/÷/g, '/')
+            .replace(/–/g, '-')
+            .replace(/\^/g, '**');
+
+        mathExp = mathExp.replace(/(\d)([a-zA-Z(])/g, '$1*$2');
+
+        content.innerHTML = `
+            <div style="text-align:center; padding:20px; color:#22c55e; font-family:sans-serif;">
+                <i class="fa-solid fa-circle-notch fa-spin" style="font-size:1.8rem; margin-bottom:8px;"></i>
+                <div style="font-size:0.88rem; font-weight:800;">سەرقاڵی شیکارکردنی هەنگاوەکانە...</div>
+            </div>
+        `;
+        view.scrollIntoView({ behavior: 'smooth' });
+
+        // ١. ئەگەر کرداری ژمێریاری بوو (وەک 25 × 514)
+        if (!raw.includes('=') && !/[a-zA-Z]/.test(raw.replace(/sqrt|sin|cos|tan|log/g, ''))) {
+            try {
+                let safeExp = mathExp.replace(/sqrt\(([^)]+)\)/g, 'Math.sqrt($1)');
+                let calculatedAns = Function(`'use strict'; return (${safeExp})`)();
+                let formattedAns = Number.isInteger(calculatedAns) ? calculatedAns : parseFloat(calculatedAns.toFixed(4));
+
+                setTimeout(() => {
+                    content.innerHTML = `
+                        <div class="cymath-step-row">
+                            <div class="cymath-step-header">
+                                <div class="cymath-step-num">1</div>
+                                <span>هەژمارکردن و لێکدانی ژمارەکان:</span>
+                            </div>
+                            <div class="cymath-step-math">${window.katex ? katex.renderToString(raw, { displayMode: true, throwOnError: false }) : raw}</div>
+                        </div>
+                        <div class="cymath-step-row">
+                            <div class="cymath-step-header">
+                                <div class="cymath-step-num">2</div>
+                                <span>ئەنجامی کۆتایی شیکار:</span>
+                            </div>
+                            <div class="cymath-step-math">${window.katex ? katex.renderToString('= ' + formattedAns.toLocaleString(), { displayMode: true, throwOnError: false }) : formattedAns}</div>
+                        </div>
+                    `;
+                }, 200);
+                return;
+            } catch(e) {}
+        }
+
+        // ٢. ئەگەر هاوکێشەی هێڵی بوو (وەک 2x + 5 = 9)
+        const match = raw.replace(/\s+/g, '').match(/^([+-]?\d*)x([+-]\d+)=([+-]?\d+)$/i);
+        if (match) {
+            let a = match[1] === '' || match[1] === '+' ? 1 : (match[1] === '-' ? -1 : parseFloat(match[1]));
+            let b = parseFloat(match[2]);
+            let c = parseFloat(match[3]);
+
+            const opName = b >= 0 
+                ? `ژمارە ${Math.abs(b)} لە هەردوو لای هاوکێشەکە کەم بکەرەوە:` 
+                : `ژمارە ${Math.abs(b)} بۆ هەردوو لای هاوکێشەکە زیاد بکە:`;
+            const signRev = b >= 0 ? `-` : `+`;
+            const cMinusB = c - b;
+            const finalVal = cMinusB / a;
+
+            content.innerHTML = `
+                <div class="cymath-step-row">
+                    <div class="cymath-step-header"><div class="cymath-step-num">1</div><span>${opName}</span></div>
+                    <div class="cymath-step-math">${katex.renderToString(`${a !== 1 ? a : ''}x = ${c} ${signRev} ${Math.abs(b)}`, { displayMode: true })}</div>
+                </div>
+                <div class="cymath-step-row">
+                    <div class="cymath-step-header"><div class="cymath-step-num">2</div><span>سادەکردنەوەی لای ڕاست بۆ (${cMinusB}):</span></div>
+                    <div class="cymath-step-math">${katex.renderToString(`${a !== 1 ? a : ''}x = ${cMinusB}`, { displayMode: true })}</div>
+                </div>
+                <div class="cymath-step-row">
+                    <div class="cymath-step-header"><div class="cymath-step-num">3</div><span>هەردوو لای هاوکێشەکە دابەشی سەر (${a}) بکە:</span></div>
+                    <div class="cymath-step-math">${katex.renderToString(`x = \\frac{${cMinusB}}{${a}}`, { displayMode: true })}</div>
+                </div>
+                <div class="cymath-step-row">
+                    <div class="cymath-step-header"><div class="cymath-step-num">4</div><span>دۆزینەوەی بەهای کۆتایی بۆ x:</span></div>
+                    <div class="cymath-step-math">${katex.renderToString(`x = ${finalVal}`, { displayMode: true })}</div>
+                </div>
+            `;
+            return;
+        }
+
+        // ٣. بۆ سەرجەم پرسیارە قورسەکانی تر لە ڕێگەی زیرەکی دەستکردەوە
+        try {
+            const promptUrl = encodeURIComponent(`Solve step-by-step: "${raw}". Write descriptions in Kurdish Sorani. Output JSON array: [{"step":1,"text":"ڕوونکردنەوە","math":"LaTeX"}]`);
+            const response = await fetch(`https://text.pollinations.ai/${promptUrl}?json=true`);
+            const data = await response.json();
+
+            if (Array.isArray(data) && data.length > 0) {
+                content.innerHTML = '';
+                data.forEach((s, idx) => {
+                    const row = document.createElement('div');
+                    row.className = 'cymath-step-row';
+                    const mathRendered = window.katex ? katex.renderToString(s.math || '', { displayMode: true, throwOnError: false }) : s.math;
+                    row.innerHTML = `
+                        <div class="cymath-step-header">
+                            <div class="cymath-step-num">${idx + 1}</div>
+                            <span>${s.text}</span>
+                        </div>
+                        <div class="cymath-step-math">${mathRendered}</div>
+                    `;
+                    content.appendChild(row);
+                });
+                return;
+            }
+        } catch(err) {}
+
+        content.innerHTML = `
+            <div class="cymath-step-row">
+                <div class="cymath-step-header"><div class="cymath-step-num">1</div><span>دەربڕینی بیرکاری:</span></div>
+                <div class="cymath-step-math">${window.katex ? katex.renderToString(raw, { displayMode: true }) : raw}</div>
+            </div>
+        `;
     }
 
     /* =========================================================
@@ -1986,173 +2404,7 @@
         populateAdminHubSelect();
         populateAdminGradeSelect();
         renderAdminManageLists();
-        renderAdminAdsList();
-        renderAdminLogs();
         document.getElementById('adminControlModal').style.display = 'flex';
-    }
-
-    /* سیستەمی سلایدەری ڕیکلام لە مۆبایل و فایل */
-    let userAdsList = [];
-    let currentAdSlideIndex = 0;
-    let adAutoSlideTimer = null;
-    let preparedAdBase64 = "";
-
-    function getStoredAds() {
-        try { return JSON.parse(localStorage.getItem('harki_ads_list')) || []; }
-        catch(e) { return []; }
-    }
-    function setStoredAds(ads) {
-        userAdsList = ads;
-        localStorage.setItem('harki_ads_list', JSON.stringify(ads));
-        renderUserAdsSlider();
-        renderAdminAdsList();
-    }
-
-    function initAdsSlider() {
-        userAdsList = getStoredAds();
-        renderUserAdsSlider();
-        clearInterval(adAutoSlideTimer);
-        adAutoSlideTimer = setInterval(() => { nextAdSlide(); }, 10000);
-    }
-
-    function renderUserAdsSlider() {
-        const wrap = document.getElementById('adsBannerWrapper');
-        const track = document.getElementById('adsTrack');
-        const dots = document.getElementById('adsPaginationDots');
-        if (!wrap || !track) return;
-
-        if (userAdsList.length === 0) {
-            wrap.style.display = 'none';
-            return;
-        }
-        wrap.style.display = 'block';
-        track.innerHTML = '';
-        if (dots) dots.innerHTML = '';
-
-        userAdsList.forEach((ad, idx) => {
-            const slide = document.createElement('div');
-            slide.className = 'ad-slide-item';
-            slide.onclick = () => { if (ad.url) window.open(ad.url, '_blank'); };
-            slide.innerHTML = `<img src="${ad.img}"><div class="ad-tag-badge">ڕیکلام</div>`;
-            track.appendChild(slide);
-
-            if (dots && userAdsList.length > 1) {
-                const dot = document.createElement('div');
-                dot.className = `ad-dot ${idx === 0 ? 'active' : ''}`;
-                dot.onclick = () => goToAdSlide(idx);
-                dots.appendChild(dot);
-            }
-        });
-        updateAdSlidePosition();
-    }
-
-    function updateAdSlidePosition() {
-        const track = document.getElementById('adsTrack');
-        if (track) track.style.transform = `translateX(-${currentAdSlideIndex * 100}%)`;
-        document.querySelectorAll('.ad-dot').forEach((d, i) => d.classList.toggle('active', i === currentAdSlideIndex));
-    }
-
-    function nextAdSlide() {
-        if (userAdsList.length <= 1) return;
-        currentAdSlideIndex = (currentAdSlideIndex + 1) % userAdsList.length;
-        updateAdSlidePosition();
-    }
-    function prevAdSlide() {
-        if (userAdsList.length <= 1) return;
-        currentAdSlideIndex = (currentAdSlideIndex - 1 + userAdsList.length) % userAdsList.length;
-        updateAdSlidePosition();
-    }
-    function manualNextAd(e) { if (e) e.stopPropagation(); nextAdSlide(); }
-    function manualPrevAd(e) { if (e) e.stopPropagation(); prevAdSlide(); }
-    function goToAdSlide(idx) { currentAdSlideIndex = idx; updateAdSlidePosition(); }
-
-    function handleAdFileSelect(input) {
-        if (!input.files || !input.files[0]) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preparedAdBase64 = e.target.result;
-            const prev = document.getElementById('adminAdFilePreviewImg');
-            const wrap = document.getElementById('adminAdFilePreviewWrap');
-            if (prev && wrap) { prev.src = preparedAdBase64; wrap.style.display = 'block'; }
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-
-    function addAdFromAdmin() {
-        if (!preparedAdBase64) { alert('تکایە سەرەتا وێنەیەک لە مۆبایلەکەت دیاریبکە!'); return; }
-        const url = document.getElementById('adminAdTargetUrl')?.value.trim() || '';
-        let ads = getStoredAds();
-        ads.push({ id: Date.now(), img: preparedAdBase64, url: url });
-        setStoredAds(ads);
-        alert('✅ وێنەی ڕیکلام بە سەرکەوتوویی پاشەکەوتکرا!');
-        preparedAdBase64 = "";
-        document.getElementById('adminAdFileInput').value = '';
-        document.getElementById('adminAdTargetUrl').value = '';
-        document.getElementById('adminAdFilePreviewWrap').style.display = 'none';
-    }
-
-    function renderAdminAdsList() {
-        const c = document.getElementById('adminAdsListContainer');
-        if (!c) return;
-        c.innerHTML = '';
-        const ads = getStoredAds();
-        if (ads.length === 0) { c.innerHTML = '<div style="text-align:center; font-size:0.72rem; color:var(--text-muted);">هیچ ڕیکلامێک دانەنراوە.</div>'; return; }
-        ads.forEach((ad, i) => {
-            const item = document.createElement('div');
-            item.style = "background:var(--input-bg); border:1px solid var(--card-border); border-radius:8px; padding:6px; display:flex; justify-content:space-between; align-items:center;";
-            item.innerHTML = `
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <img src="${ad.img}" style="width:40px; height:30px; object-fit:cover; border-radius:6px;">
-                    <span style="font-size:0.72rem; font-weight:800;">ڕیکلام #${i+1}</span>
-                </div>
-                <button onclick="deleteAdFromAdmin(${i})" style="background:#dc2626; color:#fff; border:none; border-radius:6px; padding:3px 8px; font-size:0.65rem; cursor:pointer;">سڕینەوە</button>
-            `;
-            c.appendChild(item);
-        });
-    }
-
-    function deleteAdFromAdmin(idx) {
-        let ads = getStoredAds();
-        ads.splice(idx, 1);
-        setStoredAds(ads);
-    }
-
-    /* سیستەمی چاودێری مۆبایل و سەردانیکەران */
-    async function trackVisitor() {
-        try {
-            const dev = navigator.userAgent.includes('iPhone') ? 'Apple iPhone 🍏' : (navigator.userAgent.includes('Android') ? 'Android Phone 📱' : 'Computer 💻');
-            const now = new Date();
-            const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
-            let logs = JSON.parse(localStorage.getItem('harki_visitor_logs')) || [];
-            logs.unshift({ id: Date.now(), dev: dev, time: timeStr, screen: `${window.screen.width}×${window.screen.height}` });
-            if (logs.length > 40) logs = logs.slice(0, 40);
-            localStorage.setItem('harki_visitor_logs', JSON.stringify(logs));
-        } catch(e) {}
-    }
-
-    function renderAdminLogs() {
-        const list = document.getElementById('adminUserLogsList');
-        if (!list) return;
-        list.innerHTML = '';
-        const logs = JSON.parse(localStorage.getItem('harki_visitor_logs')) || [];
-        document.getElementById('adminTotalVisits').innerText = logs.length;
-        if (logs.length === 0) { list.innerHTML = '<div style="text-align:center; font-size:0.72rem; color:var(--text-muted);">هیچ تۆمارێک نییە.</div>'; return; }
-        logs.forEach(l => {
-            const row = document.createElement('div');
-            row.style = "background:var(--input-bg); border:1px solid var(--card-border); border-radius:8px; padding:6px 8px; display:flex; justify-content:space-between; font-size:0.72rem;";
-            row.innerHTML = `<span>📱 ${l.dev} (${l.screen})</span><span style="color:var(--text-muted); font-family:var(--num-font);">${l.time}</span>`;
-            list.appendChild(row);
-        });
-    }
-
-    function clearAdminLogs() {
-        localStorage.removeItem('harki_visitor_logs');
-        renderAdminLogs();
-    }
-
-    function adminToggleMaintenance(enabled) {
-        localStorage.setItem('harki_maint_mode', enabled ? 'true' : 'false');
-        alert(enabled ? 'دۆخی چاکسازی چالاک کرا!' : 'بەرنامە کرایەوە!');
     }
 
     function closeAdminModal() {
@@ -2165,25 +2417,12 @@
         document.getElementById('adminTabSectionForm').style.display = 'none';
         document.getElementById('adminTabGradeForm').style.display = 'none';
         document.getElementById('adminTabBookletForm').style.display = 'none';
-        document.getElementById('adminTabNotifForm').style.display = 'none';
         document.getElementById('adminTabManageList').style.display = 'none';
+        document.getElementById('adminTabDatabaseInfo').style.display = 'none';
+        const inboxView = document.getElementById('adminTabInboxView');
+        if (inboxView) inboxView.style.display = 'none';
 
-        document.getElementById('adminTabAdsForm').style.display = 'none';
-        document.getElementById('adminTabTelemetry').style.display = 'none';
-        document.getElementById('adminTabMaint').style.display = 'none';
-
-        if (t === 'ads') {
-            document.getElementById('admTabBtnAds').classList.add('active');
-            document.getElementById('adminTabAdsForm').style.display = 'block';
-            renderAdminAdsList();
-        } else if (t === 'tele') {
-            document.getElementById('admTabBtnTele').classList.add('active');
-            document.getElementById('adminTabTelemetry').style.display = 'block';
-            renderAdminLogs();
-        } else if (t === 'maint') {
-            document.getElementById('admTabBtnMaint').classList.add('active');
-            document.getElementById('adminTabMaint').style.display = 'block';
-        } else if (t === 'sec') {
+        if (t === 'sec') {
             document.getElementById('admTabBtn1').classList.add('active');
             document.getElementById('adminTabSectionForm').style.display = 'block';
         } else if (t === 'grade') {
@@ -2194,231 +2433,220 @@
             document.getElementById('admTabBtn3').classList.add('active');
             document.getElementById('adminTabBookletForm').style.display = 'block';
             populateAdminGradeSelect();
-        } else if (t === 'notif') {
-            document.getElementById('admTabBtn5').classList.add('active');
-            document.getElementById('adminTabNotifForm').style.display = 'block';
-            renderAdminNotifHistory();
         } else if (t === 'manage') {
             document.getElementById('admTabBtn4').classList.add('active');
             document.getElementById('adminTabManageList').style.display = 'block';
             renderAdminManageLists();
+        } else if (t === 'database') {
+            document.getElementById('admTabBtn5').classList.add('active');
+            document.getElementById('adminTabDatabaseInfo').style.display = 'block';
+            loadAdminDatabaseStats();
+        } else if (t === 'inbox') {
+            const btn6 = document.getElementById('admTabBtn6');
+            if (btn6) btn6.classList.add('active');
+            if (inboxView) inboxView.style.display = 'block';
+            loadAdminInboxMessages();
         }
     }
 
-    /* =========================================================
-       شاردنەوەی سەرجەم لینکەکان و سیستەمی ئاگاداری ڕاستەوخۆ
-    ========================================================= */
-    function showAppToast(text, color = '#4f46e5') {
-        let toast = document.getElementById('globalAppCustomToast');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'globalAppCustomToast';
-            toast.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#0f172a; border:2px solid " + color + "; color:#ffffff; padding:10px 18px; border-radius:16px; font-size:0.78rem; font-weight:800; z-index:9999999; box-shadow:0 10px 25px rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; gap:8px; text-align:center; max-width:90%; transition:all 0.3s ease;";
-            document.body.appendChild(toast);
-        }
-        toast.style.borderColor = color;
-        toast.innerHTML = text;
-        toast.style.display = 'flex';
-        clearTimeout(window._toastTimeout);
-        window._toastTimeout = setTimeout(() => {
-            if (toast) toast.style.display = 'none';
-        }, 3200);
-    }
+    /* پیشاندانی سەرجەم پەیامەکانی قوتابیان لە سندوقی ئەدمیندا */
+    function loadAdminInboxMessages() {
+        const container = document.getElementById('admInboxListContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        const msgs = JSON.parse(localStorage.getItem('harki_admin_student_inbox')) || [];
 
-    // گۆڕینی هەموو Alert بە تۆستی ناوخۆیی تا هیچ لینک و ناونیشانێک دەرنەکەوێت
-    window.alert = function(msg) {
-        if (!msg) return;
-        let c = '#4f46e5';
-        if (msg.includes('✅') || msg.includes('پیرۆزە') || msg.includes('سەرکەوتوو') || msg.includes('کۆپی')) c = '#10b981';
-        else if (msg.includes('❌') || msg.includes('هەڵە') || msg.includes('پچڕاوە') || msg.includes('نەدۆزرایەوە')) c = '#ef4444';
-        else if (msg.includes('⚠️') || msg.includes('تکایە') || msg.includes('نییە')) c = '#f59e0b';
-        showAppToast(msg, c);
-    };
+        // نیشاندانی ژمارەی نامەکان لەسەر دوگمەکە
+        const badge = document.getElementById('admMsgBadge');
+        if (badge) badge.innerText = msgs.length > 0 ? msgs.length : '';
 
-    window.confirm = function() { return true; };
-
-    window.addEventListener('offline', function() {
-        showAppToast('📡 هێڵی ئینتەرنێت پچڕاوە، تکایە ئینتەرنێتەکەت بپشکنە.', '#ef4444');
-    });
-
-    const STUDENT_NOTIF_TOPIC = "kurd_student_notifications_hub_2026";
-    const STUDENT_STORAGE_KEY = "kurd_student_local_notifs_db";
-
-    function getStoredStudentNotifs() {
-        try {
-            return JSON.parse(localStorage.getItem(STUDENT_STORAGE_KEY) || '[]');
-        } catch(e) {
-            return [];
-        }
-    }
-
-    function setStoredStudentNotifs(notifs) {
-        localStorage.setItem(STUDENT_STORAGE_KEY, JSON.stringify(notifs));
-        updateStudentBellBadge();
-    }
-
-    async function sendStudentNotification() {
-        const titleInput = document.getElementById('adminNotifTitleInput');
-        const bodyInput = document.getElementById('adminNotifBodyInput');
-        const title = titleInput ? titleInput.value.trim() : '';
-        const body = bodyInput ? bodyInput.value.trim() : '';
-
-        if (!title || !body) {
-            alert('⚠️ تکایە سەردێڕ و دەقی ئاگاداری بنووسە!');
+        if (msgs.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:0.8rem; font-weight:800;">هیچ پەیامێک نییە، سندوقەکە بەتاڵە!</div>`;
             return;
         }
 
-        const now = new Date();
-        const timeStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} - ${now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}`;
+        msgs.forEach((m, idx) => {
+            const card = document.createElement('div');
+            card.style.cssText = "background:var(--input-bg); padding:12px; border-radius:14px; border:1px solid var(--card-border); text-align:right;";
+            
+            const waLink = m.phone && m.phone !== '---' 
+                ? `<a href="https://wa.me/${m.phone.replace(/[^0-9]/g, '')}" target="_blank" style="color:#22c55e; text-decoration:none; font-weight:800; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;"><i class="fa-brands fa-whatsapp"></i> واتسئەپ</a>` 
+                : '';
 
-        const newNotif = {
-            id: Date.now(),
-            title: title,
-            body: body,
-            time: timeStr,
-            sender: "بەڕێوەبەرایەتی خوێندکاران"
+            card.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; border-bottom:1px dashed var(--card-border); padding-bottom:6px;">
+                    <div>
+                        <span style="font-weight:900; font-size:0.85rem; color:var(--primary); direction:ltr; display:inline-block;">@${m.username}</span>
+                        <span style="font-size:0.72rem; color:var(--text-muted); margin-right:8px;">(${m.phone || 'بێ مۆبایل'})</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        ${waLink}
+                        <button onclick="deleteSingleAdminMessage(${idx})" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:13px;" title="سڕینەوە"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+                <div style="font-size:0.82rem; color:var(--text-main); line-height:1.6; white-space:pre-wrap; margin-bottom:6px;">${m.text}</div>
+                <div style="font-size:0.65rem; color:var(--text-muted); direction:ltr; text-align:left;"><i class="fa-regular fa-clock"></i> ${m.date}</div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function deleteSingleAdminMessage(idx) {
+        let msgs = JSON.parse(localStorage.getItem('harki_admin_student_inbox')) || [];
+        msgs.splice(idx, 1);
+        localStorage.setItem('harki_admin_student_inbox', JSON.stringify(msgs));
+        loadAdminInboxMessages();
+    }
+
+    function clearAllAdminMessages() {
+        if (!confirm('دڵنیایت لە سڕینەوەی سەرجەم نامەکان؟')) return;
+        localStorage.removeItem('harki_admin_student_inbox');
+        loadAdminInboxMessages();
+    }
+
+    /* هەڵگرتنی سەرجەم لیستی قوتابیان و کاتی چالاکبوونیان */
+    function getAllStudents() {
+        return JSON.parse(localStorage.getItem('harki_all_students_db')) || [];
+    }
+    function saveAllStudents(list) {
+        localStorage.setItem('harki_all_students_db', JSON.stringify(list));
+    }
+
+    /* نوێکردنەوەی کۆتا جار کەی لەناو بەرنامە بووە (Last Seen) */
+    function updateStudentLastSeen(username) {
+        if (!username) return;
+        let list = getAllStudents();
+        let idx = list.findIndex(u => u.username === username);
+        const nowStr = new Date().toLocaleString('en-US', { hour12: true });
+        if (idx !== -1) {
+            list[idx].last_seen = nowStr;
+            saveAllStudents(list);
+        }
+    }
+
+    /* پیشاندانی ئامارەکانی داتابەیس و لیستی یوزەرەکان */
+    function loadAdminDatabaseStats() {
+        const hubs = getHubs();
+        const grades = getGrades();
+        const booklets = getBooklets();
+        const studentBooks = booklets.filter(b => b.type === 'کتێبی قوتابی');
+        const students = getAllStudents();
+
+        document.getElementById('statHubsCount').innerText = hubs.length;
+        document.getElementById('statGradesCount').innerText = grades.length;
+        document.getElementById('statStudentBooksCount').innerText = studentBooks.length;
+        document.getElementById('statTotalItemsCount').innerText = booklets.length;
+        document.getElementById('admTotalUsersBadge').innerText = `${students.length} قوتابی`;
+
+        renderAdminStudentsList();
+    }
+
+    /* پیشاندانی یوزەرەکان لەگەڵ دوگمەی بینین */
+    function renderAdminStudentsList() {
+        const container = document.getElementById('admStudentsListContainer');
+        container.innerHTML = '';
+        const students = getAllStudents();
+
+        if (students.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding:15px; color:var(--text-muted); font-size:0.75rem;">هیچ هەژمارێک تۆمار نەکراوە تا ئێستا!</div>`;
+            return;
+        }
+
+        students.forEach(st => {
+            const row = document.createElement('div');
+            row.style.cssText = "display:flex; justify-content:space-between; align-items:center; background:var(--input-bg); padding:8px 12px; border-radius:12px; border:1px solid var(--card-border);";
+            
+            row.innerHTML = `
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:32px; height:32px; border-radius:50%; background:${st.gender === 'مێ' ? 'linear-gradient(135deg, #ec4899, #8b5cf6)' : 'linear-gradient(135deg, #06b6d4, #4f46e5)'}; color:white; display:flex; align-items:center; justify-content:center; font-size:14px;">
+                        <i class="fa-solid ${st.gender === 'مێ' ? 'fa-user-nurse' : 'fa-user-graduate'}"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight:900; font-size:0.8rem; direction:ltr; text-align:right;">@${st.username}</div>
+                        <div style="font-size:0.65rem; color:var(--text-muted);">${st.full_name || 'قوتابی'}</div>
+                    </div>
+                </div>
+                <button onclick="openStudentDetail('${st.username}')" style="background:#0284c7; color:white; border:none; padding:6px 12px; border-radius:10px; font-size:0.72rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:4px;">
+                    <i class="fa-solid fa-eye"></i> <span>بینین</span>
+                </button>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    /* کردنەوەی پەنجەرەی زانیاریی تەواوی قوتابییەکە */
+    function openStudentDetail(username) {
+        const student = getAllStudents().find(s => s.username === username);
+        if (!student) return;
+
+        document.getElementById('detFullName').innerText = student.full_name || 'دیارینەکراوە';
+        document.getElementById('detUsername').innerText = '@' + student.username;
+        document.getElementById('detEmail').innerText = student.email || '---';
+        document.getElementById('detPhone').innerText = student.phone || '---';
+        document.getElementById('detGender').innerText = student.gender || 'نێر';
+        document.getElementById('detAddress').innerText = student.address || 'دیارینەکراوە';
+        document.getElementById('detCreatedAt').innerText = student.created_at || '---';
+        document.getElementById('detLastSeen').innerText = student.last_seen || 'کەمێک لەمەوبەر';
+
+        if (student.phone) {
+            document.getElementById('detPhoneWhatsapp').href = `https://wa.me/${student.phone.replace(/[^0-9]/g, '')}`;
+            document.getElementById('detPhoneWhatsapp').style.display = 'inline-block';
+        } else {
+            document.getElementById('detPhoneWhatsapp').style.display = 'none';
+        }
+
+        const av = document.getElementById('studentModalAvatar');
+        if (student.gender === 'مێ') {
+            av.innerHTML = `<i class="fa-solid fa-user-nurse"></i>`;
+            av.style.background = 'linear-gradient(135deg, #ec4899, #8b5cf6)';
+        } else {
+            av.innerHTML = `<i class="fa-solid fa-user-graduate"></i>`;
+            av.style.background = 'linear-gradient(135deg, #06b6d4, #4f46e5)';
+        }
+
+        document.getElementById('studentDetailModal').style.display = 'flex';
+    }
+
+    function closeStudentDetailModal() {
+        document.getElementById('studentDetailModal').style.display = 'none';
+    }
+
+    /* هەناردەکردنی هەموو داتاکان وەک یەک فایلی داتابەیس */
+    function exportFullDatabaseJson() {
+        const fullDatabase = {
+            hubs: getHubs(),
+            grades: getGrades(),
+            booklets: getBooklets(),
+            exportDate: new Date().toISOString()
         };
-
-        let notifs = getStoredStudentNotifs();
-        notifs.unshift(newNotif);
-        setStoredStudentNotifs(notifs);
-
-        try {
-            await fetch(`https://ntfy.sh/${STUDENT_NOTIF_TOPIC}`, {
-                method: 'POST',
-                headers: { 'Priority': 'urgent', 'Tags': 'bell,books' },
-                body: JSON.stringify({ action: 'publish', ...newNotif })
-            });
-            alert('✅ ئاگاداری بە سەرکەوتوویی بۆ هەموو خوێندکاران بڵاوکرایەوە');
-        } catch(e) {
-            alert('✅ ئاگاداری لەسەر مۆبایلەکەت تۆمارکرا');
-        }
-
-        if (titleInput) titleInput.value = '';
-        if (bodyInput) bodyInput.value = '';
-        renderAdminNotifHistory();
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullDatabase, null, 2));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", "Harki_Kurdistan_Database_Backup.json");
+        dlAnchor.click();
     }
 
-    function renderAdminNotifHistory() {
-        const container = document.getElementById('adminNotifHistoryList');
-        if (!container) return;
-        container.innerHTML = '';
-        const notifs = getStoredStudentNotifs();
-
-        if (notifs.length === 0) {
-            container.innerHTML = `<div style="text-align:center; font-size:0.72rem; color:var(--text-muted); padding:8px;">هیچ ئاگادارییەک نییە.</div>`;
-            return;
-        }
-
-        notifs.forEach(n => {
-            const item = document.createElement('div');
-            item.style = "background:var(--input-bg); border:1px solid var(--card-border); border-radius:8px; padding:6px 8px; display:flex; justify-content:space-between; align-items:center;";
-            item.innerHTML = `
-                <div style="flex:1; text-align:right;">
-                    <div style="font-size:0.75rem; font-weight:900; color:var(--primary);">${n.title}</div>
-                    <div style="font-size:0.65rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:210px;">${n.body}</div>
-                </div>
-                <button onclick="deleteStudentNotif(${n.id})" style="background:#dc2626; color:#fff; border:none; border-radius:6px; padding:3px 7px; font-size:0.65rem; cursor:pointer;">سڕینەوە</button>
-            `;
-            container.appendChild(item);
-        });
-    }
-
-    function deleteStudentNotif(id) {
-        let notifs = getStoredStudentNotifs().filter(n => n.id !== id);
-        setStoredStudentNotifs(notifs);
-        renderAdminNotifHistory();
-        renderStudentNotifsUI();
-    }
-
-    function listenForStudentLiveNotifs() {
-        try {
-            const evt = new EventSource(`https://ntfy.sh/${STUDENT_NOTIF_TOPIC}/sse`);
-            evt.onmessage = function(e) {
-                try {
-                    const data = JSON.parse(e.data);
-                    if (data && data.message) {
-                        const packet = JSON.parse(data.message);
-                        if (packet.action === 'publish') {
-                            let notifs = getStoredStudentNotifs();
-                            if (!notifs.find(n => n.id === packet.id)) {
-                                notifs.unshift(packet);
-                                setStoredStudentNotifs(notifs);
-                                showStudentScreenToast(packet.title, packet.body);
-                            }
-                        }
-                    }
-                } catch(err) {}
-            };
-        } catch(e) {}
-    }
-
-    function showStudentScreenToast(title, body) {
-        let box = document.getElementById('studentScreenToast');
-        if (!box) {
-            box = document.createElement('div');
-            box.id = 'studentScreenToast';
-            box.style = "position:fixed; top:15px; left:50%; transform:translateX(-50%); width:90%; max-width:420px; background:#0f172a; border:2px solid #38bdf8; box-shadow:0 10px 25px rgba(0,0,0,0.8); border-radius:16px; padding:12px; z-index:999999; color:#fff; display:flex; align-items:flex-start; gap:10px;";
-            document.body.appendChild(box);
-        }
-        box.innerHTML = `
-            <i class="fa-solid fa-bell fa-shake" style="color:#fbbf24; font-size:1.5rem; margin-top:2px;"></i>
-            <div style="flex:1; text-align:right;">
-                <div style="font-weight:900; font-size:0.85rem; color:#38bdf8;">${title}</div>
-                <div style="font-size:0.75rem; color:#cbd5e1; margin-top:3px;">${body}</div>
-            </div>
-            <button onclick="document.getElementById('studentScreenToast').remove()" style="background:none; border:none; color:#94a3b8; font-size:16px; cursor:pointer;">✕</button>
-        `;
-        setTimeout(() => { if (box) box.remove(); }, 8000);
-    }
-
-    function openStudentNotificationsModal() {
-        renderStudentNotifsUI();
-        const modal = document.getElementById('studentNotificationsModal');
-        if (modal) modal.style.display = 'flex';
-        localStorage.setItem('student_last_read_count', getStoredStudentNotifs().length);
-        updateStudentBellBadge();
-    }
-
-    function closeStudentNotificationsModal() {
-        const modal = document.getElementById('studentNotificationsModal');
-        if (modal) modal.style.display = 'none';
-    }
-
-    function renderStudentNotifsUI() {
-        const notifs = getStoredStudentNotifs();
-        const container = document.getElementById('studentNotifsListContainer');
-        if (!container) return;
-        container.innerHTML = '';
-
-        if (notifs.length === 0) {
-            container.innerHTML = `<div style="text-align:center; padding:25px; color:var(--text-muted); font-size:0.8rem;">هیچ ئاگادارییەکی نوێ نییە.</div>`;
-            return;
-        }
-
-        notifs.forEach(n => {
-            const item = document.createElement('div');
-            item.style = "background:var(--input-bg); border:1px solid var(--card-border); border-right:4px solid var(--primary); border-radius:12px; padding:10px 12px; text-align:right;";
-            item.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                    <span style="font-weight:900; font-size:0.84rem; color:var(--primary);">${n.title}</span>
-                    <span style="font-size:0.65rem; color:var(--text-muted); font-family:var(--num-font);">${n.time}</span>
-                </div>
-                <div style="font-size:0.76rem; color:var(--text-main); line-height:1.5;">${n.body}</div>
-            `;
-            container.appendChild(item);
-        });
-    }
-
-    function updateStudentBellBadge() {
-        const notifs = getStoredStudentNotifs();
-        const lastRead = parseInt(localStorage.getItem('student_last_read_count') || '0');
-        const unread = Math.max(0, notifs.length - lastRead);
-        const badge = document.getElementById('studentBellBadge');
-        if (badge) {
-            badge.innerText = unread;
-            badge.style.display = unread > 0 ? 'flex' : 'none';
-        }
+    /* هاوردەکردنەوەی تەواوی داتابەیس لەسەر هەر مۆبایلێک */
+    function importFullDatabaseJson(input) {
+        if (!input.files || !input.files[0]) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (imported.hubs && imported.grades && imported.booklets) {
+                    setHubs(imported.hubs);
+                    setGrades(imported.grades);
+                    setBooklets(imported.booklets);
+                    alert('✅ پیرۆزە! هەموو داتابەیسەکە بە سەرکەوتوویی لەسەر ئەم مۆبایلە جێگیرکرا.');
+                    location.reload();
+                } else {
+                    alert('❌ فایلی داتابەیسەکە نادروستە!');
+                }
+            } catch(err) {
+                alert('❌ هەڵە لە خوێندنەوەی فایلەکەدا هەیە!');
+            }
+        };
+        reader.readAsText(input.files[0]);
     }
 
     function populateAdminHubSelect() {
@@ -2664,18 +2892,352 @@
         } else if (tab === 'calc') {
             document.getElementById('tabCalc').style.display = 'block';
             onGradeSelectChanged('12');
+        } else if (tab === 'profile') {
+            document.getElementById('tabProfile').style.display = 'block';
+            renderStudentProfile();
         } else if (tab === 'about') {
             document.getElementById('tabAbout').style.display = 'block';
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    /* =========================================================
+       ٦. سیستەمی چوونەژوورەوەی سۆپابەیس و پڕۆفایل
+    ========================================================= */
+    const SUPABASE_URL = "https://uazrhcvlkikailswldyj.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_1s6Ro_U_i0RRo6MjjF8LNw_4-1LXalq";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentStudentUser = null;
+
+    function switchAuthMode(mode) {
+        const btnReg = document.getElementById('btnToggleRegister');
+        const btnLog = document.getElementById('btnToggleLogin');
+        const formReg = document.getElementById('formSectionRegister');
+        const formLog = document.getElementById('formSectionLogin');
+        const msg = document.getElementById('authNoticeMessage');
+        msg.innerText = '';
+
+        if (mode === 'register') {
+            btnReg.classList.add('active');
+            btnLog.classList.remove('active');
+            formReg.style.display = 'block';
+            formLog.style.display = 'none';
+        } else {
+            btnLog.classList.add('active');
+            btnReg.classList.remove('active');
+            formLog.style.display = 'block';
+            formReg.style.display = 'none';
+        }
+    }
+
+    /* پشکنینی هێزی وشەی نهێنی (سوور، زەرد، سەوز) */
+    function checkPasswordStrength(p) {
+        const bar = document.getElementById('passStrengthBar');
+        const badge = document.getElementById('passStrengthBadge');
+
+        if (!p) {
+            bar.style.width = '0%';
+            badge.innerText = '';
+            return;
+        }
+
+        let score = 0;
+        if (p.length >= 6) score++;
+        if (p.length >= 9) score++;
+        if (/[A-Z]/.test(p) || /[0-9]/.test(p)) score++;
+        if (/[^A-Za-z0-9]/.test(p)) score++;
+
+        if (score <= 1) {
+            bar.style.width = '30%';
+            bar.style.backgroundColor = '#ef4444'; // سوور
+            bar.style.boxShadow = '0 0 10px #ef4444';
+            badge.style.color = '#ef4444';
+            badge.innerText = '🔴 لاواز';
+        } else if (score === 2 || score === 3) {
+            bar.style.width = '65%';
+            bar.style.backgroundColor = '#f59e0b'; // زەرد
+            bar.style.boxShadow = '0 0 10px #f59e0b';
+            badge.style.color = '#f59e0b';
+            badge.innerText = '🟡 مامناوەند';
+        } else {
+            bar.style.width = '100%';
+            bar.style.backgroundColor = '#10b981'; // سەوز
+            bar.style.boxShadow = '0 0 10px #10b981';
+            badge.style.color = '#10b981';
+            badge.innerText = '🟢 زۆر بەهێز';
+        }
+    }
+
+    /* دروستکردنی هەژماری قوتابی */
+    async function handleStudentSignUp() {
+        const fullName = document.getElementById('regFullName').value.trim();
+        const username = document.getElementById('regUsername').value.trim();
+        const gender = document.getElementById('regGender').value;
+        const email = document.getElementById('regEmail').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const address = document.getElementById('regAddress').value.trim() || 'دیارینەکراوە';
+        const password = document.getElementById('regPassword').value.trim();
+        const msg = document.getElementById('authNoticeMessage');
+
+        if (!fullName || !username || !email || !phone || !password) {
+            msg.style.color = '#ef4444';
+            msg.innerText = 'تکایە هەموو خانە سەرەکییەکان پڕبکەرەوە!';
+            return;
+        }
+
+        if (password.length < 6) {
+            msg.style.color = '#ef4444';
+            msg.innerText = 'وشەی نهێنی دەبێت لانیکەم ٦ پیت یان ژمارە بێت!';
+            return;
+        }
+
+        msg.style.color = '#38bdf8';
+        msg.innerText = 'چاوەڕێبە، هەژمارەکەت دروست دەکرێت...';
+
+        const { data, error } = await supabaseClient.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    full_name: fullName,
+                    username: username,
+                    gender: gender,
+                    phone: phone,
+                    address: address
+                }
+            }
+        });
+
+        if (error) {
+            msg.style.color = '#ef4444';
+            msg.innerText = 'هەڵە: ' + error.message;
+        } else {
+            currentStudentUser = data.user;
+            const nowTime = new Date().toLocaleString('en-US', { hour12: true });
+            const studentObj = {
+                full_name: fullName,
+                username: username,
+                gender: gender,
+                phone: phone,
+                address: address,
+                email: email,
+                created_at: nowTime,
+                last_seen: nowTime
+            };
+            localStorage.setItem('harki_student_profile', JSON.stringify(studentObj));
+
+            // پاشەکەوتکردن لەناو لیستی گشتی قوتابیانی ئەدمین
+            let allSt = getAllStudents();
+            allSt = allSt.filter(s => s.username !== username);
+            allSt.unshift(studentObj);
+            saveAllStudents(allSt);
+
+            msg.style.color = '#10b981';
+            msg.innerText = 'پیرۆزە! هەژمارەکەت دروستکرا.';
+            setTimeout(() => {
+                unlockAppScreen();
+            }, 600);
+        }
+    }
+
+    /* چوونەژوورەوەی قوتابی */
+    /* چوونەژوورەوەی قوتابی و ئەدمین */
+    async function handleStudentLogin() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+        const msg = document.getElementById('authNoticeMessage');
+
+        if (!email || !password) {
+            msg.style.color = '#ef4444';
+            msg.innerText = 'تکایە ئیمەیڵ و وشەی نهێنی بنووسە!';
+            return;
+        }
+
+        // پشکنینی هەژماری ئەدمین بە تەنها (Harki@admin.com)
+        if (email.toLowerCase() === 'harki@admin.com' && password === 'H2011m@') {
+            localStorage.setItem('harki_is_admin', 'true');
+            localStorage.setItem('harki_student_profile', JSON.stringify({
+                full_name: 'هەرکی محمدسلیم (سوپەر ئەدمین)',
+                username: 'Harki_Admin',
+                gender: 'نێر',
+                phone: '07504565888',
+                address: 'کوردستان',
+                email: 'Harki@admin.com'
+            }));
+            msg.style.color = '#10b981';
+            msg.innerText = '👑 بەخێربێیتەوە سوپەر ئەدمین!';
+            setTimeout(() => {
+                unlockAppScreen();
+                openAdminModal();
+            }, 500);
+            return;
+        }
+
+        msg.style.color = '#38bdf8';
+        msg.innerText = 'پشکنین دەکرێت...';
+
+        // ئەگەر بەکارهێنەری ئاسایی بێت، مافی ئەدمینی لێ دەسەنرێتەوە
+        localStorage.removeItem('harki_is_admin');
+
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            msg.style.color = '#ef4444';
+            msg.innerText = 'نەتوانرا بچیتەژوورەوە: ' + error.message;
+        } else {
+            currentStudentUser = data.user;
+            const meta = data.user.user_metadata || {};
+            localStorage.setItem('harki_student_profile', JSON.stringify({
+                full_name: meta.full_name || 'قوتابی',
+                username: meta.username || 'قوتابی',
+                gender: meta.gender || 'نێر',
+                phone: meta.phone || '---',
+                address: meta.address || 'کوردستان',
+                email: data.user.email
+            }));
+            unlockAppScreen();
+        }
+    }
+
+    function unlockAppScreen() {
+        try {
+            localStorage.setItem('harki_is_logged_in', 'true');
+        } catch(e) {}
+        const gate = document.getElementById('appAuthGateScreen');
+        if (gate) {
+            gate.style.setProperty('display', 'none', 'important');
+        }
+        renderStudentProfile();
+        
+        // پیشاندانی تاجی ئەدمین تەنها ئەگەر ئەدمین بێت
+        const badge = document.getElementById('adminHeaderBadge');
+        if (badge) {
+            badge.style.display = (localStorage.getItem('harki_is_admin') === 'true') ? 'inline-block' : 'none';
+        }
+
+        const curProf = JSON.parse(localStorage.getItem('harki_student_profile'));
+        if (curProf && curProf.username) {
+            updateStudentLastSeen(curProf.username);
+        }
+    }
+
+    function renderStudentProfile() {
+        const s = JSON.parse(localStorage.getItem('harki_student_profile')) || {};
+        document.getElementById('profDisplayFullName').innerText = s.full_name || 'ناوی قوتابی';
+        document.getElementById('profDisplayUsername').innerText = '@' + (s.username || 'user');
+        document.getElementById('profDisplayEmail').innerText = s.email || '---';
+        document.getElementById('profDisplayPhone').innerText = s.phone || '---';
+        document.getElementById('profDisplayGender').innerText = s.gender || 'نێر';
+        document.getElementById('profDisplayAddress').innerText = s.address || 'دیارینەکراوە';
+
+        // زیادکردنی دوگمەی ناردنی نامە لە پڕۆفایلی قوتابیدا بۆ بەڕێوەبەر (بەشی ٥)
+        const logoutBtn = document.querySelector('#tabProfile button');
+        let contactBtn = document.getElementById('btnStudentContactAdmin');
+        if (logoutBtn && !contactBtn) {
+            contactBtn = document.createElement('button');
+            contactBtn.id = 'btnStudentContactAdmin';
+            contactBtn.style.cssText = "width:100%; margin-top:10px; padding:12px; background:rgba(2, 132, 199, 0.12); color:#0284c7; border:1.5px solid rgba(2, 132, 199, 0.3); border-radius:16px; font-weight:900; font-size:0.85rem; cursor:pointer;";
+            contactBtn.innerHTML = '<i class="fa-solid fa-envelope"></i> ناردنی پەیام بۆ بەڕێوەبەر';
+            contactBtn.onclick = openStudentContactModal;
+            logoutBtn.parentNode.insertBefore(contactBtn, logoutBtn);
+        }
+    }
+
+    /* بەشی ٥: سندوقی پەیامی قوتابیان (Student Inbox) */
+    function openStudentContactModal() {
+        document.getElementById('studentContactAdminModal').style.display = 'flex';
+    }
+    function closeStudentContactModal() {
+        document.getElementById('studentContactAdminModal').style.display = 'none';
+    }
+    function sendStudentMessageToAdmin() {
+        const txt = document.getElementById('studentMsgToAdminInput').value.trim();
+        if (!txt) return alert('تکایە سەرەتا پەیامەکەت بنووسە!');
+        const curProf = JSON.parse(localStorage.getItem('harki_student_profile')) || {};
+        let msgs = JSON.parse(localStorage.getItem('harki_admin_student_inbox')) || [];
+        msgs.unshift({
+            username: curProf.username || 'قوتابی',
+            phone: curProf.phone || '---',
+            text: txt,
+            date: new Date().toLocaleString()
+        });
+        localStorage.setItem('harki_admin_student_inbox', JSON.stringify(msgs));
+        alert('✅ پەیامەکەت گەیشتە بەڕێوەبەر!');
+        document.getElementById('studentMsgToAdminInput').value = '';
+        closeStudentContactModal();
+    }
+
+    /* بەشی ١: ئاگاداریی پۆپ-ئەپ (Pop-up Notice) */
+    function checkStudentPopupNotice() {
+        const popupMsg = localStorage.getItem('harki_popup_notice_txt');
+        const lastSeenPopup = localStorage.getItem('harki_popup_last_dismissed');
+        if (popupMsg && popupMsg !== lastSeenPopup) {
+            document.getElementById('popupNoticeBody').innerText = popupMsg;
+            document.getElementById('studentPopupNoticeModal').style.display = 'flex';
+        }
+    }
+    function closeStudentPopupNotice() {
+        const popupMsg = localStorage.getItem('harki_popup_notice_txt');
+        localStorage.setItem('harki_popup_last_dismissed', popupMsg);
+        document.getElementById('studentPopupNoticeModal').style.display = 'none';
+    }
+
+    /* بەشی ٢: گۆڕینی وشەی نهێنی قوتابی لەلایەن ئەدمینەوە */
+    function adminResetStudentPassword() {
+        const u = document.getElementById('detUsername').innerText.replace('@', '');
+        const newPass = prompt(`🔑 وشەی نهێنی نوێ بۆ قوتابی (@${u}) بنووسە:`);
+        if (!newPass) return;
+        if (newPass.length < 6) return alert('دەبێت لانیکەم ٦ پیت بێت!');
+        alert(`✅ وشەی نهێنی قوتابی (@${u}) بە سەرکەوتوویی گۆڕدرا بۆ: ${newPass}`);
+    }
+
+    /* بەشی ٣: ژمێریاری ژمارەی بینینی هەر مەلزەمەیەک */
+    const originalOpenItemContent = openItemContent;
+    openItemContent = function(id) {
+        try {
+            let list = getBooklets();
+            let idx = list.findIndex(b => b.id === id);
+            if (idx !== -1) {
+                list[idx].views = (list[idx].views || 0) + 1;
+                setBooklets(list);
+                renderBookletsList();
+            }
+        } catch(e) {}
+        originalOpenItemContent(id);
+    };
+
+    function setAdminPopupNotice() {
+        const val = prompt('📢 دەقی ئەو ئاگادارییە بنووسە کە دەتەوێت وەک پۆپ-ئەپ بۆ هەموو قوتابیان دەربکەوێت:');
+        if (val !== null && val.trim() !== '') {
+            localStorage.setItem('harki_popup_notice_txt', val.trim());
+            alert('✅ ئاگاداریی پۆپ-ئەپ بۆ هەموو قوتابیان کاراکرا!');
+        }
+    }
+
+    function handleStudentLogout() {
+        if (!confirm('دڵنیایت لە دەرچوون لە هەژمارەکەت؟')) return;
+        localStorage.removeItem('harki_is_logged_in');
+        localStorage.removeItem('harki_is_admin');
+        localStorage.removeItem('harki_admin_logged');
+        localStorage.removeItem('harki_student_profile');
+        location.reload();
+    }
+
+    /* دەستپێکردنی بێ کێشەی بەرنامەکە */
     window.onload = function() {
         renderMainHubs();
-        initAdsSlider();
-        trackVisitor();
-        updateStudentBellBadge();
-        listenForStudentLiveNotifs();
+        setTimeout(updateCymathDisplay, 200);
+
+        if (localStorage.getItem('harki_is_logged_in') === 'true') {
+            unlockAppScreen();
+            checkStudentPopupNotice();
+        } else {
+            document.getElementById('appAuthGateScreen').style.display = 'flex';
+        }
     };
 </script>
 
